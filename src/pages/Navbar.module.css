@@ -14,7 +14,7 @@
 
 .middle{
     display: flex;
-    gap: 50px;
+    gap: 40px;
 }
 
 
@@ -125,7 +125,57 @@
 
 
 
+@media(max-width:645px){
+    .navbar{
+        display: flex;
+        flex-direction: column;
+    }
 
+    .logo {
+        display: flex;
+        justify-items: flex-start;
+    }
+
+
+    .bars{
+        display: none;
+    }
+
+
+    .firstNav{
+        display: flex;
+        /* flex-direction: column; */
+        border: none;
+    }
+
+    .search1{
+        display: none;
+    }
+
+
+    .category{
+        display: none;
+    }
+
+
+    .search2 p{
+        display: none;
+    }
+
+
+    .search2{
+        background-color: white;
+    }
+
+    .search2 svg{
+        display: flex;
+        color: #777;
+    }
+
+    .secondNav{
+        display: none;
+    }
+}
 
 
 
