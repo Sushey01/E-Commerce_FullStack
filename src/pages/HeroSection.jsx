@@ -1,11 +1,18 @@
-import React from 'react'
+import React from "react";
+import Navbar from "../components/Navbar";
 
 const HeroSection = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <>
+      <Navbar />
+      <div>
+        <div>
+          
+        </div>
+        <div></div>
+      </div>
+    </>
+  );
+};
 
-export default HeroSection
+export default HeroSection;

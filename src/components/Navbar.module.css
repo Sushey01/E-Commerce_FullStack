@@ -129,7 +129,7 @@
     .navbar{
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        padding: 15px 10px;
     }
 
     .logo {
@@ -138,9 +138,24 @@
     }
 
 
+    .logo img{
+        width: 200px;
+    }
+
+
+   
+
     .bars{
         display: none;
     }
+
+
+    .middle {
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    
 
 
     .firstNav{
@@ -165,7 +180,8 @@
 
 
     .search2{
-        background-color: white;
+        display: none;
+        /* background-color: white; */
     }
 
     .search2 svg{

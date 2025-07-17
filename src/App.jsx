@@ -1,10 +1,12 @@
 import React from 'react'
-import Navbar from './pages/Navbar'
+import Navbar from './components/Navbar'
+import SideDropDown from './ui/SideDropDown'
 
 const App = () => {
   return (
     <div>
-      <Navbar/>
+      {/* <Navbar/> */}
+      <SideDropDown/>
     </div>
   )
 }

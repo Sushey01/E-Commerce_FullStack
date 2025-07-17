@@ -11,7 +11,9 @@ const Navbar = () => {
       <div className={styles.middle}>
         <div className={styles.logo}>
           <img src={Logo}></img>
+          
         </div>
+        
         <div className={styles.firstNav}>
           <div className={styles.bars}>
             <div className={styles.category}>
@@ -49,7 +51,46 @@ const Navbar = () => {
               <circle cx="11" cy="11" r="8" />
             </svg>
           </div>
+        
         </div>
+       
+        <div className="flex content-center float-right items-center space-x-4 ">
+           <svg
+              xmlns="http://www.w3.org/2000/svg"
+          className=" lg:hidden"
+              width="20"
+              color="#777"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-search-icon lucide-search"
+            >
+              <path d="m21 21-4.34-4.34" />
+              <circle cx="11" cy="11" r="8" />
+            </svg>
+        <button
+          aria-label="Toggle menu"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className=" p-2 block lg:hidden"
+        >
+          <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            class="text-2xl"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M3 4H21V6H3V4ZM9 11H21V13H9V11ZM3 18H21V20H3V18Z"></path>
+          </svg>
+        </button>
+      </div>
       </div>
 
       <div className={styles.secondNav}>
@@ -99,26 +140,7 @@ const Navbar = () => {
           </svg>
         </div>
       </div>
-      {/* <div className="flex content-center float-right items-center space-x-4 ">
-        <button
-          aria-label="Toggle menu"
-          onClick={() => setMenuOpen(!menuOpen)}
-          className=" p-2 block lg:hidden"
-        >
-          <svg
-            stroke="currentColor"
-            fill="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            class="text-2xl"
-            height="1em"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M3 4H21V6H3V4ZM9 11H21V13H9V11ZM3 18H21V20H3V18Z"></path>
-          </svg>
-        </button>
-      </div> */}
+      
     </div>
   );
 };
