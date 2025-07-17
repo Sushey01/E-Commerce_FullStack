@@ -75,10 +75,11 @@ const SideDropDown = () => {
         className="relative group w-[25%]  md:justify-between justify-end"
       >
 
-        <div className=" hover:showList(true) space-y w-[100%]">
+        <div className=" space-y w-[100%]">
             {departments.map((item, index)=>(
                 <Category
                 key={index}
+                {...item}
                 icon={item.icon}
                 title={item.title}
                 sublist={item.sublist}
