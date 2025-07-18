@@ -54,10 +54,9 @@ const Navbar = () => {
         
         </div>
        
-        <div className="flex content-center float-right items-center space-x-4 ">
+        <div className="flex content-center float-right items-center space-x-4 block lg:hidden">
            <svg
               xmlns="http://www.w3.org/2000/svg"
-          className="lg:hidden !important"
               width="20"
               color="#777"
               height="19"

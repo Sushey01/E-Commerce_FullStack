@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { CiFilter } from "react-icons/ci";
 import {
@@ -19,11 +19,20 @@ const SideDropDown = () => {
     const [showList, setShowList] = useState(null)
     const [showCategory, setShowCategory]= useState(true)
 
-
-
     const toggleCategory = (index)=>{
         setShowList(showList === index?null:index)
     }
+
+
+
+
+
+// useEffect(() => {
+//   document.body.style.overflow = showCategory ? 'hidden' : 'auto';
+//   return () => {
+//     document.body.style.overflow = 'auto';
+//   };
+// },[showCategory]);
 
 
 
@@ -81,12 +90,12 @@ const SideDropDown = () => {
 
       <div
         id="bouton"
-        className="relative group w-[100%]  md:justify-between justify-end"
+        className="relative group w-[100%] md:justify-between justify-end"
       >
 
        <div
           className={`transition-all duration-500 ease-in-out  z-[99] ${
-            showCategory ? "max-h-[1000px]" : "max-h-0" //block and hidden also can be used..
+            showCategory ? "max-h-[1000px]" : "max-h-0 overflow-hidden" //block and hidden also can be used..
           }`}
     
         >

@@ -70,12 +70,15 @@
 
 .search1 input{
     width: 300px;
+    outline: none;
     border: none;
     font-size: 14px;
     font-weight: 600;
-    color: #d3d3d3;
+    color: #312e2e;
+    /* color: #d3d3d3; */
     font-family: Poppins, sans-serif;
 }
+
 
 
 .search2{
