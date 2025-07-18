@@ -57,7 +57,7 @@ const Navbar = () => {
         <div className="flex content-center float-right items-center space-x-4 ">
            <svg
               xmlns="http://www.w3.org/2000/svg"
-          className=" lg:hidden"
+          className="lg:hidden !important"
               width="20"
               color="#777"
               height="19"
