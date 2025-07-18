@@ -17,15 +17,21 @@ import { RiArrowRightSLine } from "react-icons/ri";
 
 const SideDropDown = () => {
     const [showList, setShowList] = useState(null)
+    const [showCategory, setShowCategory]= useState(true)
+
 
 
     const toggleCategory = (index)=>{
         setShowList(showList === index?null:index)
     }
 
+
+
   return (
-    <div className="p-5">
-      <div className="border rounded-tl-3xl text-white rounded-tr-3xl w-[25%] flex space-x-12 items-center justify-between gap-3 p-3 px-2 bg-[#0296A0]">
+    <div >
+      <div 
+      onClick={()=>setShowCategory((prev)=>!prev)}
+      className="border rounded-tl-3xl text-white rounded-tr-3xl w-[100%] flex space-x-12 items-center justify-between gap-3 p-3 px-2.5 bg-[#0296A0] cursor-pointer">
         <div className="gap-3 flex">
           <svg
             className="w-6 h-6 text-white content-center"
@@ -59,37 +65,45 @@ const SideDropDown = () => {
           <h3 className="content-center">Departments</h3>
         </div>
 
-        <svg
-          className="fill-white"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          width="1.5em"
-          height="1.5em"
-        >
-          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
-        </svg>
+      <svg
+  className={`fill-white transition-transform duration-300 ${
+    showCategory ? "rotate-180" : ""
+  }`}
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="1.5em"
+  height="1.5em"
+>
+  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
+</svg>
+
       </div>
 
       <div
         id="bouton"
-        className="relative group w-[25%]  md:justify-between justify-end"
+        className="relative group w-[100%]  md:justify-between justify-end"
       >
 
-        <div className=" space-y w-[100%]">
-            {departments.map((item, index)=>(
-                <Category
-                key={index}
-                {...item}
-                icon={item.icon}
-                title={item.title}
-                sublist={item.sublist}
-                index={index}
-                isOpen={showList===index}
-                toggleCategory={toggleCategory}/>
-            ))}
+       <div
+          className={`transition-all duration-500 ease-in-out  z-[99] ${
+            showCategory ? "max-h-[1000px]" : "max-h-0" //block and hidden also can be used..
+          }`}
+    
+        >
+          {departments.map((item, index) => (
+            <Category
+              key={index}
+              {...item}
+              icon={item.icon}
+              title={item.title}
+              sublist={item.sublist}
+              index={index}
+              isOpen={showList === index}
+              toggleCategory={toggleCategory}
+            />
+          ))}
         </div>
-
-        
+      
       </div>
     </div>
   );
@@ -133,13 +147,13 @@ const Category = ({ icon, title, sublist, index, isOpen, toggleCategory }) => {
             rounded-md
             text-sm
             w-52
-            z-50
+            z-[999]
           "
         >
           {sublist.map((item, idx) => (
             <li
               key={idx}
-              className="p-2 px-4 cursor-pointer hover:bg-slate-100 text-gray-700"
+              className="p-2 px-4 cursor-pointer hover:bg-slate-100 text-gray-700  "
             >
               <a href={item.link}>{item.title}</a>
             </li>
