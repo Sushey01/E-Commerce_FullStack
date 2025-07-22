@@ -3,8 +3,8 @@ import Watch from "../assets/images/megawatch.webp"
 
 const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
   return (
-    <div className="w-full  p-11 h-[100vh] content-center  bg-[#dcd9d9] border rounded-lg">
-      <div className="grid w-full grid-cols-2 gap-5 ">
+    <div className=" w-full  p-11 h-[100vh] content-center bg-[#dcd9d9] border rounded-lg  ">
+      <div className="grid grid-cols-2 w-full gap-5 "> 
         <div className="w-full">
           <div className="p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
           <p className="text-[#E43100] font-normal  color-[#e43100] "> 👌 Mega Sale Madness! Enjoy 30% off ✌️</p>
@@ -44,7 +44,7 @@ const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
             </div>
           </div>
         </div>
-         <div className="content-center">
+         <div className="content-center ">
             <img  src={Watch} alt='watch'/>
           </div>
       </div>
