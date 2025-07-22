@@ -9,10 +9,10 @@ import HeroSection from './pages/HeroSection'
 const App = () => {
   return (
     <div>
-      {/* <Navbar/> */}
+      <Navbar/>
       {/* <SideDropDown/> */}
       {/* <MegaSaleHome/> */}
-      <HeroSection/>
+      {/* <HeroSection/> */}
     </div>
   )
 }
