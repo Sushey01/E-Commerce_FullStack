@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import styles from "./Navbar.module.css";
+import styles from "./NavbarCopy.module.css";
 import Logo from "../assets/images/NavLogo.webp";
 import User from "../assets/images/user.avif";
 
-const Navbar = () => {
+const NavbarCopy = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toggleSearch, setToggleSearch] = useState(false);
   const [showCategory, setShowCategory] = useState(false)
@@ -18,92 +18,7 @@ const Navbar = () => {
 
   return (
     <>
-{/* MOBILE SEARCH DRAWER */}
-{toggleSearch && (
-  <div className="flex flex-col fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 p-4 shadow-md transition-transform transform md:hidden animate-slideIn">
-    {/* Close Button */}
-    <button
-      onClick={() => setToggleSearch(false)}
-      className="absolute top-1 right-5 text-gray-500 hover:text-gray-900 dark:hover:text-white text-4xl"
-      aria-label="Close search drawer"
-    >
-      &times;
-    </button>
-
-    {/* Search Input + Category */}
-    <div className="flex gap-2 w-full mb-4 relative mt-8">
-      {/* Category Dropdown */}
-      <div className="relative w-1/3">
-        <button
-          onClick={() => setShowCategory(!showCategory)}
-          className="w-full gap-1 flex items-center justify-between border rounded px-3 py-2 bg-white"
-          type="button"
-        >
-          {selectedCategory}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-chevron-down"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </button>
-
-        {showCategory && (
-          <ul className="absolute mt-1 w-full bg-white border rounded shadow z-50 max-h-48 overflow-auto">
-            {categories.map((cat) => (
-              <li
-                key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setShowCategory(false);
-                }}
-                className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              >
-                {cat}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Search Input */}
-      <div className="flex items-center flex-1">
-        <input
-          type="text"
-          placeholder="Search for products..."
-          className="w-full border rounded-tr-none rounded-br-none rounded-tl-md rounded-bl-md  px-3 py-2"
-        />
-        <button className="flex border px-3 py-2.5 rounded-tl-none rounded-bl-none rounded-md bg-[#0296A0] text-white ">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21"
-            height="21"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-search"
-          >
-            <path d="m21 21-4.34-4.34" />
-            <circle cx="11" cy="11" r="8" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
+     
 
       {/* Main Navbar */}
       <div className={styles.navbar}>
@@ -262,4 +177,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarCopy;
