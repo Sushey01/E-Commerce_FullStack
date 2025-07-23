@@ -3,14 +3,14 @@ import Watch from "../assets/images/megawatch.webp"
 
 const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
   return (
-    <div className=" w-full  p-11 h-[100vh] content-center bg-[#dcd9d9] border rounded-lg  ">
-      <div className="grid grid-cols-2 w-full gap-5 "> 
+    <div className=" w-full p-3 md:p-11 md:h-[100vh] content-center bg-[#dcd9d9] border rounded-lg  ">
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5">
         <div className="w-full">
           <div className="p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
-          <p className="text-[#E43100] font-normal  color-[#e43100] "> 👌 Mega Sale Madness! Enjoy 30% off ✌️</p>
+          <p className="text-[#E43100] font-normal text-sm md:text-base color-[#e43100] "> 👌 Mega Sale Madness! Enjoy 30% off ✌️</p>
           </div>
-          <h1 className="text-[#777] text-4xl mb-4 font-bold text-start">Experience the future of Smartwatches!</h1>
-          <p className="text-[#777] text-[18px] w- mb-4">
+          <h1 className="text-[#777] text-2xl md:text-4xl mb-4 font-bold text-start">Experience the future of Smartwatches!</h1>
+          <p className="text-[#777] text-base md:text-[18px] w- mb-4">
             A sleek design with AI voice assistant, IP68 water resistance, and a
             battery that lasts up to 7 days!
           </p>

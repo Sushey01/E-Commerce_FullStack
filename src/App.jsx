@@ -13,7 +13,7 @@ const App = () => {
       <Navbar/>
       {/* <SideDropDown/> */}
       {/* <MegaSaleHome/> */}
-      {/* <HeroSection/> */}
+      <HeroSection/>
       {/* <SideBarMenu/> */}
     </>
   )

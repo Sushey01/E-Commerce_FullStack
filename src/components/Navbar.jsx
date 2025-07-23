@@ -20,15 +20,26 @@ const Navbar = () => {
   return (
     <>
 {/* Sidebar sliding panel */}
-<div
-  className={`fixed top-0 left-0 h-full bg-white shadow-lg z-40 transition-transform duration-300 ease-in-out
-    w-64
-    ${menuOpen ? 'overflow-visible' : 'overflow-hidden'}
-    ${menuOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"}
-  `}
->
-  <SideBarMenu onClose={() => setMenuOpen(false)} />
-</div>
+{menuOpen && (
+  <div className="fixed inset-0 z-40 flex">
+    {/* BACKDROP / OUTSIDE AREA */}
+    <div
+      className="fixed inset-0 bg-black opacity-25"
+      onClick={() => setMenuOpen(false)}
+    />
+
+    {/* SIDEBAR */}
+    <div
+      className={`
+        relative z-50 h-full bg-white shadow-lg transition-transform duration-300 ease-in-out w-64
+        ${menuOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+    >
+      <SideBarMenu onClose={() => setMenuOpen(false)} />
+    </div>
+  </div>
+)}
+
 
 
 {/* MOBILE SEARCH DRAWER */}
