@@ -5,7 +5,7 @@ const MonthlySale = () => {
   return (
     <>
       <div className="px-4 my-4 py-2  flex justify-between">
-        <div className="text-[#777777] md:text-3xl">This Month Sales</div>
+        <div className="text-[#777777] text-xl md:text-3xl">This Month Sales</div>
         <button className="flex gap-2  items-center">
             <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
                  <svg

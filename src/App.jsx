@@ -6,6 +6,7 @@ import HeroSection from "./pages/HeroSection";
 import FeatureProduct from "./pages/FeatureProduct";
 import MonthlySale from "./pages/MonthlySale";
 import BlackFridaySales from "./pages/BlackFridaySales";
+import Laptop from "./pages/Laptop";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <FeatureProduct/>
       <MonthlySale/>
       <BlackFridaySales/>
+      <Laptop/>
     </>
   );
 };

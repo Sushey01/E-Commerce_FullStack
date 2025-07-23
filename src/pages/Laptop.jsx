@@ -1,11 +1,11 @@
 import React from 'react'
-import BlackFridaySalesCard from '../components/BlackFridaySalesCard'
+import LaptopCard from '../components/LaptopCard'
 
-const BlackFridaySales = () => {
+const Laptop = () => {
   return (
     <>
-        <div className="px-4 my-4 py-2  flex justify-between">
-        <div className="text-[#777777] text-xl md:text-3xl">Black Friday Sales</div>
+         <div className="px-4 my-4 py-2  flex justify-between">
+        <div className="text-[#777777] text-xl md:text-3xl">Laptop</div>
         <button className="flex gap-2  items-center">
             <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
                  <svg
@@ -25,14 +25,16 @@ const BlackFridaySales = () => {
         </button>
         
       </div>
-   <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4">
-  <BlackFridaySalesCard />
-  <BlackFridaySalesCard />
-  <BlackFridaySalesCard />
-</div>
-
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
+            <LaptopCard/>
+            <LaptopCard/>
+            <LaptopCard/>
+            <LaptopCard/>
+            <LaptopCard/>
+            <LaptopCard/>
+      </div>
     </>
   )
 }
 
-export default BlackFridaySales
+export default Laptop
