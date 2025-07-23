@@ -3,7 +3,7 @@ import Iphone from "../assets/images/iphone.webp";
 
 const MonthlySaleCard = () => {
   return (
-<div className="p-4 bg-[#f7f7f7] md:justify-items-center border rounded shadow w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 max-w-sm mx-auto">
+<div className="p-4 bg-[#f7f7f7] md:justify-items-center border rounded shadow w-full max-w-sm mx-auto">
       <div className="flex relative justify-center items-center mb-3">
         <div className="absolute top-0 left-0 border rounded-3xl bg-red-600 p-1.5 text-white">
             <p className="text-[14px]">20% off</p>

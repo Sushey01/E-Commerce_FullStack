@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import HeroSection from "./pages/HeroSection";
 import FeatureProduct from "./pages/FeatureProduct";
 import MonthlySale from "./pages/MonthlySale";
+import BlackFridaySales from "./pages/BlackFridaySales";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <HeroSection /> */}
       <FeatureProduct/>
       <MonthlySale/>
+      <BlackFridaySales/>
     </>
   );
 };
