@@ -19,6 +19,18 @@ const Navbar = () => {
 
   return (
     <>
+{/* Sidebar sliding panel */}
+<div
+  className={`fixed top-0 left-0 h-full bg-white shadow-lg z-40 transition-transform duration-300 ease-in-out
+    w-64
+    ${menuOpen ? 'overflow-visible' : 'overflow-hidden'}
+    ${menuOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"}
+  `}
+>
+  <SideBarMenu onClose={() => setMenuOpen(false)} />
+</div>
+
+
 {/* MOBILE SEARCH DRAWER */}
 {toggleSearch && (
   <div className="flex flex-col fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 p-4 shadow-md transition-transform transform md:hidden animate-slideIn">

@@ -14,7 +14,7 @@ const App = () => {
       {/* <SideDropDown/> */}
       {/* <MegaSaleHome/> */}
       {/* <HeroSection/> */}
-      <SideBarMenu/>
+      {/* <SideBarMenu/> */}
     </>
   )
 }
