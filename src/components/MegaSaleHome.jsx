@@ -16,7 +16,7 @@ const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
           </p>
 
           <button className=" content-center items-center gap-2 hover:bg-blue-600 border flex  p-2 px-3 mb-4 rounded-md bg-[#0296a0]">
-            <p className="text-[#fff] font-semibold text-[20px] ">Shop Now</p>
+            <p className="text-[#fff] font-semibold text-[20px]">Shop Now</p>
             <svg
               width="12"
               height="9"

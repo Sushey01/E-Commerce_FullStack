@@ -5,14 +5,16 @@ import Navbar from './components/Navbar'
 import SideDropDown from './ui/SideDropDown'
 import MegaSaleHome from './components/MegaSaleHome'
 import HeroSection from './pages/HeroSection'
+import SideBarMenu from './components/SideBarMenu';
 
 const App = () => {
   return (
     < >
-      {/* <Navbar/> */}
+      <Navbar/>
       {/* <SideDropDown/> */}
       {/* <MegaSaleHome/> */}
-      <HeroSection/>
+      {/* <HeroSection/> */}
+      <SideBarMenu/>
     </>
   )
 }

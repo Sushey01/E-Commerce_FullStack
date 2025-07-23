@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./Navbar.module.css";
 import Logo from "../assets/images/NavLogo.webp";
 import User from "../assets/images/user.avif";
+import SideBarMenu from "../components/SideBarMenu"
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
