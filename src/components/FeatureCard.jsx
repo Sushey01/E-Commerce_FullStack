@@ -3,12 +3,19 @@ import Iphone from "../assets/images/iphone.webp"
 
 const FeatureCard = () => {
   return (
-    <div>
-      <p>iPad & Tablets</p>
-      <p className="">Up to 20% off today!</p>
-      <img src={Iphone}/>
+    <div className='flex font-Kanit flex-col gap-2 bg-[#f7f7f7] border rounded w-full p-4 py-4 h-full hover:shadow-lg transition-all duration-700 ease-in-out group'>
+        <div>
+        <p className='text-xl md:text-3xl text-[#777]'>iPad & </p>
+      <p className='text-xl md:text-3xl text-[#777]'>Tablets</p>
+        </div>
+
+      
+      <p className="text-[#777]  md:text-base">Up to 20% off today!</p>
+      <div className='py-2'>
+      <img src={Iphone} className='md:w-[80%] hover:'/>
+      </div>
         <button className="flex gap-2  items-center">
-            <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
+            <p className='text-[#0296a0] md:text-lg underline decoration-[#0296a0] '>Shop Now</p>
                  <svg
               width="12"
               height="9"

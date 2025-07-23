@@ -1,11 +1,11 @@
 import React from 'react'
-import FeatureCard from '../components/FeatureCard'
+import MonthlySaleCard from '../components/MonthlySaleCard'
 
-const FeatureProduct = () => {
+const MonthlySale = () => {
   return (
     <>
       <div className="px-4 my-4 py-2  flex justify-between">
-        <div className="text-[#777777] md:text-3xl">Featured Products</div>
+        <div className="text-[#777777] md:text-3xl">This Month Sales</div>
         <button className="flex gap-2  items-center">
             <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
                  <svg
@@ -26,14 +26,14 @@ const FeatureProduct = () => {
         
       </div>
       <div className='p-4 flex gap-3'>
-      <FeatureCard/>
-      <FeatureCard/>
-      <FeatureCard/>
-      <FeatureCard/>
-      <FeatureCard/>
+            <MonthlySaleCard/>
+            <MonthlySaleCard/>
+            <MonthlySaleCard/>
+            <MonthlySaleCard/>
+            <MonthlySaleCard/>
       </div>
     </>
   )
 }
 
-export default FeatureProduct
+export default MonthlySale
