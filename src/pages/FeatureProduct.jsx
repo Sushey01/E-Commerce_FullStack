@@ -1,12 +1,11 @@
 import React from 'react'
-import Iphone from "../assets/images/iphone.webp"
+import FeatureCard from '../components/FeatureCard'
 
-const FeatureCard = () => {
+const FeatureProduct = () => {
   return (
-    <div>
-      <p>iPad & Tablets</p>
-      <p className="">Up to 20% off today!</p>
-      <img src={Iphone}/>
+    <>
+      <div className="px-4 py-2  flex justify-between">
+        <div className="text-[#777777] md:text-4xl">Featured Products</div>
         <button className="flex gap-2  items-center">
             <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
                  <svg
@@ -24,8 +23,13 @@ const FeatureCard = () => {
               ></path>
             </svg>
         </button>
-    </div>
+        
+      </div>
+      <div className='p-4'>
+      <FeatureCard/>
+      </div>
+    </>
   )
 }
 
-export default FeatureCard
+export default FeatureProduct

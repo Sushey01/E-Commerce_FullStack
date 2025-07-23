@@ -1,22 +1,20 @@
-import React from 'react'
+import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Navbar from './components/Navbar'
-import SideDropDown from './ui/SideDropDown'
-import MegaSaleHome from './components/MegaSaleHome'
-import HeroSection from './pages/HeroSection'
-import SideBarMenu from './components/SideBarMenu';
+import Navbar from "./components/Navbar";
+import HeroSection from "./pages/HeroSection";
+import FeatureCard from "./components/FeatureCard";
+import FeatureProduct from "./pages/FeatureProduct";
 
 const App = () => {
   return (
-    < >
-      <Navbar/>
-      {/* <SideDropDown/> */}
-      {/* <MegaSaleHome/> */}
-      <HeroSection/>
-      {/* <SideBarMenu/> */}
+    <>
+      {/* <Navbar />
+      <HeroSection /> */}
+      {/* <FeatureCard/> */}
+      <FeatureProduct/>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

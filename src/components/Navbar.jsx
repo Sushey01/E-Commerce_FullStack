@@ -21,10 +21,10 @@ const Navbar = () => {
     <>
 {/* Sidebar sliding panel */}
 {menuOpen && (
-  <div className="fixed inset-0 z-40 flex">
+  <div className="fixed inset-0 z-40 flex ">
     {/* BACKDROP / OUTSIDE AREA */}
     <div
-      className="fixed inset-0 bg-black opacity-25"
+      className="fixed inset-0  bg-black opacity-25"
       onClick={() => setMenuOpen(false)}
     />
 
