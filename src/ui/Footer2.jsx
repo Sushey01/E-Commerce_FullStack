@@ -71,7 +71,7 @@ const Footer2 = () => {
         {/* App Download */}
         <div className="flex flex-col gap-4 min-w-[180px]">
           <p className="text-[#666] text-lg font-semibold">Download App</p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-1/2 md:w-full">
             <button className="border rounded-full bg-black py-2 px-4 flex items-center gap-2">
               <img src={Apple} alt="apple" className="w-7 h-7" />
               <div>

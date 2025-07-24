@@ -25,7 +25,7 @@ const Laptop = () => {
         </button>
         
       </div>
-           <div className="grid items-content content-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
+           <div className="grid items-content content-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 px-4">
             <LaptopCard/>
             <LaptopCard/>
             <LaptopCard/>
