@@ -1,14 +1,18 @@
-import React from 'react'
-import BlackFridaySalesCard from '../components/BlackFridaySalesCard'
+import React from "react";
+import FlashSaleSlider from "./FlashSaleSlider";
+import MonthlySaleCard from "./MonthlySaleCard";
 
-const BlackFridaySales = () => {
+const FlashSalePage = () => {
   return (
     <>
-        <div className="px-4 my-4 py-2  flex justify-between">
-        <p className="text-[#777777] text-xl md:text-3xl">Black Friday Sales</p>
-        <button className="flex gap-2  items-center">
-            <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
-                 <svg
+      <div>
+        <div className=" my-4 w-full  flex justify-between">
+          <p className="text-[#777777] text-xl md:text-3xl">Flash Sales</p>
+          <button className="flex gap-2  items-center">
+            <p className="text-[#0296a0] md:text-xl underline decoration-[#0296a0] ">
+              Shop Now
+            </p>
+            <svg
               width="15"
               height="12"
               viewBox="0 0 12 9"
@@ -22,17 +26,19 @@ const BlackFridaySales = () => {
                 stroke-width="0.25"
               ></path>
             </svg>
-        </button>
-        
+          </button>
+
+          
+        </div>
+        <div className="flex gap-2">
+          <MonthlySaleCard />
+          <MonthlySaleCard />
+          {/* <MonthlySaleCard /> */}
+        </div>
+{/* <FlashSaleSlider/> */}
       </div>
-   <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4">
-  <BlackFridaySalesCard />
-  <BlackFridaySalesCard />
-  <BlackFridaySalesCard />
-</div>
-
     </>
-  )
-}
+  );
+};
 
-export default BlackFridaySales
+export default FlashSalePage;

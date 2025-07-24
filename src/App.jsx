@@ -7,6 +7,10 @@ import FeatureProduct from "./pages/FeatureProduct";
 import MonthlySale from "./pages/MonthlySale";
 import BlackFridaySales from "./pages/BlackFridaySales";
 import Laptop from "./pages/Laptop";
+import NewProduct from "./pages/NewProduct";
+import FlashSaleContainer from "./pages/FlashSaleContainer";
+import FlashSaleSlider from "./components/FlashSaleSlider";
+
 
 const App = () => {
   return (
@@ -17,6 +21,9 @@ const App = () => {
       <MonthlySale/>
       <BlackFridaySales/>
       <Laptop/>
+      <NewProduct/>
+      <FlashSaleContainer/>
+
     </>
   );
 };
