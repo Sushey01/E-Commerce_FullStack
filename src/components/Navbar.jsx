@@ -182,7 +182,7 @@ const Navbar = () => {
             {/* 🔍 Mobile search icon with drawer toggle */}
             <button
               onClick={() => setToggleSearch(true)}
-              className="block md:hidden"
+              className="block lg:hidden"
               aria-label="Open search drawer"
             >
               <svg
