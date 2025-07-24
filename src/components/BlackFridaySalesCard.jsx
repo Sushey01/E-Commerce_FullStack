@@ -5,8 +5,8 @@ const BlackFridaySalesCard = () => {
   return (
     <>
       <div className='p-4 flex flex-col md:flex-row border rounded border-1 bg-[#1E61C633] items-center'>
-        <div className=' flex-cols w-1/2  '>
-            <p className='mb-3 border-1 border-red-500 rounded-2xl px-5  py-1 bg-white text-red-600 text-sm'>Hot Deal</p>
+        <div className=' flex-cols w-full  '>
+            <p className='mb-3 border-1 border-red-500 rounded-2xl text-center md:px-5  md:py-1 bg-white text-red-600 text-sm'>Hot Deal</p>
             <p className='text-blue-600 text-2xl mb-3 '>Exciting Sales on Electronic</p>
             <p className='mb-3 text-[#777]'>Don't miss out on the best deal of the season!</p>
              <button className="flex gap-2 items-center">
