@@ -4,7 +4,7 @@ import FlashSalePage from '../components/FlashSalePage'
 const FlashSaleContainer = () => {
   return (
     <>
-    <div className='flex gap-3 py-2 px-4'>
+    <div className='md:flex gap-3 py-2 px-4'>
       <FlashSalePage/>
       <FlashSalePage/>
     </div>
