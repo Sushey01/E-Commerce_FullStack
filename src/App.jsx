@@ -11,12 +11,13 @@ import NewProduct from "./pages/NewProduct";
 import FlashSaleContainer from "./pages/FlashSaleContainer";
 import FlashSaleSlider from "./components/FlashSaleSlider";
 import Footer from "./pages/Footer";
+import CartPage from "./components/CartPage";
 
 
 const App = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar />
       <HeroSection />
       <FeatureProduct/>
       <MonthlySale/>
@@ -24,7 +25,8 @@ const App = () => {
       <Laptop/>
       <NewProduct/>
       <FlashSaleContainer/>
-     <Footer/>
+     <Footer/> */}
+     <CartPage/>
     </>
   );
 };
