@@ -10,20 +10,21 @@ import Laptop from "./pages/Laptop";
 import NewProduct from "./pages/NewProduct";
 import FlashSaleContainer from "./pages/FlashSaleContainer";
 import FlashSaleSlider from "./components/FlashSaleSlider";
+import Footer from "./pages/Footer";
 
 
 const App = () => {
   return (
     <>
-      {/* <Navbar />
-      <HeroSection /> */}
+      <Navbar />
+      <HeroSection />
       <FeatureProduct/>
       <MonthlySale/>
       <BlackFridaySales/>
       <Laptop/>
       <NewProduct/>
       <FlashSaleContainer/>
-
+     <Footer/>
     </>
   );
 };
