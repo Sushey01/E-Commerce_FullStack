@@ -12,6 +12,7 @@ import FlashSaleContainer from "./pages/FlashSaleContainer";
 import FlashSaleSlider from "./components/FlashSaleSlider";
 import Footer from "./pages/Footer";
 import CartPage from "./components/CartPage";
+import Wishlist from "./pages/WishList";
 
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
       <FlashSaleContainer/>
      <Footer/> */}
      <CartPage/>
+     <Wishlist/>
     </>
   );
 };
