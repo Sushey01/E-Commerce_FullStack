@@ -26,7 +26,7 @@ const FilterByPrice = () => {
           </div>
         </div>
 
-        <div className="flex items-center w-1/2">
+        <div className="flex items-center w-full">
           <button className="border rounded-full w-5 h-5 bg-teal-500"></button>
           <div className="flex-grow border-t-4  border-teal-500" />
           <button className="border rounded-full w-5 h-5 bg-teal-500"></button>
