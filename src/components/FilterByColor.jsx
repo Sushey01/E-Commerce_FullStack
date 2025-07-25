@@ -4,7 +4,7 @@ const FilterByColor = () => {
   return (
     <>
       <div className='flex flex-col py-2 gap-3'>
-        <h2>Filter By Color</h2>
+        <h2 className="text-lg text-black">Filter By Color</h2>
         <div className='flex flex-wrap flex-col gap-2'>
             <div className='flex flex-wrap gap-2'>
                 <button className='border rounded-full w-8 h-8 bg-purple-700'></button>

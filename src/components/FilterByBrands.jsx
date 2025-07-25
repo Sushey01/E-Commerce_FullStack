@@ -1,61 +1,63 @@
-import React from "react";
-import FilterByColor from "./FilterByColor";
-import FilterByPrice from "../pages/FilterByPrice";
-import FilterByBrands from "./FilterByBrands";
-import FilterByProduct from "./FilterByProduct";
+import React from 'react'
 
-const FilterByCategories = () => {
+const FilterByBrands = () => {
   return (
     <>
-      <div className="flex p-2 flex-col gap-2 border rounded w-1/2">
-        <h2 className="text-lg text-black">Filter By Categories</h2>
+       <div className="flex p-2 flex-col gap-2 ">
+        <h2 className="text-lg text-black">Filter By Brands</h2>
        <div className="flex flex-col gap-1">
          <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Smartphone & Tablets
+          Apple
         </label>
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Laptop & Desktop
-        </label>
-
-        <label className="gap-2 flex text-[#4b5563]">
-          <input type="checkbox" />
-          Headphones
+          Samsung
         </label>
 
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Smart Watches
+          Dell
         </label>
 
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Drone & Camera
+          Asus
         </label>
 
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Top Selling Products
+          Acer
         </label>
 
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Electronic, TVs & More
+          Lenovo
         </label>
 
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Virtual Reality Headsets
+          SanDisk
+        </label>
+
+        <label className="gap-2 flex text-[#4b5563]">
+          <input type="checkbox" />
+          Samsung
+        </label>
+
+        <label className="gap-2 flex text-[#4b5563]">
+          <input type="checkbox" />
+          Canon
+        </label>
+
+        <label className="gap-2 flex text-[#4b5563]">
+          <input type="checkbox" />
+          DIGICOM
         </label>
        </div>
-       <FilterByColor/>
-       <FilterByPrice/>
-       <FilterByBrands/>
-       <FilterByProduct/>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default FilterByCategories;
+export default FilterByBrands
