@@ -1,7 +1,7 @@
 import React from 'react'
 import FilterByCategories from '../components/FilterByCategories'
 import FilterByColor from '../components/FilterByColor'
-import FilterByPrice from './FilterByPrice'
+import FilterByPrice from '../components/FilterByPrice'
 import FilterByBrands from '../components/FilterByBrands'
 import FilterByProduct from '../components/FilterByProduct'
 
