@@ -13,6 +13,10 @@ import FlashSaleSlider from "./components/FlashSaleSlider";
 import Footer from "./pages/Footer";
 import CartPage from "./components/CartPage";
 import Wishlist from "./pages/WishList";
+import FilterByCategories from "./components/FilterByCategories";
+import HomeProductHead from "./ui/HomeProductHead";
+import HomeProductFilterSort from "./components/HomeProductFilterSort";
+import HomeProduct from "./pages/HomeProduct";
 
 
 const App = () => {
@@ -27,8 +31,12 @@ const App = () => {
       <NewProduct/>
       <FlashSaleContainer/>
      <Footer/> */}
-     <CartPage/>
-     <Wishlist/>
+     {/* <CartPage/>
+     <Wishlist/> */}
+     {/* <FilterByCategories/> */}
+     {/* <HomeProductHead/>
+     <HomeProductFilterSort/> */}
+     <HomeProduct/>
     </>
   );
 };
