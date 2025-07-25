@@ -12,19 +12,18 @@ const HomeProduct = () => {
       {/* Overlay for mobile filter drawer */}
       {showDrawer && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setShowDrawer(false)}
         />
       )}
 
-      {/* Filter drawer - mobile only */}
+      {/* Filter drawer - only for mobile */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
           showDrawer ? 'translate-x-0' : '-translate-x-full'
-        } lg:hidden`}
+        } md:hidden`}
       >
-        <div className="flex float-right items-center px-4 py-3 border-b">
-          {/* Cross button for mobile */}
+        <div className="flex justify-end px-4 py-3 border-b">
           <button
             onClick={() => setShowDrawer(false)}
             className="text-gray-600 hover:text-red-500 text-2xl font-bold focus:outline-none"
@@ -40,13 +39,21 @@ const HomeProduct = () => {
 
       {/* Main layout */}
       <div className="w-full p-4 flex gap-3">
-        {/* Sidebar - visible on large screens */}
-        <div className="hidden w-[25%] lg:flex flex-col gap-2">
-          <SideDropDown />
-          <FilterProduct />
+        {/* Sidebar layout */}
+        
+        <div className="hidden md:flex w-[25%] flex-col gap-2">
+          {/* SideDropDown only visible on lg */}
+          <div className="hidden lg:block">
+            <SideDropDown />
+          </div>
+
+          {/* FilterProduct visible on md and lg */}
+          <div>
+            <FilterProduct />
+          </div>
         </div>
 
-        {/* Main Content */}
+        {/* Main content area */}
         <div className="flex flex-col md:w-full lg:w-full">
           <HomeProductHead />
           <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />

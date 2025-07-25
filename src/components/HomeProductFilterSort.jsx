@@ -9,10 +9,10 @@ const HomeProductFilterSort = ({onFilterClick}) => {
         <p className='text-sm'>Showing all 12 items</p>
 
         {/* Controls wrapper: stacked on mobile, row on tablet and up */}
-        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full md:w-auto'>
+        <div className='flex flex-col  sm:flex-row sm:items-center sm:justify-between gap-3 w-full md:w-auto'>
 
           {/* Sort & Show Controls */}
-          <div className='flex flex-wrap  gap-4'>
+          <div className='flex flex-wrap justify-between md:gap-2 lg:gap-4'>
             {/* Sort By */}
             <div className='flex gap-2 items-center'>
               <p className='text-sm text-[#4b5563]'>Sort By:</p>

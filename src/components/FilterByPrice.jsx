@@ -6,13 +6,13 @@ const FilterByPrice = () => {
       <h2 className="py-2 text-lg text-black">Filter By Price</h2>
 
       {/* Input Section */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col w-full sm:flex-row gap-4">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-700">Min Price</p>
           <input
             type="number"
             placeholder="0.00"
-            className="w-full sm:w-32 px-3 border border-gray-300 rounded bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full  px-3 border border-gray-300 rounded bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
 
@@ -22,7 +22,7 @@ const FilterByPrice = () => {
             type="number"
             max={1000000}
             placeholder="10,00,000"
-            className="w-full sm:w-32 px-3 border border-gray-300 rounded bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full  px-3 border border-gray-300 rounded bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
       </div>
