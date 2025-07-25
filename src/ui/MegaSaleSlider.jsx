@@ -19,7 +19,7 @@ const MegaSaleSlider = () => {
   };
 
   return (
-    <div className="relative  w-[950px] mx-auto">
+    <div className="relative  w-100% mx-auto">
       {/* Slider */}
       <Slider ref={sliderRef} {...settings}>
         {slides.map((slide, index) => (
@@ -28,7 +28,7 @@ const MegaSaleSlider = () => {
       </Slider>
 
       {/* Custom Dots */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 ">
         {slides.map((_, index) => (
           <button
             key={index}

@@ -129,7 +129,7 @@
 
 
 
-@media(max-width:900px){
+@media(max-width:645px){
     .navbar{
         display: flex;
         flex-direction: column;
@@ -156,7 +156,7 @@
 
     .middle {
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     

@@ -1,22 +1,22 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import SideDropDown from "../ui/SideDropDown";
-import MegaSaleSlider from "../ui/MegaSaleSlider"
-import MegaSaleHome from "../components/MegaSaleHome";
+import MegaSaleSlider from "../ui/MegaSaleSlider";
 
 const HeroSection = () => {
   return (
-    <>
-    <Navbar/>
-      <div className=" flex gap-4 px-6 w-full mt-2 relative">
-        <div className="w-[25%] ">
-          <SideDropDown/>
-           </div>
-          <div className="w-[70%]"><MegaSaleSlider/></div>
-        </div>
-        
-     
-    </>
+    <div className="flex flex-col lg:flex-row gap-4 px-4 md:px-6 w-full mt-2 relative">
+      
+      {/* Sidebar: only shown on large screens (≥1024px) */}
+      <div className="hidden lg:block w-full lg:w-1/4">
+        <SideDropDown />
+      </div>
+
+      {/* Slider: full width on mobile and tablet, 75% on desktop */}
+      <div className="w-full lg:w-3/4">
+        <MegaSaleSlider />
+      </div>
+
+    </div>
   );
 };
 

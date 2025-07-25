@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-
-import { CiFilter } from "react-icons/ci";
 import {
   FaHeadphones,
   FaLaptop,
