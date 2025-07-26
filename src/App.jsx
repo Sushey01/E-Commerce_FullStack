@@ -18,6 +18,8 @@ import HomeProductHead from "./ui/HomeProductHead";
 import HomeProductFilterSort from "./components/HomeProductFilterSort";
 import HomeProduct from "./pages/HomeProduct";
 import ProductDetailPhoto from "./components/ProductDetailPhoto";
+import ProductDetailInfo from "./components/ProductDetailInfo";
+import ProductDetail from "./pages/ProductDetail";
 
 
 const App = () => {
@@ -38,7 +40,7 @@ const App = () => {
      {/* <HomeProductHead/>
      <HomeProductFilterSort/> */}
      {/* <HomeProduct/> */}
-     <ProductDetailPhoto/>
+     <ProductDetail/>
     </>
   );
 };

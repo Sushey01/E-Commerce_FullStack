@@ -6,22 +6,22 @@ import ProductImage3 from "../assets/images/laptop3.webp"
 
 const ProductDetailPhoto = () => {
   return (
-    <>
-     <div className='flex flex-col gap-2'>
-        <div >
-            <div className='relative w-full'>
-            <img src={ProductImage} alt='laptop' className='border-none w-full  rounded'/>
-            <h1 className='border rounded-full text-red-600 bg-pink-300 text-lg absolute top-3 right-4'>Out of Stock</h1>
-            </div>
+    <div className="flex flex-col gap-4 w-full">
+      {/* Main Image with Stock Badge */}
+      <div className="relative w-full">
+        <img src={ProductImage} alt="laptop" className="w-full rounded object-cover" />
+        <span className="absolute top-3 right-4 px-3 py-1 text-red-600 bg-pink-200 rounded-full text-sm font-medium shadow">
+          Out of Stock
+        </span>
+      </div>
 
-        </div>
-        <div className='flex flex-wrap gap-3 border-none rounded w-full'>
-            <img src={ProductImage1} alt='laptop'/>
-            <img src={ProductImage2} alt='laptop'/>
-            <img src={ProductImage3} alt='laptop'/>
-        </div>
-    </div> 
-    </>
+      {/* Thumbnails */}
+      <div className="grid grid-cols-3 gap-3 w-full">
+        <img src={ProductImage1} alt="laptop" className="w-full rounded cursor-pointer object-cover" />
+        <img src={ProductImage2} alt="laptop" className="w-full rounded cursor-pointer object-cover" />
+        <img src={ProductImage3} alt="laptop" className="w-full rounded cursor-pointer object-cover" />
+      </div>
+    </div>
   )
 }
 
