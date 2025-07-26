@@ -3,7 +3,7 @@ import Watch from "../assets/images/megawatch.webp"
 
 const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
   return (
-    <div className=" w-full p-3 md:p-11 md:h-[100vh] content-center bg-[#dcd9d9] border rounded-lg  ">
+    <div className=" w-full p-3 md:p-11 md:h-[100vh] content-center bg-[#dcd9d9] border md:rounded-lg  ">
       <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5">
         <div className="w-full">
           <div className=" p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">

@@ -6,7 +6,7 @@ const HomeProductFilterSort = ({onFilterClick}) => {
     <>
       {/* Filter & Sort Bar */}
       <div className='flex flex-col md:flex-row md:items-center md:justify-between py-3 px-1 gap-3'>
-        <p className='text-sm'>Showing all 12 items</p>
+        <p className='text-sm hidden md:block lg:block'>Showing all 12 items</p>
 
         {/* Controls wrapper: stacked on mobile, row on tablet and up */}
         <div className='flex flex-col  sm:flex-row sm:items-center sm:justify-between gap-3 w-full md:w-auto'>

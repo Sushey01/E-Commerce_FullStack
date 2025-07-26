@@ -17,6 +17,7 @@ import FilterByCategories from "./components/FilterByCategories";
 import HomeProductHead from "./ui/HomeProductHead";
 import HomeProductFilterSort from "./components/HomeProductFilterSort";
 import HomeProduct from "./pages/HomeProduct";
+import ProductDetailPhoto from "./components/ProductDetailPhoto";
 
 
 const App = () => {
@@ -36,7 +37,8 @@ const App = () => {
      {/* <FilterByCategories/> */}
      {/* <HomeProductHead/>
      <HomeProductFilterSort/> */}
-     <HomeProduct/>
+     {/* <HomeProduct/> */}
+     <ProductDetailPhoto/>
     </>
   );
 };
