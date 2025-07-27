@@ -1,5 +1,6 @@
 import React from 'react'
 import BlackFridaySalesCard from '../components/BlackFridaySalesCard'
+import BlackFridaySaleSlider from '../components/BlackFridaySaleSlider'
 
 const BlackFridaySales = () => {
   return (
@@ -25,10 +26,8 @@ const BlackFridaySales = () => {
         </button>
         
       </div>
-   <div className="p-4 grid grid-cols-2  lg:grid-cols-3  gap-4">
-  <BlackFridaySalesCard />
-  <BlackFridaySalesCard />
-  <BlackFridaySalesCard />
+   <div className="p-2 grid grid-cols-1  lg:grid-cols-1 overflow-x-hidden ">
+  <BlackFridaySaleSlider />
 </div>
 
     </>

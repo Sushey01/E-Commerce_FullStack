@@ -1,6 +1,6 @@
 import React from "react";
 import FilterByColor from "./FilterByColor";
-import FilterByPrice from "../pages/FilterByPrice";
+import FilterByPrice from "./FilterByPrice";
 import FilterByBrands from "./FilterByBrands";
 import FilterByProduct from "./FilterByProduct";
 

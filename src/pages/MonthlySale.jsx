@@ -28,7 +28,7 @@ const MonthlySale = () => {
       </div>
 
       {/* Card Grid Section */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4">
+     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3 px-3">
         <MonthlySaleCard />
         <MonthlySaleCard />
         <MonthlySaleCard />

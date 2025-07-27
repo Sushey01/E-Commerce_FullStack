@@ -1,27 +1,66 @@
-import React from 'react'
-import HomeProductFilterSort from '../components/HomeProductFilterSort'
-import SideDropDown from '../ui/SideDropDown'
-import HomeProductHead from '../ui/HomeProductHead'
-import FilterByCategories from '../components/FilterByCategories'
-import FilterProduct from './FilterProduct'
+import React, { useState } from 'react';
+import HomeProductFilterSort from '../components/HomeProductFilterSort';
+import SideDropDown from '../ui/SideDropDown';
+import HomeProductHead from '../ui/HomeProductHead';
+import FilterProduct from './FilterProduct';
 
 const HomeProduct = () => {
+  const [showDrawer, setShowDrawer] = useState(false);
+
   return (
     <>
+      {/* Overlay for mobile filter drawer */}
+      {showDrawer && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setShowDrawer(false)}
+        />
+      )}
 
-      <div className='w-full p-4 flex gap-3'>
-        <div className='w-[25%] flex flex-col gap-2 '>
-            
-        <SideDropDown/>
-        <FilterProduct/>
+      {/* Filter drawer - only for mobile */}
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+          showDrawer ? 'translate-x-0' : '-translate-x-full'
+        } md:hidden`}
+      >
+        <div className="flex justify-end px-4 py-3 border-b">
+          <button
+            onClick={() => setShowDrawer(false)}
+            className="text-gray-600 hover:text-red-500 text-2xl font-bold focus:outline-none"
+          >
+            &times;
+          </button>
         </div>
-        <div className='flex flex-col'>
-            <HomeProductHead/>
-            <HomeProductFilterSort/>
+
+        <div className="p-4">
+          <FilterProduct />
+        </div>
+      </div>
+
+      {/* Main layout */}
+      <div className="w-full p-4 flex gap-3">
+        {/* Sidebar layout */}
+        
+        <div className="hidden md:flex w-[25%] flex-col gap-2">
+          {/* SideDropDown only visible on lg */}
+          <div className="hidden lg:block">
+            <SideDropDown />
+          </div>
+
+          {/* FilterProduct visible on md and lg */}
+          <div>
+            <FilterProduct />
+          </div>
+        </div>
+
+        {/* Main content area */}
+        <div className="flex flex-col md:w-full lg:w-full">
+          <HomeProductHead />
+          <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default HomeProduct
+export default HomeProduct;
