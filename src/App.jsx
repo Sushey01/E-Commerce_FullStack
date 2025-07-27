@@ -25,20 +25,20 @@ import ProductDetail from "./pages/ProductDetail";
 const App = () => {
   return (
     <>
-      <Navbar />
-      <HeroSection />
-      <FeatureProduct/>
-      <MonthlySale/>
+      {/* <Navbar /> */}
+      {/* <HeroSection /> */}
+      {/* <FeatureProduct/> */}
+      {/* <MonthlySale/> */}
       <BlackFridaySales/>
-      <Laptop/>
+      {/* <Laptop/>
       <NewProduct/>
       <FlashSaleContainer/>
-     <Footer/>
+     <Footer/> */}
      {/* <CartPage/>
      <Wishlist/> */}
 
-     <HomeProduct/>
-     <ProductDetail/>
+     {/* <HomeProduct/>
+     <ProductDetail/> */}
     </>
   );
 };
