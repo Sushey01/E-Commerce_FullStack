@@ -5,7 +5,7 @@ import FooterCopyRight from '../components/FooterCopyRight'
 const Footer = () => {
   return (
     <>
-    <div className='p-4'>
+    <div className='p-0'>
       <Footer1/>
     </div>
     <FooterCopyRight/>
