@@ -25,7 +25,7 @@ import ProductDetail from "./pages/ProductDetail";
 const App = () => {
   return (
     <>
-      {/* <Navbar />
+      <Navbar />
       <HeroSection />
       <FeatureProduct/>
       <MonthlySale/>
@@ -33,13 +33,11 @@ const App = () => {
       <Laptop/>
       <NewProduct/>
       <FlashSaleContainer/>
-     <Footer/> */}
+     <Footer/>
      {/* <CartPage/>
      <Wishlist/> */}
-     {/* <FilterByCategories/> */}
-     {/* <HomeProductHead/>
-     <HomeProductFilterSort/> */}
-     {/* <HomeProduct/> */}
+
+     <HomeProduct/>
      <ProductDetail/>
     </>
   );

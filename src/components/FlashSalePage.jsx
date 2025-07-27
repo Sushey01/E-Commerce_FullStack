@@ -6,7 +6,7 @@ const FlashSalePage = () => {
   return (
     <>
       <div>
-        <div className=" my-4 w-full  flex justify-between">
+        <div className=" my-4 w-full p-4  flex justify-between">
           <p className="text-[#777777] text-xl md:text-3xl">Flash Sales</p>
           <button className="flex gap-2  items-center">
             <p className="text-[#0296a0] md:text-xl underline decoration-[#0296a0] ">
@@ -30,7 +30,7 @@ const FlashSalePage = () => {
 
           
         </div>
-        <div className="flex gap-2">
+        <div className="w-full flex gap-2 p-4">
           <MonthlySaleCard />
           <MonthlySaleCard />
           {/* <MonthlySaleCard /> */}
