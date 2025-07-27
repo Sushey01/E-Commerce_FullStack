@@ -5,7 +5,7 @@ import MonthlySaleCard from "./MonthlySaleCard";
 const FlashSalePage = () => {
   return (
     <>
-      <div>
+      <div className="w-full md:w-1/2" >
         <div className=" my-4 w-full p-4  flex justify-between">
           <p className="text-[#777777] text-xl md:text-3xl">Flash Sales</p>
           <button className="flex gap-2  items-center">
@@ -27,15 +27,20 @@ const FlashSalePage = () => {
               ></path>
             </svg>
           </button>
-
           
         </div>
-        <div className="w-full flex gap-2 p-4">
+        {/* <div className="w-full flex gap-2 p-4">
           <MonthlySaleCard />
           <MonthlySaleCard />
-          {/* <MonthlySaleCard /> */}
-        </div>
-{/* <FlashSaleSlider/> */}
+        </div> */}
+       
+
+<div className="w-full">
+
+<FlashSaleSlider/>
+</div>
+
+        
       </div>
     </>
   );

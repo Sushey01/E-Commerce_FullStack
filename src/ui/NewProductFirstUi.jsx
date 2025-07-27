@@ -6,18 +6,18 @@ const NewProductFirstUi = () => {
   return (
     <>
       <div className="bg-[#fff2e3] justify-center border rounded flex flex-col items-center gap-2 h-full p-6 w-full">
-        <div>
-          <p className="text-2xl text-[#777] ">Apple MacBook Pro </p>
-          <p className="text-2xl text-[#777] flex justify-center">
+        <div >
+          <p className="text-2xl md:text-4xl lg:text-3xl text-[#777] ">Apple MacBook Pro </p>
+          <p className="text-2xl md:text-4xl lg:text-3xl text-[#777] flex justify-center">
             16.2" M2 Max
           </p>
         </div>
 
         <div className="flex flex-col gap-3 ">
-          <p className="text-sm justify-center text-[#777] flex">
+          <p className="text-sm lg:text-lg md:text-2xl justify-center text-[#777] flex">
             End offer in:
           </p>
-          <div className="sm:flex-col justify-center gap-2 flex md:flex-row">
+          <div className="sm:flex-col  justify-center gap-2 flex md:flex-row">
             <ButtonUi />
             <ButtonUi />
             <ButtonUi />
@@ -26,7 +26,7 @@ const NewProductFirstUi = () => {
           <div className="flex justify-center">
             <img src={Iphone} alt="img" />
           </div>
-          <p className="flex text-center">
+          <p className="flex text-center lg:text-lg md:text-xl">
             Gaming PC Element 9260 PRO Level Desktop Intel Core i7-9700F 3.0GHz
             | NVIDIA 16GB DDR4 | 240GB SSD
           </p>
@@ -47,10 +47,10 @@ const NewProductFirstUi = () => {
                 <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
               </svg>
             ))}
-            <span className="ml-1.5 text-gray-600 ">25 Reviews</span>
+            <span className="ml-1.5 md:text-xl lg:text-lg text-gray-600 ">25 Reviews</span>
           </div>
           <div className="flex gap-2 items-center justify-center">
-            <p className="text-[#777] text-lg">Rs.50000</p>
+            <p className="text-[#777] text-lg md:text-2xl lg:text-lg">Rs.50000</p>
             <p className="text-[#777] text-sm line-through">Rs.55000</p>
           </div>
 

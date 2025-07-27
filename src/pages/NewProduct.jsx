@@ -25,11 +25,11 @@ const NewProduct = () => {
             </svg>
         </button>
       </div>
-      <div className='flex px-4 py-2 gap-3 w-full md:flex-row flex-col'>
-        <div className='w-full md:max-w-[300px] '>
+      <div className='flex px-4 py-2 gap-3 w-full lg:flex-row  md:flex-col flex-col '>
+        <div className='w-full  '> 
         <NewProductFirstUi/>
         </div>
-        <div className='grid md lg:grid-cols-4 md:grid-cols-3 gap-2 '>
+        <div className='grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-2 '>
             <NewProductCard/>
             <NewProductCard/>
             <NewProductCard/>
