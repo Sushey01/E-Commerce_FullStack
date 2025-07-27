@@ -3,13 +3,14 @@ import styles from "./Navbar.module.css";
 import Logo from "../assets/images/NavLogo.webp";
 import User from "../assets/images/user.avif";
 import SideBarMenu from "../components/SideBarMenu"
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toggleSearch, setToggleSearch] = useState(false);
   const [showCategory, setShowCategory] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
-
+  const navigate = useNavigate()
 
 
 
@@ -132,7 +133,9 @@ const Navbar = () => {
       {/* Main Navbar */}
       <div className={styles.navbar}>
         <div className={styles.middle}>
-          <div className={styles.logo}>
+          <div className={styles.logo}
+          onClick={()=>navigate("/")}
+          >
             <img src={Logo} alt="Logo" />
           </div>
 
@@ -231,6 +234,7 @@ const Navbar = () => {
 
           {/* ❤️ Wishlist */}
           <div
+          onClick={()=>navigate("/wishlist")}
             className={styles.heart}
             style={{ position: "relative" }}
           >
@@ -256,6 +260,7 @@ const Navbar = () => {
 
           {/* 🛒 Cart */}
           <div
+          onClick={()=>navigate("/cart")}
             className={styles.cart}
             style={{ position: "relative" }}
           >

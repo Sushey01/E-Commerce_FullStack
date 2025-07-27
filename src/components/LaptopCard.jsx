@@ -26,8 +26,8 @@ const LaptopCard = () => {
               ))}
               <span className="ml-1  text-gray-600">25 Reviews</span>
             </div>
-            <p className='mb-2 text-xl text-[#777]'>Apple MacBook Pro</p>
-            <p className='text-2xl text-[#16A34A]'>Rs.2,50,000</p>
+            <p className='mb-2 text-xl text-[#777] line-clamp-1'>Apple MacBook Pro</p>
+            <p className='text-2xl text-center text-[#16A34A]'>Rs.2,50,000</p>
             </div>
     </>
   )
