@@ -1,18 +1,20 @@
 import React from "react";
-import Watch from "../assets/images/megawatch.webp"
+import Watch from "../assets/images/megawatch.webp";
 
-const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
+const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
   return (
-    <div className=" w-full p-3 md:p-11 md:h-[100vh] content-center bg-[#dcd9d9] border md:rounded-lg  ">
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5">
+    <div className=" w-full p-3 md:p-11  items-start content-center bg-[#dcd9d9] border rounded md:rounded-lg  ">
+      <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-5">
         <div className="w-full">
           <div className=" p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
-          <p className="text-[#E43100] font-normal  md:text-start text-sm md:text-base">
-  👌 Mega Sale Madness! Enjoy 30% off ✌️
-</p>
+            <p className="text-[#E43100] md:text-center font-normal  text-sm md:text-base">
+              👌 Mega Sale Madness! Enjoy 30% off ✌️
+            </p>
           </div>
-          <h1 className="text-[#777] text-2xl md:text-4xl mb-4 font-bold text-start">Experience the future of Smartwatches!</h1>
-          <p className="text-[#777] text-base md:text-[18px] w- mb-4">
+          <h1 className="text-[#777]  text-2xl md:text-4xl mb-4 font-bold text-start">
+            Experience the future of Smartwatches!
+          </h1>
+          <p className="text-[#777] text-base md:text-[18px]  mb-4">
             A sleek design with AI voice assistant, IP68 water resistance, and a
             battery that lasts up to 7 days!
           </p>
@@ -37,18 +39,60 @@ const MegaSaleHome = ({onPrev, onNext, currentSlide, totalSlide}) => {
           <div className="flex gap-3  content-center">
             <p className="text-[#0296a0] font-normal  text-[30px]">02/03</p>
             <div className="content-center flex gap-3">
-            <button onClick={onPrev}>
-              <svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M1 9.48111L10.1828 17.9622L1 9.48111Z" fill="#0296A0"></path><path d="M1 9.48111L10.1828 17.9622" stroke="#0296A0" stroke-linecap="round" stroke-linejoin="round"></path><path d="M1 9.4812L10.1828 1.00016L1 9.4812Z" fill="#0296A0"></path><path d="M1 9.4812L10.1828 1.00016" stroke="#0296A0" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-            </button>
-            <button onClick={onNext}>
-              <svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M10.3655 9.48111L1.18277 17.9622L10.3655 9.48111Z" fill="#0296A0"></path><path d="M10.3655 9.48111L1.18277 17.9622" stroke="#0296A0" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.3655 9.4812L1.18277 1.00016L10.3655 9.4812Z" fill="#0296A0"></path><path d="M10.3655 9.4812L1.18277 1.00016" stroke="#0296A0" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-            </button>
+              <button onClick={onPrev}>
+                <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
+                  <path
+                    d="M1 9.48111L10.1828 17.9622L1 9.48111Z"
+                    fill="#0296A0"
+                  ></path>
+                  <path
+                    d="M1 9.48111L10.1828 17.9622"
+                    stroke="#0296A0"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M1 9.4812L10.1828 1.00016L1 9.4812Z"
+                    fill="#0296A0"
+                  ></path>
+                  <path
+                    d="M1 9.4812L10.1828 1.00016"
+                    stroke="#0296A0"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <button onClick={onNext}>
+                <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
+                  <path
+                    d="M10.3655 9.48111L1.18277 17.9622L10.3655 9.48111Z"
+                    fill="#0296A0"
+                  ></path>
+                  <path
+                    d="M10.3655 9.48111L1.18277 17.9622"
+                    stroke="#0296A0"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M10.3655 9.4812L1.18277 1.00016L10.3655 9.4812Z"
+                    fill="#0296A0"
+                  ></path>
+                  <path
+                    d="M10.3655 9.4812L1.18277 1.00016"
+                    stroke="#0296A0"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
-         <div className="content-center ">
-            <img  src={Watch} alt='watch'/>
-          </div>
+        <div className=" items-center flex ">
+          <img src={Watch} alt="watch" />
+        </div>
       </div>
     </div>
   );

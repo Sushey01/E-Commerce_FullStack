@@ -38,7 +38,7 @@ const SideDropDown = () => {
     <div >
       <div 
       onClick={()=>setShowCategory((prev)=>!prev)}
-      className=" border rounded-tl-3xl text-white rounded-tr-3xl w-[100%] flex space-x-12 items-center justify-between gap-3 p-3 px-2.5 bg-[#0296A0] cursor-pointer">
+      className="  border rounded-tl-3xl text-white rounded-tr-3xl w-[100%] flex space-x-12 items-center justify-between gap-3 p-3 px-2.5 bg-[#0296A0] cursor-pointer">
         <div className="gap-3 flex ">
           <svg
             className="w-6 h-6 text-white content-center"

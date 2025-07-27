@@ -19,7 +19,7 @@ const MegaSaleSlider = () => {
   };
 
   return (
-    <div className="relative  w-100% mx-auto">
+    <div className="relative w-full  mx-auto">
       {/* Slider */}
       <Slider ref={sliderRef} {...settings}>
         {slides.map((slide, index) => (

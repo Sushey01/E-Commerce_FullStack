@@ -15,33 +15,37 @@ import CartPage from "./components/CartPage";
 import Wishlist from "./pages/WishList";
 import HomeProduct from "./pages/HomeProduct";
 import ProductDetail from "./pages/ProductDetail";
+import TestPageSlider from "./pages/TestPageSlider";
 
 const App = () => {
   return (
-    <Router>
-      <Navbar />
+    // <Router>
+    //   <Navbar />
       
-      <Routes>
-        <Route path="/" element={
-          <>
-            <HeroSection />
-            <FeatureProduct />
-            <MonthlySale />
-            <BlackFridaySales />
-            <Laptop />
-            <NewProduct />
-            <FlashSaleContainer />
-          </>
-        } />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/products" element={<HomeProduct />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        {/* Add 404 route later if needed */}
-      </Routes>
+    //   <Routes>
+    //     <Route path="/" element={
+    //       <>
+    //         <HeroSection />
+    //         <FeatureProduct />
+    //         <MonthlySale />
+    //         <BlackFridaySales />
+    //         <Laptop />
+    //         <NewProduct />
+    //         <FlashSaleContainer />
+    //       </>
+    //     } />
+    //     <Route path="/cart" element={<CartPage />} />
+    //     <Route path="/wishlist" element={<Wishlist />} />
+    //     <Route path="/products" element={<HomeProduct />} />
+    //     <Route path="/product/:id" element={<ProductDetail />} />
+    //     {/* Add 404 route later if needed */}
+    //   </Routes>
 
-      <Footer />
-    </Router>
+    //   <Footer />
+    // </Router>
+    <>
+    <TestPageSlider/>
+    </>
   );
 };
 
