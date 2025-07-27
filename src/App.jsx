@@ -26,14 +26,14 @@ const App = () => {
   return (
     <>
       <Navbar />
-      {/* <HeroSection /> */}
-      {/* <FeatureProduct/> */}
-      {/* <MonthlySale/> */}
-      {/* <BlackFridaySales/> */}
-      {/* <Laptop/>
+      <HeroSection />
+      <FeatureProduct/>
+      <MonthlySale/>
+      <BlackFridaySales/>
+      <Laptop/>
       <NewProduct/>
       <FlashSaleContainer/>
-     <Footer/> */}
+     <Footer/>
      {/* <CartPage/>
      <Wishlist/> */}
 

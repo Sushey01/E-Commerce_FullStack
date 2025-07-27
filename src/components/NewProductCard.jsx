@@ -29,7 +29,7 @@ const NewProductCard = () => {
       </div>
 
       <div className="mt-4 space-y-2 text-center sm:text-left">
-        <p className="text-base font-medium text-gray-800">
+        <p className="text-base font-medium text-gray-800 line-clamp-2">
           Network Cable Tester LAN Telephone Wire Tracker Diagnose
         </p>
 
