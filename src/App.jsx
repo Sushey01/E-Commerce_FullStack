@@ -25,11 +25,11 @@ import ProductDetail from "./pages/ProductDetail";
 const App = () => {
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       {/* <HeroSection /> */}
       {/* <FeatureProduct/> */}
       {/* <MonthlySale/> */}
-      <BlackFridaySales/>
+      {/* <BlackFridaySales/> */}
       {/* <Laptop/>
       <NewProduct/>
       <FlashSaleContainer/>

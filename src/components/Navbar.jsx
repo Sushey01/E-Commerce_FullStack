@@ -44,7 +44,7 @@ const Navbar = () => {
 
 {/* MOBILE SEARCH DRAWER */}
 {toggleSearch && (
-  <div className="flex flex-col fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 p-4 shadow-md transition-transform transform md:hidden animate-slideIn">
+  <div className="flex flex-col fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 p-4 shadow-md transition-transform transform lg:hidden animate-slideIn">
     {/* Close Button */}
     <button
       onClick={() => setToggleSearch(false)}
