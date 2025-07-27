@@ -8,7 +8,7 @@ import PlayStore from "../assets/images/playstore.webp";
 
 const Footer2 = () => {
   return (
-    <div className="bg-[#f9f9f9] py-3 ">
+    <div className="bg-[#f9f9f9] p-3 ">
       <div className="flex flex-col md:flex-row md:flex-wrap gap-8 justify-between">
         {/* About */}
         <div className="flex flex-col gap-4 max-w-md">

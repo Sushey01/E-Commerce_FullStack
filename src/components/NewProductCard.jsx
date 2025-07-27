@@ -28,7 +28,7 @@ const NewProductCard = () => {
         </svg>
       </div>
 
-      <div className="mt-4 space-y-2 text-center sm:text-left">
+      <div className="mt-4  space-y-2 text-center sm:text-left">
         <p className="text-base font-medium text-gray-800 line-clamp-2">
           Network Cable Tester LAN Telephone Wire Tracker Diagnose
         </p>
@@ -38,8 +38,8 @@ const NewProductCard = () => {
           <p className="text-sm text-gray-500 line-through">Rs. 55,000</p>
         </div>
 
-        <div className="flex justify-center sm:justify-start justify-self-center">
-          <button className="px-6 py-2 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition ">
+        <div className="flex justify-center  sm:justify-start justify-self-center">
+          <button className="px-6 py-2 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-full ">
             Buy Now
           </button>
         </div>

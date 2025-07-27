@@ -8,7 +8,7 @@ import Footer2 from './Footer2'
 const Footer1 = () => {
   return (
     <>
-      <div className=' md:my-6 p-4 flex flex-col gap-2 md:flex-row  justify-between border-b-2'>
+      <div className=' md:my-6 p-3 flex flex-col gap-2 md:flex-row  justify-between border-b-2'>
         <div className='flex items-center gap-2 '>
         <img src={Car}/>
         <div className='flex flex-col gap-1'>
