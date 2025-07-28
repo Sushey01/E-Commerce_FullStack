@@ -7,7 +7,7 @@ const ProductLayout = () => {
   return (
     <div className="w-full flex-col p-4 flex gap-3">
       <div className="hidden md:flex flex-row">
-        <div className="hidden lg:block relative w-[20%] ">
+        <div className="hidden  lg:block relative w-[20%] ">
           <SideDropDown IsLayout={true}/>
         </div>
         <div className="w-[80%]">
