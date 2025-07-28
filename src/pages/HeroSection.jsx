@@ -7,12 +7,12 @@ const HeroSection = () => {
     <div className="flex p-2 gap-4 lg:px-4  md:px-3 w-full mt-2 relative">
       
       {/* Sidebar: only shown on large screens (≥1024px) */}
-      <div className="hidden xl:block w-full xl:w-1/4 ">
+      <div className="hidden lg:block w-full lg:w-1/4 ">
         <SideDropDown IsLayout= {false}/>
       </div>
 
       {/* Slider: full width on mobile and tablet, 75% on desktop */}
-      <div className="w-full xl:w-3/4 h-full lg:min-h-[400px] ">
+      <div className="w-full lg:w-3/4 h-full lg:min-h-[400px] ">
         <MegaSaleSlider />
       </div>
     </div>

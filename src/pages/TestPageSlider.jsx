@@ -4,8 +4,14 @@ import NewProductCard from '../components/NewProductCard'
 import FeatureCard from '../components/FeatureCard'
 import MonthlySaleCard from '../components/MonthlySaleCard'
 import LaptopCard from '../components/LaptopCard'
+import { useNavigate } from 'react-router-dom'
 
 const TestPageSlider = () => {
+
+  const navigate=useNavigate()
+
+
+
     // const Feature =[
 
     //     <FeatureCard   key={1}/>,
@@ -60,7 +66,7 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
      title="Feature Products"
      cards={Feature}
      buttonText="Shop Now"
-     onButtonClick={()=>console.log('navigate to deals')}
+     onButtonClick={()=>navigate("/products")}
      settings={{slidesToShow:5}}
     />
 

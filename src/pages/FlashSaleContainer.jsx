@@ -4,7 +4,7 @@ import FlashSalePage from '../components/FlashSalePage'
 const FlashSaleContainer = () => {
   return (
     <>
-  <div className="flex flex-col lg:flex-row px-2 max-w-full overflow-hidden pb-5">
+  <div className="flex flex-col gap-4 lg:flex-row px-2 max-w-full overflow-hidden pb-5">
   <FlashSalePage />
   <FlashSalePage />
 </div>

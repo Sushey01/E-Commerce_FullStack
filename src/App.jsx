@@ -29,7 +29,7 @@ const App = () => {
           element={
             <>
               <HeroSection />
-              {/* <TestPageSlider/> */}
+              <TestPageSlider/>
               {/* <FeatureProduct />
               <MonthlySale /> */}
               <BlackFridaySales />

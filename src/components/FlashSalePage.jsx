@@ -6,8 +6,8 @@ const FlashSalePage = () => {
   return (
     <>
       <div className="w-full lg:w-1/2" >
-        <div className=" my-4 w-full p-4  flex justify-between">
-          <p className="text-[#777777] text-xl md:text-3xl">Flash Sales</p>
+        <div className=" w-full px-3 py-2  flex justify-between">
+          <p className="text-[#777777] text-2xl md:text-3xl">Flash Sales</p>
           <button className="flex gap-2  items-center">
             <p className="text-[#0296a0] md:text-xl underline decoration-[#0296a0] ">
               Shop Now

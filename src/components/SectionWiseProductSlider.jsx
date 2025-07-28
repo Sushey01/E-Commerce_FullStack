@@ -34,10 +34,10 @@ const SectionWiseProductSlider = ({
 
   return (
     <>
-      <div className=" p-1 text-center flex flex-col gap-3 py-3">
+      <div className="overflow-hidden p-1 text-center flex flex-col gap-3 py-3">
         <div className="flex justify-between px-3">
           <h2 className="text-2xl text-[#777]">{title}</h2>
-          <button className="flex items-center gap-1">
+          <button className="flex items-center gap-1" onClick={onButtonClick}>
             {/* onClick={onButtonClick} */}
             <div className="text-[#0296a0] underline">
 {buttonText}

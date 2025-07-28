@@ -21,14 +21,14 @@ const BlackFridaySaleSlider = () => {
       {
         breakpoint: 768, // mobile
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
         },
       },
     ],
   };
 
   return (
-    <div className="w-full mx-auto py-6">
+    <div className="w-full mx-auto pb-6">
       <Slider {...settings}>
         {[...Array(6)].map((_, index) => (
           <div key={index} className="px-2">

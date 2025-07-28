@@ -5,8 +5,8 @@ import BlackFridaySaleSlider from '../components/BlackFridaySaleSlider'
 const BlackFridaySales = () => {
   return (
     <>
-        <div className="px-4 my-4 py-2  flex justify-between">
-        <p className="text-[#777777] text-xl md:text-3xl">Black Friday Sales</p>
+        <div className="px-3 py-2  flex justify-between">
+        <p className="text-[#777777] text-2xl md:text-3xl">Black Friday Sales</p>
         <button className="flex gap-2  items-center">
             <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
                  <svg

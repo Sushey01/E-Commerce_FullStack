@@ -5,8 +5,8 @@ import NewProductFirstUi from '../ui/NewProductFirstUi'
 const NewProduct = () => {
   return (
     <>
-      <div className='flex justify-between px-4 py-2 my-4'>
-        <p className="text-[#777777] text-xl md:text-3xl">New Product</p>
+      <div className='flex justify-between px-3 py-2'>
+        <p className="text-[#777777] text-2xl md:text-3xl">New Product</p>
         <button className='flex gap-2 items-center'>
             <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
               <svg
