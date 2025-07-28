@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import HomeProductFilterSort from '../components/HomeProductFilterSort';
-import SideDropDown from '../ui/SideDropDown';
-import HomeProductHead from '../ui/HomeProductHead';
-import FilterProduct from './FilterProduct';
-import ProductLayout from '../layouts/ProductLayout';
+import React, { useState } from "react";
+import HomeProductFilterSort from "../components/HomeProductFilterSort";
+import SideDropDown from "../ui/SideDropDown";
+import HomeProductHead from "../ui/HomeProductHead";
+import FilterProduct from "./FilterProduct";
+import ProductLayout from "../layouts/ProductLayout";
 
 const HomeProduct = () => {
   const [showDrawer, setShowDrawer] = useState(false);
@@ -21,7 +21,7 @@ const HomeProduct = () => {
       {/* Filter drawer - only for mobile */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
-          showDrawer ? 'translate-x-0' : '-translate-x-full'
+          showDrawer ? "translate-x-0" : "-translate-x-full"
         } md:hidden`}
       >
         <div className="flex justify-end px-4 py-3 border-b">
@@ -39,25 +39,16 @@ const HomeProduct = () => {
       </div>
 
       {/* Main layout */}
-      
 
-
-       
-
-        {/* Main content area */}
-        <div className="flex gap-2 md:w-full lg:w-full">
-      
-      <div className='w-1/5'>
-          <FilterProduct/>
-        
-      </div>
-      <div>
-          <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
-
-      </div>
-           
+      {/* Main content area */}
+      <div className="flex gap-2 md:w-full lg:w-full">
+        <div className="w-1/5 hidden md:block">
+          <FilterProduct />
         </div>
-   
+        <div>
+          <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
+        </div>
+      </div>
     </>
   );
 };
