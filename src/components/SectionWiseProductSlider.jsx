@@ -20,11 +20,11 @@ const SectionWiseProductSlider = ({
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 2 },
+        settings: { slidesToShow: 3 },
       },
       {
         breakpoint: 640,
-        settings: { slidesToShow: 2 },
+        settings: { slidesToShow: 3 },
       },
     ],
     ...settings, // user overrides go here
@@ -34,12 +34,15 @@ const SectionWiseProductSlider = ({
 
   return (
     <>
-      <div className="p-4 text-center">
-        <div className="flex justify-between">
-          <h2 className="text-2xl text-[#777] ">{title}</h2>
-          <button className="flex items-center">
+      <div className="p-1 text-center flex flex-col gap-3">
+        <div className="flex justify-between px-3">
+          <h2 className="text-2xl text-[#777]">{title}</h2>
+          <button className="flex items-center gap-1">
             {/* onClick={onButtonClick} */}
-            {buttonText}
+            <div className="text-[#0296a0] underline">
+{buttonText}
+            </div>
+            
             <svg
               width="12"
               height="9"
@@ -58,12 +61,14 @@ const SectionWiseProductSlider = ({
           </button>
         </div>
 
-       <Slider {...defaultSettings}>
-        {cards.map((card, idx)=>(
-            <div key={idx} className="">
-             {card}</div>
-        ))}
-       </Slider>
+     <Slider {...defaultSettings}>
+  {cards.map((card, idx) => (
+    <div key={idx} className="px-2">
+      {card}
+    </div>
+  ))}
+</Slider>
+
       </div>
     </>
   );

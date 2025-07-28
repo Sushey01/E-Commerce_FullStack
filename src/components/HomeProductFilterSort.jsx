@@ -38,7 +38,7 @@ const HomeProductFilterSort = ({onFilterClick}) => {
 
           {/* View Toggle Buttons */}
           <div className='flex gap-2 items-center justify-between'>
-            <p className='block lg:hidden md:hidden'>Showing all 12 items</p>
+            <p className='block lg:hidden md:hidden '>Showing all 12 items</p>
             <div className='flex flex-wrap items-center gap-1'>
 
             <button className='border-none rounded p-1 hover:bg-gray-200'>

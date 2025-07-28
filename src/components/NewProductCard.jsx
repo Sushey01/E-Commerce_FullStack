@@ -3,12 +3,12 @@ import Iphone from "../assets/images/iphone.webp";
 
 const NewProductCard = () => {
   return (
-    <div className="border rounded-lg p-4 bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+    <div className=" flex flex-col justify-center h-auto border rounded-lg p-3   bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
       <div className="relative w-full">
         <img
           src={Iphone}
           alt="iPhone"
-          className="w-full h-auto object-cover rounded-md"
+          className="w-full object-cover rounded-md"
         />
         <svg
           stroke="currentColor"
@@ -28,13 +28,13 @@ const NewProductCard = () => {
         </svg>
       </div>
 
-      <div className="mt-4  space-y-2 text-center sm:text-left">
+      <div className="mt-2  space-y-2 text-center sm:text-left">
         <p className="text-base font-medium text-gray-800 line-clamp-2">
           Network Cable Tester LAN Telephone Wire Tracker Diagnose
         </p>
 
-        <div className="flex justify-center sm:justify-start gap-2 items-center">
-          <p className="text-[#0296a0] font-semibold text-lg">Rs. 50,000</p>
+        <div className="flex  justify-center gap-2 items-center">
+          <p className="text-[#0296a0]  font-semibold text-sm">Rs. 50,000</p>
           <p className="text-sm text-gray-500 line-through">Rs. 55,000</p>
         </div>
 

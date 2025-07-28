@@ -3,26 +3,34 @@ import SectionWiseProductSlider from '../components/SectionWiseProductSlider'
 import NewProductCard from '../components/NewProductCard'
 import FeatureCard from '../components/FeatureCard'
 import MonthlySaleCard from '../components/MonthlySaleCard'
+import LaptopCard from '../components/LaptopCard'
 
 const TestPageSlider = () => {
-    const Feature =[
+    // const Feature =[
 
-        <FeatureCard   key={1}/>,
-        <FeatureCard   key={2}/>,
-        <FeatureCard   key={3}/>,
-        <FeatureCard   key={4}/>,
-        <FeatureCard   key={5}/>,
-        <FeatureCard   key={6}/>,
-        <FeatureCard   key={7}/>,
-        <FeatureCard   key={8}/>,
-        <FeatureCard   key={9}/>,
-        <FeatureCard   key={10}/>,
-    ]
+    //     <FeatureCard   key={1}/>,
+    //     <FeatureCard   key={2}/>,
+    //     <FeatureCard   key={3}/>,
+    //     <FeatureCard   key={4}/>,
+    //     <FeatureCard   key={5}/>,
+    //     <FeatureCard   key={6}/>,
+    //     <FeatureCard   key={7}/>,
+    //     <FeatureCard   key={8}/>,
+    //     <FeatureCard   key={9}/>,
+    //     <FeatureCard   key={10}/>,
+    // ]
+
+const Feature = Array.from({ length: 10 }, (_, i) => (
+  <div key={i} className="flex-shrink-0">
+    <FeatureCard />
+  </div>
+));
+
 
 
     // Array.from(...).map(...) pattern is cleaner and shortcut"
   const Month = Array.from({ length: 7 }, (_, i) => (
-    <div key={i} className="lg:pr-4 md:pr-2">
+    <div key={i} className="flex-shrink-0">
       <MonthlySaleCard />
     </div>
   ));
@@ -38,6 +46,12 @@ const TestPageSlider = () => {
   //   )
   // }
 
+  const Laptop = Array.from({length:9}, (_, i)=>(
+    <div key={i} className='flex-shrink-0'>
+      <LaptopCard/>
+    </div>
+  ))
+  
 
   
   return (
@@ -56,6 +70,14 @@ const TestPageSlider = () => {
     buttonText='Shop Now'
     onButtonClick={()=>console.log('navigate to sales')}
     settings={{slidesToShow:6}}
+    />
+
+    <SectionWiseProductSlider
+    title = "Laptop"
+    cards={Laptop}
+    buttonText='Shop Now'
+    onButtonClick={()=>console.log('navigate to new products')}
+    settings={{slidesToShow:5}}
     />
     </>
   )
