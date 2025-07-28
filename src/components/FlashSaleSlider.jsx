@@ -30,18 +30,18 @@ export default function FlashSaleSlider() {
   };
 
   return (
-    <div className="w-full px-2 md:px-4 lg:px-8">
+    <div className="w-full  md:px-4 lg:px-8">
       <Slider {...settings}>
-        <div className="px-1 md:px-2 ">
+        <div className="px-2 ">
           <MonthlySaleCard />
         </div>
-        <div className="px-1 md:px-2">
+        <div className="px-2">
           <MonthlySaleCard />
         </div>
-        <div className="px-1 md:px-2">
+        <div className="px-2">
           <MonthlySaleCard />
         </div>
-        <div className="px-1 md:px-2">
+        <div className="px-2">
           <MonthlySaleCard />
         </div>
       </Slider>

@@ -24,7 +24,7 @@ const SectionWiseProductSlider = ({
       },
       {
         breakpoint: 640,
-        settings: { slidesToShow: 3 },
+        settings: { slidesToShow: 2 },
       },
     ],
     ...settings, // user overrides go here
@@ -34,7 +34,7 @@ const SectionWiseProductSlider = ({
 
   return (
     <>
-      <div className="p-1 text-center flex flex-col gap-3">
+      <div className=" p-1 text-center flex flex-col gap-3 py-3">
         <div className="flex justify-between px-3">
           <h2 className="text-2xl text-[#777]">{title}</h2>
           <button className="flex items-center gap-1">

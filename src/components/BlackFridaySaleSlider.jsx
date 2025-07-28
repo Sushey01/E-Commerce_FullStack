@@ -21,7 +21,7 @@ const BlackFridaySaleSlider = () => {
       {
         breakpoint: 768, // mobile
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
     ],
