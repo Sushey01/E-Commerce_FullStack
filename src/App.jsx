@@ -16,36 +16,41 @@ import Wishlist from "./pages/WishList";
 import HomeProduct from "./pages/HomeProduct";
 import ProductDetail from "./pages/ProductDetail";
 import TestPageSlider from "./pages/TestPageSlider";
+import ProductLayout from "./layouts/ProductLayout";
 
 const App = () => {
   return (
-    // <Router>
-    //   <Navbar />
-      
-    //   <Routes>
-    //     <Route path="/" element={
-    //       <>
-    //         <HeroSection />
-    //         <FeatureProduct />
-    //         <MonthlySale />
-    //         <BlackFridaySales />
-    //         <Laptop />
-    //         <NewProduct />
-    //         <FlashSaleContainer />
-    //       </>
-    //     } />
-    //     <Route path="/cart" element={<CartPage />} />
-    //     <Route path="/wishlist" element={<Wishlist />} />
-    //     <Route path="/products" element={<HomeProduct />} />
-    //     <Route path="/product/:id" element={<ProductDetail />} />
-    //     {/* Add 404 route later if needed */}
-    //   </Routes>
+    <Router>
+      <Navbar />
 
-    //   <Footer />
-    // </Router>
-    <>
-    <TestPageSlider/>
-    </>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <HeroSection />
+              <FeatureProduct />
+              <MonthlySale />
+              <BlackFridaySales />
+              <Laptop />
+              <NewProduct />
+              <FlashSaleContainer />
+            </>
+          }
+        />
+
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+
+        {/* Products routes with nested layout */}
+        <Route path="/products" element={<ProductLayout />}>
+          <Route index element={<HomeProduct />} />
+          <Route path=":id" element={<ProductDetail />} />
+        </Route>
+      </Routes>
+
+      <Footer />
+    </Router>
   );
 };
 

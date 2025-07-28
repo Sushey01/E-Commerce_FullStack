@@ -24,7 +24,7 @@ const SectionWiseProductSlider = ({
       },
       {
         breakpoint: 640,
-        settings: { slidesToShow: 1 },
+        settings: { slidesToShow: 2 },
       },
     ],
     ...settings, // user overrides go here
@@ -34,7 +34,7 @@ const SectionWiseProductSlider = ({
 
   return (
     <>
-      <div className="p-4 bg-red-700 text-center">
+      <div className="p-4 text-center">
         <div className="flex justify-between">
           <h2 className="text-2xl text-[#777] ">{title}</h2>
           <button className="flex items-center">
@@ -60,7 +60,8 @@ const SectionWiseProductSlider = ({
 
        <Slider {...defaultSettings}>
         {cards.map((card, idx)=>(
-            <div key={idx}>{card}</div>
+            <div key={idx} className="">
+             {card}</div>
         ))}
        </Slider>
       </div>

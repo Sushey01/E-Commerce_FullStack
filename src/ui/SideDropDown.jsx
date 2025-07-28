@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import { RiArrowRightSLine } from "react-icons/ri";
 
-const SideDropDown = () => {
+const SideDropDown = ({IsLayout= true}) => {
     const [showList, setShowList] = useState(null)
     const [showCategory, setShowCategory]= useState(true)
 
@@ -35,7 +35,7 @@ const SideDropDown = () => {
 
 
   return (
-    <div >
+    <div className={`${IsLayout ? "absolute":''}`} >
       <div 
       onClick={()=>setShowCategory((prev)=>!prev)}
       className="  border rounded-tl-3xl text-white rounded-tr-3xl w-[100%] flex space-x-12 items-center justify-between gap-3 p-3 px-2.5 bg-[#0296A0] cursor-pointer">
@@ -121,7 +121,7 @@ const SideDropDown = () => {
 
 const Category = ({ icon, title, sublist, index, isOpen, toggleCategory }) => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full bg-white shadow-md">
       {/* Main Category Button */}
       <button
         onClick={() => toggleCategory(index)}

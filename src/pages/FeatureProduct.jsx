@@ -1,14 +1,19 @@
 import React from 'react';
 import FeatureCard from '../components/FeatureCard';
+import { useNavigate } from 'react-router-dom';
 
 const FeatureProduct = () => {
+
+  const navigate = useNavigate()
+
   return (
     <>
       <div className="px-4 my-4 py-2 flex flex-row md:flex-row justify-between items-start md:items-center gap-4">
         <div className="text-[#777777] text-xl md:text-3xl">Featured Products</div>
 
-        <button className="flex gap-2 items-center">
-          <p className="text-[#0296a0] md:text-xl underline decoration-[#0296a0]">
+        <button className="flex gap-2 items-center"
+        onClick={()=>navigate("/products")}>
+          <p className="text-[#0296a0] md:text-xl underline decoration-[#0296a0] ">
             Shop Now
           </p>
           <svg

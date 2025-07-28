@@ -3,6 +3,7 @@ import HomeProductFilterSort from '../components/HomeProductFilterSort';
 import SideDropDown from '../ui/SideDropDown';
 import HomeProductHead from '../ui/HomeProductHead';
 import FilterProduct from './FilterProduct';
+import ProductLayout from '../layouts/ProductLayout';
 
 const HomeProduct = () => {
   const [showDrawer, setShowDrawer] = useState(false);
@@ -38,27 +39,25 @@ const HomeProduct = () => {
       </div>
 
       {/* Main layout */}
-      <div className="w-full p-4 flex gap-3">
-        {/* Sidebar layout */}
-        
-        <div className="hidden md:flex w-[25%] flex-col gap-2">
-          {/* SideDropDown only visible on lg */}
-          <div className="hidden lg:block">
-            <SideDropDown />
-          </div>
+      
 
-          {/* FilterProduct visible on md and lg */}
-          <div>
-            <FilterProduct />
-          </div>
-        </div>
+
+       
 
         {/* Main content area */}
-        <div className="flex flex-col md:w-full lg:w-full">
-          <HomeProductHead />
-          <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
-        </div>
+        <div className="flex gap-2 md:w-full lg:w-full">
+      
+      <div className='w-1/5'>
+          <FilterProduct/>
+        
       </div>
+      <div>
+          <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
+
+      </div>
+           
+        </div>
+   
     </>
   );
 };

@@ -8,7 +8,7 @@ const HeroSection = () => {
       
       {/* Sidebar: only shown on large screens (≥1024px) */}
       <div className="hidden lg:block w-full lg:w-1/4">
-        <SideDropDown />
+        <SideDropDown IsLayout= {false}/>
       </div>
 
       {/* Slider: full width on mobile and tablet, 75% on desktop */}
