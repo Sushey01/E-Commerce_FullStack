@@ -42,6 +42,8 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
   ));
 
 
+
+
   // Expanded long pattern
   // const Month = [];
   // for (let i=0; i<7; i++){

@@ -30,8 +30,6 @@ const App = () => {
             <>
               <HeroSection />
               <TestPageSlider/>
-              {/* <FeatureProduct />
-              <MonthlySale /> */}
               <BlackFridaySales />
               <NewProduct />
               <FlashSaleContainer />

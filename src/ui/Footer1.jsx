@@ -9,7 +9,7 @@ const Footer1 = () => {
   return (
     <>
       <div className=' md:my-6 p-3 flex flex-col gap-2 md:flex-row  justify-between border-b-2'>
-        <div className='flex items-center gap-2 '>
+        <div className='flex items-center gap-3 '>
         <img src={Car}/>
         <div className='flex flex-col gap-1'>
             <p className=' font-semibold text-[#666]'>Fast Delivery</p>
