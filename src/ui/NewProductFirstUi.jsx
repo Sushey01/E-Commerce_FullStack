@@ -7,14 +7,14 @@ const NewProductFirstUi = () => {
     <>
       <div className="bg-[#fff2e3] justify-center border rounded flex flex-col items-center gap-2 h-full p-[16px] py-2 w-full">
         <div >
-          <p className="text-2xl md:text-4xl lg:text-3xl text-[#777] ">Apple MacBook Pro </p>
-          <p className="text-2xl md:text-4xl lg:text-3xl text-[#777] flex justify-center">
+          <p className="text-2xl md:text-3xl  text-[#777] ">Apple MacBook Pro </p>
+          <p className="text-2xl md:text-3xl  text-[#777] flex justify-center">
             16.2" M2 Max
           </p>
         </div>
 
         <div className="flex flex-col gap-3 ">
-          <p className="text-sm lg:text-lg md:text-2xl justify-center text-[#777] flex">
+          <p className="text-sm md:text-xl justify-center text-red-600 flex">
             End offer in:
           </p>
           <div className="sm:flex-col  justify-center gap-2 flex md:flex-row">
@@ -26,7 +26,7 @@ const NewProductFirstUi = () => {
           <div className="flex justify-center">
             <img src={Iphone} alt="img" />
           </div>
-          <p className="flex text-center lg:text-lg md:text-xl">
+          <p className="flex text-center text-sm md:text-[16px]">
             Gaming PC Element 9260 PRO Level Desktop Intel Core i7-9700F 3.0GHz
             | NVIDIA 16GB DDR4 | 240GB SSD
           </p>
@@ -50,7 +50,7 @@ const NewProductFirstUi = () => {
             <span className="ml-1.5 md:text-xl lg:text-lg text-gray-600 ">25 Reviews</span>
           </div>
           <div className="flex gap-2 items-center justify-center">
-            <p className="text-[#777] text-lg md:text-2xl lg:text-lg">Rs.50000</p>
+            <p className="text-[#777] text-sm md:text-lg ">Rs.50000</p>
             <p className="text-[#777] text-sm line-through">Rs.55000</p>
           </div>
 
@@ -61,7 +61,7 @@ const NewProductFirstUi = () => {
 
           {/* 📦 Stock & Sales Info */}
           <div className="flex justify-center gap-3  mb-3">
-            <p className="text-lg  text-red-600 md:text-xl lg:text-lg ">620 Sold</p>
+            <p className="text-sm  text-red-600 md:text-lg  ">620 Sold</p>
             <div className="flex items-center gap-1 text-sm flex-wrap  text-gray-800">
               <svg
                 stroke="currentColor"
