@@ -5,7 +5,7 @@ import Iphone from "../assets/images/iphone.webp";
 const NewProductFirstUi = () => {
   return (
     <>
-      <div className="bg-[#fff2e3] justify-center border rounded flex flex-col items-center gap-2 h-full p-6 w-full">
+      <div className="bg-[#fff2e3] justify-center border rounded flex flex-col items-center gap-2 h-full p-[16px] py-2 w-full">
         <div >
           <p className="text-2xl md:text-4xl lg:text-3xl text-[#777] ">Apple MacBook Pro </p>
           <p className="text-2xl md:text-4xl lg:text-3xl text-[#777] flex justify-center">

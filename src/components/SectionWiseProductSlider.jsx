@@ -39,10 +39,8 @@ const SectionWiseProductSlider = ({
           <h2 className="text-2xl text-[#777]">{title}</h2>
           <button className="flex items-center gap-1" onClick={onButtonClick}>
             {/* onClick={onButtonClick} */}
-            <div className="text-[#0296a0] underline">
-{buttonText}
-            </div>
-            
+            <div className="text-[#0296a0] underline">{buttonText}</div>
+
             <svg
               width="12"
               height="9"
@@ -61,14 +59,13 @@ const SectionWiseProductSlider = ({
           </button>
         </div>
 
-     <Slider {...defaultSettings}>
-  {cards.map((card, idx) => (
-    <div key={idx} className="px-2">
-      {card}
-    </div>
-  ))}
-</Slider>
-
+        <Slider {...defaultSettings}>
+          {cards.map((card, idx) => (
+            <div key={idx} className="px-2">
+              {card}
+            </div>
+          ))}
+        </Slider>
       </div>
     </>
   );

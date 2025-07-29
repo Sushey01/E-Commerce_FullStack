@@ -4,8 +4,8 @@ import ProductDetailInfo from "../components/ProductDetailInfo";
 
 const ProductDetail = () => {
   return (
-    <div className="bg-gray-50 min-h-screen p-4 md:p-8">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-4 md:p-8 rounded-md shadow-sm">
+    <div className="bg-gray-50  p-[16px] py-1  ">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 bg-white   rounded-md shadow-sm ">
         {/* Left: Product Image */}
         <ProductDetailPhoto />
 
