@@ -3,7 +3,7 @@ import Iphone from "../assets/images/iphone.webp";
 
 const MonthlySaleCard = () => {
   return (
-<div className="p-3 bg-[#f7f7f7] md:justify-items-center border rounded hover:shadow w-full max-w-sm mx-auto">
+<div className="p-3 py-2 bg-[#f7f7f7] md:justify-items-center border rounded hover:shadow w-full max-w-sm mx-auto">
       <div className="flex relative justify-center items-center mb-3">
         <div className="absolute top-0 left-0 border rounded-3xl bg-red-600 p-1.5 text-white">
             <p className="text-[12px] md:text-sm">20% off</p>
@@ -34,15 +34,15 @@ const MonthlySaleCard = () => {
       </div>
 
       {/* 💰 Pricing */}
-      <div className="mb-2 flex flex-wrap gap-2 justify-center">
-        <p className="  text-[12px] md:text-sm text-gray-400 line-through flex items-center">Rs. 2,70,000</p>
-        <p className=" md:text-sm lg:text-xl font-bold text-green-600">Rs. 2,50,000</p>
+      <div className="mb-2 flex  gap-2 justify-center">
+        <p className="  text-[10px] md:text-sm  text-gray-400 line-through flex items-center">Rs. 2,70,000</p>
+        <p className="text-[13px] md:text-sm lg:text-[15px]  font-bold text-green-600">Rs. 2,50,000</p>
       </div>
 
       {/* 📦 Stock & Sales Info */}
-      <div className="flex items-center justify-center gap-3 mb-3">
-        <p className="text-sm  text-gray-600 line-clamp-1 ">620 Sold</p>
-        <div className="flex items-center gap-1  text-sm text-gray-800">
+      <div className=" items-center justify-center gap-3 mb-3 flex">
+        <p className="md:text-sm text-[12px] text-gray-600 line-clamp-1 ">620 Sold</p>
+        <div className="flex items-center gap-1 text-[12px]  md:text-sm text-gray-800">
           <svg
             stroke="currentColor"
             fill="currentColor"
@@ -59,7 +59,7 @@ const MonthlySaleCard = () => {
       </div>
 
       {/* 🛒 CTA */}
-      <button className=" w-full   text-[#0296a0] p-2.5 border rounded-full  hover:bg-[#0296a0] hover:text-white transition">
+      <button className=" w-full   text-[#0296a0] p-2.5 border rounded-full  md:hover:bg-[#0296a0] md:hover:text-white transition">
         Buy Now
       </button>
     </div>

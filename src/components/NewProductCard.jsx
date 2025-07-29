@@ -3,7 +3,7 @@ import Iphone from "../assets/images/iphone.webp";
 
 const NewProductCard = () => {
   return (
-    <div className=" flex flex-col justify-center h-auto border rounded-lg p-3   bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+    <div className=" flex flex-col justify-center h-auto border rounded-lg p-3  py-2 bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
       <div className="relative w-full">
         <img
           src={Iphone}
@@ -29,7 +29,7 @@ const NewProductCard = () => {
       </div>
 
       <div className="mt-2  space-y-2 text-center sm:text-left">
-        <p className="text-base font-medium text-gray-800 line-clamp-2">
+        <p className="text-base font-medium text-gray-800 line-clamp-1 md:line-clamp-2">
           Network Cable Tester LAN Telephone Wire Tracker Diagnose
         </p>
 
@@ -39,7 +39,7 @@ const NewProductCard = () => {
         </div>
 
         <div className="flex justify-center  sm:justify-start justify-self-center">
-          <button className="px-6 py-2 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-full ">
+          <button className="px-6 text-sm py-2 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-full ">
             Buy Now
           </button>
         </div>
