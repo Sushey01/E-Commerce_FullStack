@@ -8,9 +8,9 @@ const ProductDetailPhoto = () => {
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Main Image with Stock Badge */}
-      <div className="relative w-full">
+      <div className="relative w-full ">
         <img src={ProductImage} alt="laptop" className="w-full rounded object-cover" />
-        <span className="absolute top-3 right-4 px-3 py-1 text-red-600 bg-pink-200 rounded-full text-sm font-medium shadow">
+        <span className="absolute  top-3 right-4 px-3 py-1 text-red-600 bg-pink-200 rounded-full text-sm font-medium shadow">
           Out of Stock
         </span>
       </div>

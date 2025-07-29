@@ -39,11 +39,14 @@ const App = () => {
 
         <Route path="/cart" element={<CartPage />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/details" element={<ProductDetail />} />
+
 
         {/* Products routes with nested layout */}
         <Route path="/products" element={<ProductLayout />}>
           <Route index element={<HomeProduct />} />
           <Route path=":id" element={<ProductDetail />} />
+          
         </Route>
       </Routes>
 

@@ -5,7 +5,7 @@ import Iphone from "../assets/images/iphone.webp"
 const LaptopCard = () => {
   return (
     <>
-      <div className='w-full p-4 border-1 rounded bg-[#E6F4F1] '>
+      <div className='w-full p-4 py-2 border-1 rounded bg-[#E6F4F1] '>
               <img src={Iphone}/>
                     {/* ⭐ Rating */}
             <div className="flex items-center justify-between text-yellow-400 text-sm mb-2">
@@ -26,8 +26,8 @@ const LaptopCard = () => {
               ))}
               <span className="ml-1 text-[12px] md:text-sm text-gray-600">25 Reviews</span>
             </div>
-            <p className='mb-2 text-xl text-[#777] line-clamp-1'>Apple MacBook Pro</p>
-            <p className='text-2xl text-center text-[#16A34A]'>Rs.2,50,000</p>
+            <p className='mb-2 text-lg md:text-xl text-[#777] line-clamp-1'>Apple MacBook Pro</p>
+            <p className='text-lg md:text-xl text-center text-[#16A34A]'>Rs.2,50,000</p>
             </div>
     </>
   )

@@ -11,6 +11,27 @@ const TestPageSlider = () => {
   const navigate=useNavigate()
 
 
+  const featureProducts = [
+  {
+    id: "1",
+    category: "iPad",
+    subcategory: "Tablets",
+    offer: "Up to 20% off today!",
+    image: "/path/to/ipad.webp",
+    name: "Apple iPad Pro",
+  },
+  {
+    id: "2",
+    category: "Phone",
+    subcategory: "Smartphones",
+    offer: "Save 10% this week!",
+    image: "/path/to/phone.webp",
+    name: "Samsung Galaxy",
+  },
+  // add more feature products
+]
+
+
 
     // const Feature =[
 
