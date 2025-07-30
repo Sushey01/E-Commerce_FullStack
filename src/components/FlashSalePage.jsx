@@ -4,7 +4,7 @@ import monthlyProducts from "../data/monthlyProducts"; // ✅ Make sure this exi
 
 const FlashSalePage = () => {
   return (
-    <div className="w-full lg:w-1/2">
+    <div >
       {/* Header with Title and Button */}
       <div className="w-full px-3 py-2 flex justify-between items-center">
         <p className="text-[#777777] text-2xl md:text-3xl">Flash Sales</p>
@@ -30,9 +30,10 @@ const FlashSalePage = () => {
       </div>
 
       {/* Product Slider */}
-      <div className="w-full">
-        <FlashSaleSlider products={monthlyProducts} />
-      </div>
+     <div className="w-full box-border overflow-hidden relative">
+  <FlashSaleSlider products={monthlyProducts} />
+</div>
+
     </div>
   );
 };

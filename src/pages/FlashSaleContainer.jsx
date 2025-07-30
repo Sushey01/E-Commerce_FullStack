@@ -4,12 +4,14 @@ import monthlySaleProducts from '../data/monthlyProducts';
 
 const FlashSaleContainer = () => {
   return (
-    <>
-      <div className="md:pt-4 flex flex-col gap-3 lg:flex-row px-2 pb-5">
-        <FlashSalePage products={monthlySaleProducts} />
+    <div className="md:pt-4 w-full flex flex-col px-2 lg:flex-row pb-5">
+      <div className="w-full lg:w-1/2">
         <FlashSalePage products={monthlySaleProducts} />
       </div>
-    </>
+      <div className="w-full lg:w-1/2">
+        <FlashSalePage products={monthlySaleProducts} />
+      </div>
+    </div>
   );
 };
 
