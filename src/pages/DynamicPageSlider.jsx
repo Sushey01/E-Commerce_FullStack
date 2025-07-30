@@ -5,8 +5,12 @@ import FeatureCard from '../components/FeatureCard'
 import MonthlySaleCard from '../components/MonthlySaleCard'
 import LaptopCard from '../components/LaptopCard'
 import { useNavigate } from 'react-router-dom'
+import FeatureCardV1 from '../components/FeatureCardV1'
+import featureProducts from '../data/featureProducts'
+import monthlySaleProducts from '../data/monthlyProducts'
+import laptopProducts from '../data/laptopProducts'
 
-const TestPageSlider = () => {
+const DynamicPageSlider  = () => {
 
   const navigate=useNavigate()
 
@@ -14,34 +18,40 @@ const TestPageSlider = () => {
 
 
 
-    // const Feature =[
+ 
 
-    //     <FeatureCard   key={1}/>,
-    //     <FeatureCard   key={2}/>,
-    //     <FeatureCard   key={3}/>,
-    //     <FeatureCard   key={4}/>,
-    //     <FeatureCard   key={5}/>,
-    //     <FeatureCard   key={6}/>,
-    //     <FeatureCard   key={7}/>,
-    //     <FeatureCard   key={8}/>,
-    //     <FeatureCard   key={9}/>,
-    //     <FeatureCard   key={10}/>,
-    // ]
+ const featureCards = featureProducts.map(product => (
+    <div key={product.id} className="flex-shrink-0">
+      <FeatureCardV1 {...product} />
+    </div>
+  ));
 
-const Feature = Array.from({ length: 10 }, (_, i) => (
-  <div key={i} className="flex-shrink-0">
-    <FeatureCard />
-  </div>
-));
+
+  const monthlyCards = monthlySaleProducts.map(product=>(
+    <div key ={product.id} className='flex-shrink-0'>
+        <MonthlySaleCard {...product}/>
+    </div>
+  ))
+
+
+  const laptopCards = laptopProducts.map(product=>(
+    <div key={product.id} className='flex-shrink-0'>
+        <LaptopCard {...product}/>
+    </div>
+  ))
+
+
+
+
 
 
 
     // Array.from(...).map(...) pattern is cleaner and shortcut"
-  const Month = Array.from({ length: 7 }, (_, i) => (
-    <div key={i} className="flex-shrink-0">
-      <MonthlySaleCard />
-    </div>
-  ));
+//   const Month = Array.from({ length: 7 }, (_, i) => (
+//     <div key={i} className="flex-shrink-0">
+//       <MonthlySaleCard />
+//     </div>
+//   ));
 
 
 
@@ -56,11 +66,7 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
   //   )
   // }
 
-  const Laptop = Array.from({length:9}, (_, i)=>(
-    <div key={i} className='flex-shrink-0'>
-      <LaptopCard/>
-    </div>
-  ))
+
   
 
   
@@ -68,7 +74,7 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
     <>
     <SectionWiseProductSlider
      title="Feature Products"
-     cards={Feature}
+     cards={featureCards}
      buttonText="Shop Now"
      onButtonClick={()=>navigate("/products")}
      settings={{slidesToShow:5}}
@@ -76,7 +82,7 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
 
     <SectionWiseProductSlider
     title ="This Month Sale"
-    cards={Month}
+    cards={monthlyCards}
     buttonText='Shop Now'
     onButtonClick={()=>console.log('navigate to sales')}
     settings={{slidesToShow:6}}
@@ -84,7 +90,7 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
 
     <SectionWiseProductSlider
     title = "Laptop"
-    cards={Laptop}
+    cards={laptopCards}
     buttonText='Shop Now'
     onButtonClick={()=>console.log('navigate to new products')}
     settings={{slidesToShow:5}}
@@ -93,4 +99,4 @@ const Feature = Array.from({ length: 10 }, (_, i) => (
   )
 }
 
-export default TestPageSlider
+export default DynamicPageSlider

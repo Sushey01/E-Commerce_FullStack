@@ -1,0 +1,78 @@
+import Iphone from '../assets/images/iphone.webp';
+
+const featureProducts = [
+  {
+    id: '1',
+    title1: 'iPad',
+    title2: '& Tablets',
+    subtitle: 'Up to 20% off today!',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '2',
+    title1: 'Samsung',
+    title2: 'Galaxy',
+    subtitle: 'Save 10% this week!',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '3',
+    title1: 'Xiaomi',
+    title2: 'Gaming',
+    subtitle: 'Flat 20% off',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '4',
+    title1: 'Xiaomi',
+    title2: 'Gaming',
+    subtitle: 'Flat 20% off',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '5',
+    title1: 'Xiaomi',
+    title2: 'Gaming',
+    subtitle: 'Flat 20% off',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '6',
+    title1: 'Xiaomi',
+    title2: 'Gaming',
+    subtitle: 'Flat 20% off',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '7',
+    title1: 'Xiaomi',
+    title2: 'Gaming',
+    subtitle: 'Flat 20% off',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+  {
+    id: '8',
+    title1: 'Xiaomi',
+    title2: 'Gaming',
+    subtitle: 'Flat 20% off',
+    label: 'Shop Now',
+    link: '/products/details',
+    image: Iphone,
+  },
+];
+
+export default featureProducts;

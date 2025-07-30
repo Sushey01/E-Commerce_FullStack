@@ -2,7 +2,7 @@ import React from "react";
 import FlashSaleSlider from "./FlashSaleSlider";
 import MonthlySaleCard from "./MonthlySaleCard";
 
-const FlashSalePage = () => {
+const FlashSalePage = ({products}) => {
   return (
     <>
       <div className="w-full lg:w-1/2" >

@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import Footer from "./pages/Footer";
 
 import HeroSection from "./pages/HeroSection";
-import FeatureProduct from "./pages/FeatureProduct";
 import MonthlySale from "./pages/MonthlySale";
 import BlackFridaySales from "./pages/BlackFridaySales";
 import Laptop from "./pages/Laptop";
@@ -17,6 +16,7 @@ import HomeProduct from "./pages/HomeProduct";
 import ProductDetail from "./pages/ProductDetail";
 import TestPageSlider from "./pages/TestPageSlider";
 import ProductLayout from "./layouts/ProductLayout";
+import DynamicPageSlider from "./pages/DynamicPageSlider";
 
 const App = () => {
   return (
@@ -28,8 +28,9 @@ const App = () => {
           path="/"
           element={
             <>
+            
               <HeroSection />
-              <TestPageSlider/>
+              <DynamicPageSlider/>
               <BlackFridaySales />
               <NewProduct />
               <FlashSaleContainer />
