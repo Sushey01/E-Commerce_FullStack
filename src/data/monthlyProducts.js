@@ -3,6 +3,7 @@ import Iphone from "../assets/images/iphone.webp";
 const monthlySaleProducts = [
   {
     id: 1,
+    image: Iphone,
     title: "Apple MacBook Pro",
     discount: "20% off",
     reviewsCount: "25 Reviews",
@@ -14,6 +15,7 @@ const monthlySaleProducts = [
   },
   {
     id: 2,
+    image: Iphone,
     title: "Samsung Galaxy Tab",
     discount: "15% off",
     reviewsCount: "18 Reviews",
@@ -25,6 +27,7 @@ const monthlySaleProducts = [
   },
   {
     id: 3,
+    image:Iphone,
     title: "Lenovo Yoga Slim",
     discount: "18% off",
     reviewsCount: "33 Reviews",
@@ -36,6 +39,7 @@ const monthlySaleProducts = [
   },
   {
     id: 4,
+    image:Iphone,
     title: "Asus ZenBook",
     discount: "10% off",
     reviewsCount: "40 Reviews",
@@ -47,6 +51,7 @@ const monthlySaleProducts = [
   },
   {
     id: 5,
+    image: Iphone,
     title: "Dell Inspiron",
     discount: "25% off",
     reviewsCount: "58 Reviews",
@@ -58,6 +63,7 @@ const monthlySaleProducts = [
   },
   {
     id: 6,
+    image: Iphone,
     title: "HP Pavilion",
     discount: "22% off",
     reviewsCount: "20 Reviews",
@@ -69,6 +75,7 @@ const monthlySaleProducts = [
   },
   {
     id: 7,
+    image: Iphone,
     title: "Acer Swift 3",
     discount: "17% off",
     reviewsCount: "12 Reviews",
@@ -80,6 +87,7 @@ const monthlySaleProducts = [
   },
   {
     id: 8,
+    image: Iphone,
     title: "Microsoft Surface",
     discount: "30% off",
     reviewsCount: "64 Reviews",

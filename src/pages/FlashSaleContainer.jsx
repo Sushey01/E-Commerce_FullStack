@@ -1,15 +1,16 @@
-import React from 'react'
-import FlashSalePage from '../components/FlashSalePage'
+import React from 'react';
+import FlashSalePage from '../components/FlashSalePage';
+import monthlySaleProducts from '../data/monthlyProducts';
 
 const FlashSaleContainer = () => {
   return (
     <>
-  <div className="flex flex-col gap-4 lg:flex-row px-2 max-w-full overflow-hidden pb-5">
-  <FlashSalePage />
-  <FlashSalePage />
-</div>
+      <div className="md:pt-4 flex flex-col gap-3 lg:flex-row px-2 pb-5">
+        <FlashSalePage products={monthlySaleProducts} />
+        <FlashSalePage products={monthlySaleProducts} />
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default FlashSaleContainer
+export default FlashSaleContainer;
