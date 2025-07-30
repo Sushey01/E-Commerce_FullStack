@@ -1,14 +1,14 @@
 import React from "react";
 import Iphone from "../assets/images/iphone.webp";
 
-const MonthlySaleCard = ({discount, title, reviewsCount, actualPrice, discountedPrice,totalSold, stockLeft, label}) => {
+const MonthlySaleCard = ({discount, image, title, reviewsCount, actualPrice, discountedPrice,totalSold, stockLeft, label}) => {
   return (
 <div className="p-3 py-2 bg-[#f7f7f7] md:justify-items-center border rounded hover:shadow w-full max-w-sm mx-auto">
       <div className="flex relative justify-center items-center mb-3">
         <div className="absolute top-0 left-0 border rounded-3xl bg-red-600 p-1.5 text-white">
             <p className="text-[12px] md:text-sm">{discount}</p>
         </div>
-        <img src={Iphone} alt="iPhone" className="w-[75%] rounded" />
+        <img src={image} alt="iPhone" className="w-[75%] rounded" />
       </div>
 
       <p className="text-lg font-semibold mb-1 text-center line-clamp-1">{title}</p>

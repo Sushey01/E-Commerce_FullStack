@@ -6,12 +6,12 @@ import MonthlySaleCard from "./MonthlySaleCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-export default function FlashSaleSlider() {
+export default function FlashSaleSlider({ products }) {
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
       {
@@ -29,21 +29,28 @@ export default function FlashSaleSlider() {
     ],
   };
 
+  if (!products || products.length === 0) {
+    return <p className="text-gray-500 px-4">No products available</p>;
+  }
+
   return (
     <div className="w-full px-0">
       <Slider {...settings}>
-        <div className="px-2 ">
-          <MonthlySaleCard />
-        </div>
-        <div className="px-2">
-          <MonthlySaleCard />
-        </div>
-        <div className="px-2">
-          <MonthlySaleCard />
-        </div>
-        <div className="px-2">
-          <MonthlySaleCard />
-        </div>
+        {products.map((product) => (
+          <div key={product.id} className="px-2">
+            <MonthlySaleCard
+              image={product.image}
+              title={product.title}
+              discount={product.discount}
+              reviewsCount={product.reviewsCount}
+              actualPrice={product.actualPrice}
+              discountedPrice={product.discountedPrice}
+              totalSold={product.totalSold} // Pass directly!
+              stockLeft={product.stockLeft} // Pass directly!
+              label={product.label}
+            />
+          </div>
+        ))}
       </Slider>
     </div>
   );
