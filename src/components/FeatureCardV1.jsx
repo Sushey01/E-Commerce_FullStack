@@ -27,8 +27,8 @@ const FeatureCardV1 = ({label, title1, title2, subtitle,link, image}) => {
           {subtitle}
         </p>
 
-        <div className="py-2">
-          <img src={image} className="md:w-[80%] hover:" />
+        <div className="flex justify-center py-2">
+          <img src={image} className="md:w-[80%] " />
         </div>
         <button className="flex gap-2  items-center">
           <p className="text-[#0296a0] md:text-lg underline decoration-[#0296a0] ">

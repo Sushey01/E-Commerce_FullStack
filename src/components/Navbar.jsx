@@ -10,6 +10,7 @@ const Navbar = () => {
   const [toggleSearch, setToggleSearch] = useState(false);
   const [showCategory, setShowCategory] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
   const navigate = useNavigate()
 
 
@@ -229,7 +230,44 @@ const Navbar = () => {
 
         <div className={styles.secondNav}>
           <div className={styles.user}>
-            <img src={User} alt="User" />
+            <img src={User} alt="User"
+            className="cursor-pointer border rounded-full bg-white w-9 h-9 "
+            onClick={()=>setShowProfileMenu((prev)=>!prev)}/>
+
+            {showProfileMenu && (
+    <div className="absolute right-[10%] mt-2 w-48 bg-white border rounded shadow-md z-50">
+      <ul className="text-sm">
+        <li
+          onClick={() => {
+            setShowProfileMenu(false);
+            navigate("/profile");
+          }}
+          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+        >
+          Your Profile
+        </li>
+        <li
+          onClick={() => {
+            setShowProfileMenu(false);
+            navigate("/settings");
+          }}
+          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+        >
+          Settings
+        </li>
+        <li
+          onClick={() => {
+            setShowProfileMenu(false);
+            // Handle logout logic here
+            console.log("Signed out");
+          }}
+          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+        >
+          Sign out
+        </li>
+      </ul>
+    </div>
+  )}
           </div>
 
           {/* ❤️ Wishlist */}
