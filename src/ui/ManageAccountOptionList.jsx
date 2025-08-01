@@ -13,7 +13,7 @@ const ManageAccountOptionList = () => {
 
   return (
     <div className="w-full p-4 shadow-sm  ">
-      <p className="font-semibold text-[22px] mb-3 ">Manage My Account</p>
+      <p className="font-semibold text-sm md:text-[22px] mb-3 ">Manage My Account</p>
 
       <ul className="text-[16px] flex flex-col gap-2 ">
         {options.map((option, index) => (

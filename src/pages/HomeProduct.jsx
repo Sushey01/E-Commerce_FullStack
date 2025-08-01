@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import HomeProductFilterSort from "../components/HomeProductFilterSort";
-import SideDropDown from "../ui/SideDropDown";
-import HomeProductHead from "../ui/HomeProductHead";
 import FilterProduct from "./FilterProduct";
-import ProductLayout from "../layouts/ProductLayout";
 
 const HomeProduct = () => {
   const [showDrawer, setShowDrawer] = useState(false);
@@ -18,12 +15,13 @@ const HomeProduct = () => {
         />
       )}
 
-      {/* Filter drawer - only for mobile */}
+      {/* Filter drawer - mobile only */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           showDrawer ? "translate-x-0" : "-translate-x-full"
         } md:hidden`}
       >
+        {/* Close button */}
         <div className="flex justify-end px-4 py-3 border-b">
           <button
             onClick={() => setShowDrawer(false)}
@@ -33,19 +31,21 @@ const HomeProduct = () => {
           </button>
         </div>
 
+        {/* Filter content */}
         <div className="p-4">
           <FilterProduct />
         </div>
       </div>
 
       {/* Main layout */}
-
-      {/* Main content area */}
-      <div className="flex gap-2 p-3 md:w-full lg:w-full">
-        <div className="w-1/5 hidden md:block">
+      <div className="flex gap-2 p-3 pt-0 w-full">
+        {/* Left sidebar filter for desktop */}
+        <div className="hidden md:block w-1/5">
           <FilterProduct />
         </div>
-        <div>
+
+        {/* Product sort and list */}
+        <div className="flex-1">
           <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
         </div>
       </div>

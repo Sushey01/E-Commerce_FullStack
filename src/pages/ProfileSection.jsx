@@ -9,7 +9,7 @@ const ProfileSection = () => {
         <div className='hidden md:flex w-[20%]'>
             <ManageAccountOptionList/>
         </div>
-        <div className='wfull md:w-[80%] '>
+        <div className='w-full md:w-[80%] '>
             <UserProfilePage/>
         </div>
         

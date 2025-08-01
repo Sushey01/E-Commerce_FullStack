@@ -4,7 +4,7 @@ import RecentOrderManagement from './RecentOrderManagement'
 
 const UserProfilePage = () => {
   return (
-    <div className='flex flex-col gap-4 p-2 '>
+    <div className='flex w-full flex-col gap-4 p-2 '>
       <ProfileAccountManagement/>
       <RecentOrderManagement/>
     </div>

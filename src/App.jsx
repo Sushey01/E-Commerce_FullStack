@@ -17,7 +17,6 @@ import ProductDetail from "./pages/ProductDetail";
 import TestPageSlider from "./pages/TestPageSlider";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
-import ProfileAccountManagement from "./components/ProfileAccountManagement";
 import ProfileSection from "./pages/ProfileSection";
 
 const App = () => {
@@ -58,7 +57,7 @@ const App = () => {
       <Footer />
     </Router>
     // <>
-    // <ProfileAccountManagement/>
+    // <ProfileSection/>
     // </>
   );
 };
