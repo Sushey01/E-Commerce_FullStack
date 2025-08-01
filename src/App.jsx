@@ -17,6 +17,7 @@ import ProductDetail from "./pages/ProductDetail";
 import TestPageSlider from "./pages/TestPageSlider";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
+import ProfileAccountManagement from "./components/ProfileAccountManagement";
 
 const App = () => {
   return (
@@ -37,8 +38,10 @@ const App = () => {
             </>
           }
         />
+          
 
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/profile" element={<ProfileAccountManagement />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/details" element={<ProductDetail />} />
 
@@ -53,6 +56,9 @@ const App = () => {
 
       <Footer />
     </Router>
+    // <>
+    // <ProfileAccountManagement/>
+    // </>
   );
 };
 
