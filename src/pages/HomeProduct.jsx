@@ -41,7 +41,7 @@ const HomeProduct = () => {
       {/* Main layout */}
 
       {/* Main content area */}
-      <div className="flex gap-2 md:w-full lg:w-full">
+      <div className="flex gap-2 p-3 md:w-full lg:w-full">
         <div className="w-1/5 hidden md:block">
           <FilterProduct />
         </div>

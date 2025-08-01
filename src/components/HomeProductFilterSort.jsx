@@ -1,5 +1,6 @@
 import React from 'react'
 import MonthlySaleCard from './MonthlySaleCard'
+import monthlySaleProducts from '../data/monthlyProducts'
 
 const HomeProductFilterSort = ({onFilterClick}) => {
   return (
@@ -61,8 +62,8 @@ const HomeProductFilterSort = ({onFilterClick}) => {
 
       {/* Product Grid */}
       <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-2 gap-3'>
-        {Array.from({ length: 12 }).map((_, idx) => (
-          <MonthlySaleCard key={idx} />
+         {monthlySaleProducts.map((product) => (
+          <MonthlySaleCard key={product.id} {...product} />
         ))}
       </div>
     </>
