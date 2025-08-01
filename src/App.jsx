@@ -18,6 +18,7 @@ import TestPageSlider from "./pages/TestPageSlider";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileAccountManagement from "./components/ProfileAccountManagement";
+import ProfileSection from "./pages/ProfileSection";
 
 const App = () => {
   return (
@@ -41,7 +42,7 @@ const App = () => {
           
 
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/profile" element={<ProfileAccountManagement />} />
+        <Route path="/profile" element={<ProfileSection />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/details" element={<ProductDetail />} />
 
