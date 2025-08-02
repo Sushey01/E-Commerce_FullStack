@@ -6,7 +6,7 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline';
 
-const MobileNavbar = () => {
+const BottomNavBarMobile = () => {
   return (
     <div className="fixed bottom-0 w-full bg-white border-t border-gray-200 z-50">
       <div className="flex justify-around items-center py-2">
@@ -35,4 +35,4 @@ const MobileNavbar = () => {
   );
 };
 
-export default MobileNavbar;
+export default BottomNavBarMobile;

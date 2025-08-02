@@ -4,6 +4,8 @@ import Logo from "../assets/images/NavLogo.webp";
 import User from "../assets/images/user.avif";
 import SideBarMenu from "../components/SideBarMenu"
 import { useNavigate } from "react-router-dom";
+import BottomNavBarMobile from "../mobileNav/BottomNavBarMobile";
+
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,6 +23,9 @@ const Navbar = () => {
 
   return (
     <>
+    {/* <div className="block w-full lg:hidden">
+    <BottomNavBarMobile/>
+    </div> */}
 {/* Sidebar sliding panel */}
 {menuOpen && (
   <div className="fixed inset-0 z-40 flex ">
