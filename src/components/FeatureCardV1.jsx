@@ -19,11 +19,11 @@ const FeatureCardV1 = ({label, title1, title2, subtitle,link, image}) => {
         onClick={handleClick}
         className="flex font-Kanit flex-col gap-2 bg-[#f7f7f7] border rounded w-full p-4 py-2  h-full hover:shadow-lg transition-all duration-700 ease-in-out group">
         <div className="flex justify-center gap-1 w-full ">
-          <p className="text-xl  text-[#777]">{title1}</p>
-          <p className="text-xl line-clamp-1 text-[#777]">{title2}</p>
+          <p className="text-lg  text-[#777]">{title1}</p>
+          <p className="text-lg line-clamp-1 text-[#777]">{title2}</p>
         </div>
 
-        <p className="text-red-400 text-sm md:text-base line-clamp-1">
+        <p className="text-red-400 text-xs md:text-base line-clamp-1">
           {subtitle}
         </p>
 
@@ -31,7 +31,7 @@ const FeatureCardV1 = ({label, title1, title2, subtitle,link, image}) => {
           <img src={image} className="md:w-[80%] " />
         </div>
         <button className="flex gap-2  items-center">
-          <p className="text-[#0296a0] md:text-sm underline decoration-[#0296a0] ">
+          <p className="text-[#0296a0] text-xs md:text-sm underline decoration-[#0296a0] ">
             {label}
           </p>
           <svg
