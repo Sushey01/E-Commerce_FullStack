@@ -31,7 +31,7 @@ const FeatureCardV1 = ({label, title1, title2, subtitle,link, image}) => {
           <img src={image} className="md:w-[80%] " />
         </div>
         <button className="flex gap-2  items-center">
-          <p className="text-[#0296a0] text-xs md:text-sm underline decoration-[#0296a0] ">
+          <p className="text-[#0296a0] text-xs md:text-[16px] underline decoration-[#0296a0] ">
             {label}
           </p>
           <svg

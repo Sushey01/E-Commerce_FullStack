@@ -12,7 +12,7 @@ const BottomNavBarMobile = () => {
 
 
   return (
-    <div className="fixed bottom-0 w-full  bg-white p-2 border-t  border-gray-200 z-50 ">
+    <div className="fixed bottom-0  w-full  bg-white p-2 border  z-50 ">
       <div className="flex justify-around items-center py-2">
         {/* Home (Active) */}
         <div className="flex flex-col items-center text-text">
