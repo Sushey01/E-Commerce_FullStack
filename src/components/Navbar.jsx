@@ -23,9 +23,9 @@ const Navbar = () => {
 
   return (
     <>
-    {/* <div className="block w-full lg:hidden">
+    <div className="block w-full lg:hidden">
     <BottomNavBarMobile/>
-    </div> */}
+    </div>
 {/* Sidebar sliding panel */}
 {menuOpen && (
   <div className="fixed inset-0 z-40 flex ">

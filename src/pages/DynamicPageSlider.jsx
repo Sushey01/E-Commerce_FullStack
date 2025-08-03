@@ -21,7 +21,7 @@ const DynamicPageSlider  = () => {
  
 
  const featureCards = featureProducts.map(product => (
-    <div key={product.id} className="flex-shrink-0">
+    <div key={product.id} >
       <FeatureCardV1 {...product} />
     </div>
   ));

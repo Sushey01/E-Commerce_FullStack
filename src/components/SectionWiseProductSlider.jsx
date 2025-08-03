@@ -13,21 +13,43 @@ const SectionWiseProductSlider = ({
 }) => {
   const defaultSettings = {
     dots: false,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 3, // default value
     slidesToScroll: 1,
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 3 },
+        settings: { slidesToShow: 3,
+          centerPadding: "0px", 
+          centerMode: false,
+          infinte:false,
+        },
       },
       {
         breakpoint: 640,
-        settings: { slidesToShow: 2 },
+        settings: { slidesToShow: 2,   centerPadding: "0px", 
+          centerMode: false, infinte:false, },
       },
+      
+        {
+      breakpoint: 480, // very small phones, maybe 1 slide?
+      settings: {
+        slidesToShow: 2
+        ,
+        centerMode: true,     // Enable centerMode only if showing 1 slide
+        centerPadding: "60px",
+        infinte:true,
+      },
+    },
+
     ],
     ...settings, // user overrides go here
+
+    //Applying centerMode only when slidesToShow ===1
+    // centerMode: settings.slidesToShow===2,
+    // centerPadding: settings.slidesToShow===2 ? "60px":"0px",
+
   };
 
   if (!cards.length) return null;
