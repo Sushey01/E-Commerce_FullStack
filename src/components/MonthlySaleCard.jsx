@@ -52,7 +52,7 @@ const MonthlySaleCard = ({
         <p className="  text-[8px] md:text-sm  text-gray-400 line-through flex items-center">
           {actualPrice}
         </p>
-        <p className="text-[10px] md:text-[16px] font-bold text-green-600">
+        <p className="text-[10px] md:text-sm font-bold text-green-600">
           {discountedPrice}
         </p>
       </div>
