@@ -5,14 +5,14 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
   return (
     <div className=" w-full p-3 md:p-11 lg:h-[100vh] content-center bg-[#dcd9d9] border rounded md:rounded-lg  ">
       <div className=" block md:hidden p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
-        <p className="text-[#E43100]  font-normal text-center  md:text-start text-sm md:text-base">
+        <p className="text-[#E43100]  font-normal text-center aria-hidden:true  md:text-start text-sm md:text-base">
           👌 Mega Sale Madness! Enjoy 30% off ✌️
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-2 w-full gap-5">
         <div className="w-full">
           <div className=" hidden md:block p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
-            <p className="text-[#E43100]  font-normal  md:text-start text-sm md:text-base">
+            <p className="text-[#E43100]  font-normal aria-hidden:true md:text-start text-sm md:text-base">
               👌 Mega Sale Madness! Enjoy 30% off ✌️
             </p>
           </div>

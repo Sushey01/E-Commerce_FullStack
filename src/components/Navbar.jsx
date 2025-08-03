@@ -23,7 +23,7 @@ const Navbar = () => {
 
   return (
     <>
-    <div className="block w-full lg:hidden">
+    <div className="block  lg:hidden">
     <BottomNavBarMobile/>
     </div>
 {/* Sidebar sliding panel */}

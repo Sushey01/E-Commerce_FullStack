@@ -12,12 +12,12 @@ const BottomNavBarMobile = () => {
 
 
   return (
-    <div className="fixed bottom-3 w-full bg-[#222121] border-t border rounded-full border-gray-200 z-50">
+    <div className="fixed bottom-0 w-full  bg-white p-2 border-t  border-gray-200 z-50 ">
       <div className="flex justify-around items-center py-2">
         {/* Home (Active) */}
-        <div className="flex flex-col items-center text-white">
+        <div className="flex flex-col items-center text-text">
           <HomeIcon className="h-6 w-6"/>
-          <div className="w-1.5 h-1.5 bg-white rounded-full mt-1" onClick={()=>navigate("/")} />
+          <div className="w-1.5 h-1.5 bg-black rounded-full mt-1" onClick={()=>navigate("/")} />
         </div>
 
         {/* Wishlist */}
