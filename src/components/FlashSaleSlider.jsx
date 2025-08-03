@@ -17,7 +17,7 @@ export default function FlashSaleSlider({ products }) {
       {
         breakpoint: 1024, // tablet
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 3,
         },
       },
       {
