@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function FlashSaleSlider({ products }) {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
@@ -24,6 +24,8 @@ export default function FlashSaleSlider({ products }) {
         breakpoint: 640, // mobile
         settings: {
           slidesToShow: 2,
+          centerMode:true,
+          centerPadding:"60px",
         },
       },
     ],
