@@ -6,25 +6,25 @@ import NewProductCard from "../components/NewProductCard"; // adjust path if nee
 
 const NewProductSlider = ({ products = [], slidesToShow = 4 }) => {
   const settings = {
-    dots: true,
-    infinite: false,
+    dots: false,
+    infinite: true,
     speed: 500,
     slidesToShow,
     slidesToScroll: 1,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
       { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1, centerMode:true, centerPadding:"60px" } },
     ],
   };
 
   if (!products.length) return null;
 
   return (
-    <div className=" w-full">
+    <div className=" w-full ">
       <Slider {...settings}>
         {products.map((_, i) => (
-          <div key={i} className="px-2">
+          <div key={i} className="px-2 ">
             <NewProductCard />
           </div>
         ))}

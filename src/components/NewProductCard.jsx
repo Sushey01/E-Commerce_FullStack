@@ -3,19 +3,19 @@ import Iphone from "../assets/images/iphone.webp";
 
 const NewProductCard = () => {
   return (
-    <div className=" flex flex-col justify-center h-auto border rounded-lg p-3  py-2 bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
-      <div className="relative w-full">
+    <div className=" flex flex-col justify-center h-auto border rounded-lg p-2   bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+      <div className="relative w-full flex justify-center">
         <img
           src={Iphone}
           alt="iPhone"
-          className="w-full object-cover rounded-md"
+          className="w-full object-cover rounded-md max-w-[120px] sm:max-w-[180px]"
         />
         <svg
           stroke="currentColor"
           fill="currentColor"
           strokeWidth="0"
           viewBox="0 0 512 512"
-          className="absolute top-0 right-0 h-6 w-6 text-red-600 p-1 bg-[#D9D9D980] border rounded-full cursor-pointer"
+          className="absolute top-0 right-2 h-6 w-6 text-red-600 p-1 bg-[#D9D9D980] border rounded-full cursor-pointer"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -29,8 +29,8 @@ const NewProductCard = () => {
       </div>
 
       <div className="mt-2  space-y-2 text-center sm:text-left">
-        <p className="text-base font-medium text-gray-800 line-clamp-1 md:line-clamp-2">
-          Network Cable Tester LAN Telephone Wire Tracker Diagnose
+        <p className="text-base font-medium text-gray-800  line-clamp-1 md:line-clamp-2">
+          Network Cable Tester LAN 
         </p>
 
         <div className="flex  justify-center gap-2 items-center">
