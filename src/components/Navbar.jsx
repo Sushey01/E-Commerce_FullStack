@@ -2,146 +2,146 @@ import React, { useState } from "react";
 import styles from "./Navbar.module.css";
 import Logo from "../assets/images/NavLogo.webp";
 import User from "../assets/images/user.avif";
-import SideBarMenu from "../components/SideBarMenu"
+import SideBarMenu from "../components/SideBarMenu";
 import { useNavigate } from "react-router-dom";
 import BottomNavBarMobile from "../mobileNav/BottomNavBarMobile";
-
+import RedirectTopButton from "../ui/RedirectTopButton";
+import HelpCustomerChat from "../ui/HelpCustomerChat";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toggleSearch, setToggleSearch] = useState(false);
-  const [showCategory, setShowCategory] = useState(false)
+  const [showCategory, setShowCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const navigate = useNavigate()
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
 
-
-
-
-  const categories = ["Electronics", "Fashion", "Home & Kitchen", "Books", "Toys"]
-
+  const categories = [
+    "Electronics",
+    "Fashion",
+    "Home & Kitchen",
+    "Books",
+    "Toys",
+  ];
 
   return (
     <>
-    <div className="block lg:hidden">
-    <BottomNavBarMobile/>
-    </div>
-{/* Sidebar sliding panel */}
-{menuOpen && (
-  <div className="fixed inset-0 z-40 flex ">
-    {/* BACKDROP / OUTSIDE AREA */}
-    <div
-      className="fixed inset-0  bg-black opacity-25"
-      onClick={() => setMenuOpen(false)}
-    />
+      <RedirectTopButton />
+      <HelpCustomerChat />
+      <div className="block lg:hidden ">
+        <BottomNavBarMobile />
+      </div>
 
-    {/* SIDEBAR */}
-    <div
-      className={`
+      {/* Sidebar sliding panel */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 flex ">
+          {/* BACKDROP / OUTSIDE AREA */}
+          <div
+            className="fixed inset-0  bg-black opacity-25"
+            onClick={() => setMenuOpen(false)}
+          />
+
+          {/* SIDEBAR */}
+          <div
+            className={`
         relative z-50 h-full bg-white shadow-lg transition-transform duration-300 ease-in-out w-64
         ${menuOpen ? "translate-x-0" : "-translate-x-full"}
       `}
-    >
-      <SideBarMenu onClose={() => setMenuOpen(false)} />
-    </div>
-  </div>
-)}
-
-
-
-{/* MOBILE SEARCH DRAWER */}
-{toggleSearch && (
-  <div className="flex flex-col fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 p-4 shadow-md transition-transform transform lg:hidden animate-slideIn">
-    {/* Close Button */}
-    <button
-      onClick={() => setToggleSearch(false)}
-      className="absolute top-1 right-5 text-gray-500 hover:text-gray-900 dark:hover:text-white text-4xl"
-      aria-label="Close search drawer"
-    >
-      &times;
-    </button>
-
-    {/* Search Input + Category */}
-    <div className="flex gap-2 w-full mb-4 relative mt-8">
-      {/* Category Dropdown */}
-      <div className="relative w-1/3">
-        <button
-          onClick={() => setShowCategory(!showCategory)}
-          className="w-full gap-1 flex items-center justify-between border rounded px-3 py-2 bg-white"
-          type="button"
-        >
-          {selectedCategory}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-chevron-down"
           >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </button>
+            <SideBarMenu onClose={() => setMenuOpen(false)} />
+          </div>
+        </div>
+      )}
 
-        {showCategory && (
-          <ul className="absolute mt-1 w-full bg-white border rounded shadow z-50 max-h-48 overflow-auto">
-            {categories.map((cat) => (
-              <li
-                key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setShowCategory(false);
-                }}
-                className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+      {/* MOBILE SEARCH DRAWER */}
+      {toggleSearch && (
+        <div className="flex flex-col fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 p-4 shadow-md transition-transform transform lg:hidden animate-slideIn">
+          {/* Close Button */}
+          <button
+            onClick={() => setToggleSearch(false)}
+            className="absolute top-1 right-5 text-gray-500 hover:text-gray-900 dark:hover:text-white text-4xl"
+            aria-label="Close search drawer"
+          >
+            &times;
+          </button>
+
+          {/* Search Input + Category */}
+          <div className="flex gap-2 w-full mb-4 relative mt-8">
+            {/* Category Dropdown */}
+            <div className="relative w-1/3">
+              <button
+                onClick={() => setShowCategory(!showCategory)}
+                className="w-full gap-1 flex items-center justify-between border rounded px-3 py-2 bg-white"
+                type="button"
               >
-                {cat}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                {selectedCategory}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-chevron-down"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
 
-      {/* Search Input */}
-      <div className="flex items-center flex-1">
-        <input
-          type="text"
-          placeholder="Search for products..."
-          className="w-full border rounded-tr-none rounded-br-none rounded-tl-md rounded-bl-md  px-3 py-2"
-        />
-        <button className="flex border px-3 py-2.5 rounded-tl-none rounded-bl-none rounded-md bg-[#0296A0] text-white ">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21"
-            height="21"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-search"
-          >
-            <path d="m21 21-4.34-4.34" />
-            <circle cx="11" cy="11" r="8" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              {showCategory && (
+                <ul className="absolute mt-1 w-full bg-white border rounded shadow z-50 max-h-48 overflow-auto">
+                  {categories.map((cat) => (
+                    <li
+                      key={cat}
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setShowCategory(false);
+                      }}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {cat}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
-
+            {/* Search Input */}
+            <div className="flex items-center flex-1">
+              <input
+                type="text"
+                placeholder="Search for products..."
+                className="w-full border rounded-tr-none rounded-br-none rounded-tl-md rounded-bl-md  px-3 py-2"
+              />
+              <button className="flex border px-3 py-2.5 rounded-tl-none rounded-bl-none rounded-md bg-[#0296A0] text-white ">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="21"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-search"
+                >
+                  <path d="m21 21-4.34-4.34" />
+                  <circle cx="11" cy="11" r="8" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Navbar */}
       <div className={styles.navbar}>
         <div className={styles.middle}>
-          <div className={styles.logo}
-          onClick={()=>navigate("/")}
-          >
+          <div className={styles.logo} onClick={() => navigate("/")}>
             <img src={Logo} alt="Logo" />
           </div>
 
@@ -159,10 +159,7 @@ const Navbar = () => {
               </div>
               <div className={styles.search1}>
                 <label>
-                  <input
-                    placeholder="Search for products..."
-                    type="text"
-                  />
+                  <input placeholder="Search for products..." type="text" />
                 </label>
               </div>
             </div>
@@ -235,49 +232,52 @@ const Navbar = () => {
 
         <div className={styles.secondNav}>
           <div className={styles.user}>
-            <img src={User} alt="User"
-            className="cursor-pointer border rounded-full bg-white w-9 h-9 "
-            onClick={()=>setShowProfileMenu((prev)=>!prev)}/>
+            <img
+              src={User}
+              alt="User"
+              className="cursor-pointer border rounded-full bg-white w-9 h-9 "
+              onClick={() => setShowProfileMenu((prev) => !prev)}
+            />
 
             {showProfileMenu && (
-    <div className="absolute right-[10%] mt-2 w-48 bg-white border rounded shadow-md z-50">
-      <ul className="text-sm">
-        <li
-          onClick={() => {
-            setShowProfileMenu(false);
-            navigate("/profile");
-          }}
-          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-        >
-          Your Profile
-        </li>
-        <li
-          onClick={() => {
-            setShowProfileMenu(false);
-            navigate("/settings");
-          }}
-          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-        >
-          Settings
-        </li>
-        <li
-          onClick={() => {
-            setShowProfileMenu(false);
-            // Handle logout logic here
-            console.log("Signed out");
-          }}
-          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
-        >
-          Sign out
-        </li>
-      </ul>
-    </div>
-  )}
+              <div className="absolute right-[10%] mt-2 w-48 bg-white border rounded shadow-md z-50">
+                <ul className="text-sm">
+                  <li
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      navigate("/profile");
+                    }}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Your Profile
+                  </li>
+                  <li
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      navigate("/settings");
+                    }}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Settings
+                  </li>
+                  <li
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      // Handle logout logic here
+                      console.log("Signed out");
+                    }}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
+                  >
+                    Sign out
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* ❤️ Wishlist */}
           <div
-          onClick={()=>navigate("/wishlist")}
+            onClick={() => navigate("/wishlist")}
             className={styles.heart}
             style={{ position: "relative" }}
           >
@@ -303,7 +303,7 @@ const Navbar = () => {
 
           {/* 🛒 Cart */}
           <div
-          onClick={()=>navigate("/cart")}
+            onClick={() => navigate("/cart")}
             className={styles.cart}
             style={{ position: "relative" }}
           >

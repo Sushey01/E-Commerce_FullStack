@@ -4,8 +4,8 @@ import React from 'react'
 const LaptopCard = ({reviewsCount, title, price, image}) => {
   return (
     <>
-      <div className='w-full p-4 py-2 border-1 rounded bg-[#E6F4F1] '>
-              <img src={image}/>
+      <div className='w-full flex flex-col items-center p-3 py-2 border-1 rounded bg-[#E6F4F1] '>
+              <img src={image} alt={title} className='md:max-w-[150px]'/>
                     {/* ⭐ Rating */}
             <div className="flex items-center justify-between text-yellow-400 text-sm mb-2">
               {[...Array(5)].map((_, i) => (
@@ -25,8 +25,8 @@ const LaptopCard = ({reviewsCount, title, price, image}) => {
               ))}
               <span className="ml-1 text-[10px] md:text-sm text-gray-600 line-clamp-1">{reviewsCount}</span>
             </div>
-            <p className='mb-2 text-sm md:text-xl text-[#777] line-clamp-1'>{title}</p>
-            <p className='text-sm md:text-xl text-center text-[#16A34A]'>{price}</p>
+            <p className='mb-2 text-sm md:text-lg text-[#777] line-clamp-1'>{title}</p>
+            <p className='text-sm md:text-lg text-center text-[#16A34A]'>{price}</p>
             </div>
     </>
   )

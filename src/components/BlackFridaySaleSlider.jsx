@@ -6,12 +6,12 @@ import BlackFridaySalesCard from "./BlackFridaySalesCard"; // Adjust path if nee
 
 const BlackFridaySaleSlider = () => {
   const settings = {
-    dots: false,
-    
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+
     responsive: [
       {
         breakpoint: 1024, // tablet
@@ -25,6 +25,7 @@ const BlackFridaySaleSlider = () => {
           slidesToShow: 1,
           centerPadding:"60px",
           centerMode:true,
+          dots:false,
         },
       },
     ],
