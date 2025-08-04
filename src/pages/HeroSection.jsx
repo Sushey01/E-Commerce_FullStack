@@ -4,7 +4,7 @@ import MegaSaleSlider from "../ui/MegaSaleSlider";
 
 const HeroSection = () => {
   return (
-    <div className="flex  gap-4 lg:px-4 lg:p-2  w-full  relative">
+    <div className="flex  gap-4  lg:p-2  w-full  relative">
       
       {/* Sidebar: only shown on large screens (≥1024px) */}
       <div className="hidden lg:block w-full lg:w-1/4 ">

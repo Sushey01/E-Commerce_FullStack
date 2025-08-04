@@ -35,7 +35,7 @@ const BlackFridaySaleSlider = () => {
     <div className="w-full mx-auto pb-6">
       <Slider {...settings}>
         {[...Array(6)].map((_, index) => (
-          <div key={index} className="px-2">
+          <div key={index} className="px-1">
             <BlackFridaySalesCard />
           </div>
         ))}

@@ -83,7 +83,7 @@ const SectionWiseProductSlider = ({
 
         <Slider {...defaultSettings}>
           {cards.map((card, idx) => (
-            <div key={idx} className="px-2">
+            <div key={idx} className="px-1">
               {card}
             </div>
           ))}

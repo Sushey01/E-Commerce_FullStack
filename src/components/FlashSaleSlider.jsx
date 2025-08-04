@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function FlashSaleSlider({ products }) {
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
@@ -25,6 +25,7 @@ export default function FlashSaleSlider({ products }) {
         settings: {
           slidesToShow: 2,
           centerMode:true,
+          dots:false,
           centerPadding:"60px",
         },
       },
@@ -36,10 +37,10 @@ export default function FlashSaleSlider({ products }) {
   }
 
   return (
-    <div className="w-full px-0">
+    <div className="w-full px-0 pb-4">
       <Slider {...settings}>
         {products.map((product) => (
-          <div key={product.id} className="px-2">
+          <div key={product.id} className="px-1 ">
             <MonthlySaleCard
               image={product.image}
               title={product.title}

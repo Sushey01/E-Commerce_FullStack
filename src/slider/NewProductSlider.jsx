@@ -24,7 +24,7 @@ const NewProductSlider = ({ products = [], slidesToShow = 4 }) => {
     <div className=" w-full ">
       <Slider {...settings}>
         {products.map((_, i) => (
-          <div key={i} className="px-2 ">
+          <div key={i} className="px-1 ">
             <NewProductCard />
           </div>
         ))}

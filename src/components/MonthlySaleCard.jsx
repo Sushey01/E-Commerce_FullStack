@@ -13,7 +13,7 @@ const MonthlySaleCard = ({
   label,
 }) => {
   return (
-    <div className="p-3 py-2 bg-[#f7f7f7]  md:justify-items-center border rounded hover:shadow w-full max-w-[360px] sm:max-w-[280px] mx-auto">
+<div className="p-3 py-2 bg-[#f7f7f7] border rounded hover:shadow w-full h-full">
       <div className="flex relative justify-center items-center mb-3">
         <div className="absolute top-0 left-0 border rounded-3xl bg-red-600 p-1.5 text-white">
           <p className="text-[10px] md:text-sm">{discount}</p>

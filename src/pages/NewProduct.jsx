@@ -33,7 +33,7 @@ const NewProduct = () => {
         </button>
       </div>
 
-      <div className="overflow-hidden flex px-3 pr-1 py-2 gap-3 w-full lg:flex-row md:flex-col flex-col">
+      <div className="overflow-hidden flex px-2 pr-1 py-2 gap-2 w-full lg:flex-row md:flex-col flex-col">
         <div className="w-full  lg:w-[40%]">
           <NewProductFirstUi />
         </div>
@@ -41,7 +41,7 @@ const NewProduct = () => {
           <div className="block md:hidden pb-4 w-full ">
             <NewProductSlider products={productList} slidesToShow={2} />
           </div>
-          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {productList.map((_, i) => (
               <NewProductCard key={i} />
             ))}
