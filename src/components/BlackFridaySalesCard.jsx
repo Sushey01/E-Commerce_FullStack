@@ -4,13 +4,13 @@ import Iphone from "../assets/images/iphone.webp"
 const BlackFridaySalesCard = () => {
   return (
     <>
-      <div className='p-3 py-2 flex  border rounded border-1 bg-[#1E61C633] items-center'>
-        <div className=' flex-cols w-full  '>
-            <p className='mb-3 border-1 border-red-500 rounded-2xl text-center md:px-5  md:py-1 bg-white text-red-600 text-sm'>Hot Deal</p>
-            <p className='text-blue-600 text-lg md:text-2xl mb-3 '>Exciting Sales on Electronic</p>
-            <p className='mb-3 text-[#777] text-sm md:text-lg line-clamp-1'>Don't miss out on the best deal of the season!</p>
+      <div className='p-3 flex  border rounded border-1 bg-[#1E61C633] items-center'>
+        <div className='flex-col w-full '>
+            <p className='mb-3 border-1 border-red-500 rounded-2xl w-1/2  flex justify-center text-center md:px-3  md:py-1 bg-red-600 text-white text-sm md:text-[16px]'>Hot Deal</p>
+            <p className='text-blue-600 text-lg md:text-xl  mb-2 '>Exciting Sales on Electronic</p>
+            <p className='mb-3  text-[#777] text-xs md:text-sm '>Don't miss this best deal !</p>
              <button className="flex gap-1 items-center">
-            <p className='text-[#0296a0] text-sm md:text-lg underline decoration-[#0296a0] '>Shop Now</p>
+            <p className='text-[#0296a0] text-xs md:text-[16px] underline decoration-[#0296a0] '>Shop Now</p>
                  <svg
               width="12"
               height="9"
