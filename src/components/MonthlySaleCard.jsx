@@ -49,7 +49,7 @@ const MonthlySaleCard = ({
 
       {/* 💰 Pricing */}
       <div className="mb-2 flex  gap-2 justify-center">
-        <p className="  text-[5px] md:text-sm  text-gray-400 line-through flex items-center">
+        <p className="  text-[5px] md:text-xs  text-gray-400 line-through flex items-center">
           {actualPrice}
         </p>
         <p className="text-[10px] md:text-sm font-bold text-green-600">

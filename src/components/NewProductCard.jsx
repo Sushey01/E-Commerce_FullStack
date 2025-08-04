@@ -29,8 +29,8 @@ const NewProductCard = () => {
       </div>
 
       <div className="mt-2  space-y-2 text-center sm:text-left">
-        <p className="text-base font-medium text-gray-800  line-clamp-1 md:line-clamp-2">
-          Network Cable Tester LAN 
+        <p className="text-base font-medium text-gray-800  line-clamp-1 ">
+          Network Cable Tester LAN Wireless 
         </p>
 
         <div className="flex  justify-center gap-2 items-center">
@@ -39,7 +39,7 @@ const NewProductCard = () => {
         </div>
 
         <div className="flex justify-center  sm:justify-start justify-self-center">
-          <button className="px-6 text-sm py-2 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-full ">
+          <button className="px-4 text-sm py-1 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-full ">
             Buy Now
           </button>
         </div>
