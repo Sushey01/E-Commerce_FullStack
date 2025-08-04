@@ -4,7 +4,7 @@ import Iphone from "../assets/images/iphone.webp"
 const BlackFridaySalesCard = () => {
   return (
     <>
-      <div className='p-3 py-2 flex flex-col md:flex-row border rounded border-1 bg-[#1E61C633] items-center'>
+      <div className='p-3 py-2 flex  border rounded border-1 bg-[#1E61C633] items-center'>
         <div className=' flex-cols w-full  '>
             <p className='mb-3 border-1 border-red-500 rounded-2xl text-center md:px-5  md:py-1 bg-white text-red-600 text-sm'>Hot Deal</p>
             <p className='text-blue-600 text-lg md:text-2xl mb-3 '>Exciting Sales on Electronic</p>
@@ -29,7 +29,7 @@ const BlackFridaySalesCard = () => {
         </div>
         <div className='flex w-fit max-w-full' >
             <img src={Iphone}
-            className="w-full max-w-[150px] sm:max-w-none  h-auto object-contain"
+            className="w-full  h-auto object-contain"
             />
         </div>
       </div>

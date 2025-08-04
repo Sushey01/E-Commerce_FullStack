@@ -60,7 +60,7 @@ const NewProductFirstUi = () => {
           </div>
 
           {/* 📦 Stock & Sales Info */}
-          <div className="flex justify-center gap-3  mb-3">
+          <div className="flex justify-center gap-3 items-center  mb-3">
             <p className="text-xs  text-red-600 md:text-lg  ">620 Sold</p>
             <div className="flex items-center gap-1 text-sm flex-wrap  text-gray-800">
               <svg

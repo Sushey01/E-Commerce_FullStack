@@ -11,7 +11,7 @@ const Footer2 = () => {
     <div className="bg-[#f9f9f9] p-3 ">
       <div className="flex flex-col md:flex-row md:flex-wrap gap-8 justify-between">
         {/* About */}
-        <div className="flex flex-col gap-4 max-w-md">
+        <div className="flex flex-col gap-3 max-w-md">
           <p className="text-[#666] text-lg font-semibold">About The Shop</p>
           <p className="text-[#777]">
             We're not just an online store; we're your gateway to a world of
@@ -28,8 +28,11 @@ const Footer2 = () => {
           </div>
         </div>
 
+        
+        {/* <div className="flex md:flex-col"> */}
+          
         {/* Popular Categories */}
-        <div className="flex flex-col gap-4 min-w-[150px]">
+        <div className="flex flex-col gap-3 min-w-[150px]">
           <p className="text-[#666] text-lg font-semibold">Popular Categories</p>
           <div className="flex flex-col gap-1 text-[#555] text-sm">
             <a href="#">Smartphone & Tablets</a>
@@ -43,7 +46,7 @@ const Footer2 = () => {
         </div>
 
         {/* Let Us Help You */}
-        <div className="flex flex-col gap-4 min-w-[150px]">
+        <div className="flex flex-col gap-3 min-w-[150px]">
           <p className="text-[#666] text-lg font-semibold">Let Us Help You</p>
           <div className="flex flex-col gap-1 text-[#555] text-sm">
             <a href="#">Your Account</a>
@@ -54,9 +57,10 @@ const Footer2 = () => {
             <a href="#">Shop With Points</a>
           </div>
         </div>
+        {/* </div> */}
 
         {/* Get to Know Us */}
-        <div className="flex flex-col gap-4 min-w-[150px]">
+        <div className="flex flex-col gap-3 min-w-[150px]">
           <p className="text-[#666] text-lg font-semibold">Get to Know Us</p>
           <div className="flex flex-col gap-1 text-[#555] text-sm">
             <a href="#">About Us</a>
@@ -69,7 +73,7 @@ const Footer2 = () => {
         </div>
 
         {/* App Download */}
-        <div className="flex flex-col gap-4 min-w-[180px]">
+        <div className="flex flex-col gap-3 min-w-[180px]">
           <p className="text-[#666] text-lg font-semibold">Download App</p>
           <div className="flex md:flex-col justify-center gap-3 w-full ">
             <button className="border rounded-full bg-black py-2 px-4 flex items-center gap-2">
