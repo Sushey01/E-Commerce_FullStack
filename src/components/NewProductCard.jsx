@@ -8,7 +8,7 @@ const NewProductCard = () => {
         <img
           src={Iphone}
           alt="iPhone"
-          className="w-full object-cover rounded-md max-w-[120px] sm:max-w-[180px]"
+          className="w-full object-cover rounded-md max-w-[120px] sm:max-w-[150px]"
         />
         <svg
           stroke="currentColor"
