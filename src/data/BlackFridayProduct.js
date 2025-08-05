@@ -40,6 +40,14 @@ const blackFridayProducts = [
     notice: "Get the best shots today!",
     label: "Shop Now",
   },
+  {
+    image: Iphone,
+    offer: "Hot Deal",
+    title: "iPhone 14 Pro Max Discount",
+    notice: "Don't miss this best deal!",
+    label: "Shop Now",
+  },
+  
 ];
 
 export default blackFridayProducts;

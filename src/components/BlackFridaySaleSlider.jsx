@@ -45,10 +45,11 @@ const BlackFridaySaleSlider = () => {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
           centerMode: true,
           centerPadding: "30px",
           dots: false,
+          infinite:true,
           nextArrow: null,
           prevArrow: null,
         },
@@ -57,7 +58,7 @@ const BlackFridaySaleSlider = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <Slider {...settings}>
         {blackFridayProducts.map((product, index) => (
           <div key={index} className="px-1">

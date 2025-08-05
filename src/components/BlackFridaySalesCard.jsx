@@ -2,12 +2,12 @@ import React from "react";
 
 const BlackFridaySalesCard = ({ image, offer, title, notice, label }) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all p-3 md:p-4 h-full flex flex-col justify-between">
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all p-3 md:p-4 h-full flex flex-col  justify-between">
       <div className="flex justify-center items-center mb-3">
         <img
           src={image}
           alt={title}
-          className="h-40 object-contain"
+          className="h-40 object-contain "
         />
       </div>
 
@@ -16,11 +16,11 @@ const BlackFridaySalesCard = ({ image, offer, title, notice, label }) => {
           {offer}
         </span>
 
-        <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
+        <h3 className=" text-sm md:text-lg font-semibold text-gray-900 line-clamp-1">
           {title}
         </h3>
 
-        <p className=" text-sm text-gray-500 line-clamp-2">{notice}</p>
+        <p className=" hidden md:block text-sm text-gray-500 line-clamp-2">{notice}</p>
       </div>
 
       <button className="flex items-center gap-1 text-xs md:text-sm text-[#0296a0] mt-3 underline decoration-[#0296a0] hover:text-[#026a73] transition">
