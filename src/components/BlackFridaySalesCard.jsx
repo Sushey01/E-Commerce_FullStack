@@ -1,17 +1,33 @@
-import React from 'react'
-import Iphone from "../assets/images/iphone.webp"
+import React from "react";
+import Iphone from "../assets/images/iphone.webp";
 
-const BlackFridaySalesCard = () => {
+const BlackFridaySalesCard = ({ image, offer, title, notice, label }) => {
   return (
     <>
-      <div className='p-3 flex  border rounded border-1 bg-[#1E61C633] items-center'>
-        <div className='flex-col w-full '>
-            <p className='mb-3 border-1 border-red-500 rounded-2xl w-1/2  flex justify-center text-center md:px-3  md:py-1 bg-red-600 text-white text-sm md:text-[16px]'>Hot Deal</p>
-            <p className='text-blue-600 text-lg md:text-xl  mb-2 '>Exciting Sales on Electronic</p>
-            <p className='mb-3  text-[#777] text-xs md:text-sm '>Don't miss this best deal !</p>
-             <button className="flex gap-1 items-center">
-            <p className='text-[#0296a0] text-xs md:text-[16px] underline decoration-[#0296a0] '>Shop Now</p>
-                 <svg
+      <div className="p-2 flex gap-2 w-full border rounded border-1 bg-[#1E61C633] items-center">
+        <div className="w-[170px] h-[170px] flex items-center justify-center shrink-0">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-contain"
+          />
+        </div>
+
+        <div className=" flex flex-col w-[80%] ">
+          <p className="mb-3 border-1 border-red-500 rounded-2xl w-full lg:w-[60%]  flex justify-center text-center  bg-red-600 text-white text-xs lg:text-sm">
+            {offer}
+          </p>
+          <p className="text-blue-600 text-sm lg:text-xl  mb-2 line-clamp-2 ">
+            {title}
+          </p>
+          <p className="mb-3  text-[#777] text-xs lg:text-sm line-clamp-2">
+            {notice}
+          </p>
+          <button className="flex gap-1 items-center">
+            <p className="text-[#0296a0] text-xs lg:text-[16px] underline decoration-[#0296a0] ">
+              {label}
+            </p>
+            <svg
               width="12"
               height="9"
               viewBox="0 0 12 9"
@@ -25,17 +41,11 @@ const BlackFridaySalesCard = () => {
                 stroke-width="0.25"
               ></path>
             </svg>
-        </button>
-        </div>
-        <div className='flex w-fit max-w-full' >
-            <img src={Iphone}
-            className="w-full  h-auto object-contain"
-            />
+          </button>
         </div>
       </div>
-   
     </>
-  )
-}
+  );
+};
 
-export default BlackFridaySalesCard
+export default BlackFridaySalesCard;

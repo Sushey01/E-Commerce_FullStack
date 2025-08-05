@@ -2,6 +2,7 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import blackFridayProducts from "../data/BlackFridayProduct";
 import BlackFridaySalesCard from "./BlackFridaySalesCard"; // Adjust path if needed
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -11,7 +12,7 @@ const BlackFridaySaleSlider = () => {
     <div className="absolute z-10 left-2 top-1/2 -translate-y-1/2 bg-white border rounded-full shadow-md p-1 cursor-pointer"
     onClick={onClick}
     >
-      <ChevronLeft size={20}/>
+      <ChevronLeft size={25}/>
     </div>
   )
 
@@ -20,7 +21,7 @@ const BlackFridaySaleSlider = () => {
     <div className="absolute z-10 right-2 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md cursor-pointer p-1"
     onClick={onClick}
     >
-      <ChevronRight size={20}/>
+      <ChevronRight size={25}/>
     </div>
   )
 
@@ -40,7 +41,6 @@ const BlackFridaySaleSlider = () => {
         breakpoint: 1024, // tablet
         settings: {
           slidesToShow: 2,
-         
         },
       },
       {
@@ -72,13 +72,20 @@ const BlackFridaySaleSlider = () => {
   return (
     <>
     <div className="w-full mx-auto pb-6">
-      <Slider {...settings}>
-        {[...Array(6)].map((_, index) => (
-          <div key={index} className="px-1">
-            <BlackFridaySalesCard />
-          </div>
-        ))}
-      </Slider>
+     <Slider {...settings}>
+  {blackFridayProducts.map((product, index) => (
+    <div key={index} className="px-1">
+      <BlackFridaySalesCard
+        image={product.image}
+        offer={product.offer}
+        title={product.title}
+        notice={product.notice}
+        label={product.label}
+      />
+    </div>
+  ))}
+</Slider>
+
     </div>
             </>
   );
