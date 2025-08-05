@@ -4,7 +4,7 @@ import Iphone from "../assets/images/iphone.webp";
 const BlackFridaySalesCard = ({ image, offer, title, notice, label }) => {
   return (
     <>
-      <div className="p-2 flex gap-2 w-full border rounded border-1 bg-[#1E61C633] items-center">
+      <div className="p-2  flex gap-2 w-full border rounded border-1 bg-[#1E61C633] items-center">
         <div className="w-[170px] h-[170px] flex items-center justify-center shrink-0">
           <img
             src={image}

@@ -29,7 +29,6 @@ const App = () => {
           path="/"
           element={
             <>
-            
               <HeroSection />
               <DynamicPageSlider/>
               <BlackFridaySales />

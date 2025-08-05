@@ -29,17 +29,17 @@ const NewProductCard = () => {
       </div>
 
       <div className="mt-2  space-y-2 text-center sm:text-left">
-        <p className="text-base font-medium text-gray-800  line-clamp-1 ">
+        <p className="md:text-base text-xs font-medium text-gray-800  line-clamp-1 ">
           Network Cable Tester LAN Wireless 
         </p>
 
         <div className="flex  justify-center gap-2 items-center">
-          <p className="text-[#0296a0]  font-semibold text-sm">Rs. 50,000</p>
-          <p className="text-sm text-gray-500 line-through">Rs. 55,000</p>
+          <p className="text-[#0296a0]  font-semibold text-xs md:text-sm">Rs. 50,000</p>
+          <p className=" text-[10px] md:text-sm text-gray-500 line-through">Rs. 55,000</p>
         </div>
 
         <div className="flex justify-center  sm:justify-start justify-self-center">
-          <button className="px-4 text-sm py-1 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-full ">
+          <button className="px-4  text-xs md:text-sm py-1 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-[80%] md:w-full ">
             Buy Now
           </button>
         </div>

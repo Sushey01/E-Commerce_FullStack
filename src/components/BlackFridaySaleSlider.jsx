@@ -18,7 +18,7 @@ const BlackFridaySaleSlider = () => {
 
 
   const NextArrow = ({onClick})=>(
-    <div className="absolute z-10 right-2 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md cursor-pointer p-1"
+    <div className="absolute z-10 overflow-hidden right-2 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-md cursor-pointer p-1"
     onClick={onClick}
     >
       <ChevronRight size={25}/>
