@@ -1,11 +1,15 @@
 import React from "react";
 import ButtonUi from "./OfferButton";
 import Iphone from "../assets/images/iphone.webp";
+import Background from "../assets/images/newproductbg.jpg"
+import NewImage from "../assets/images/watch.jpg"
 
 const NewProductFirstUi = () => {
   return (
     <>
-      <div className="bg-[#fff2e3] justify-center border rounded flex flex-col items-center gap-2 h-full p-[16px] py-2 w-full">
+      <div 
+      style={{ backgroundImage: `url(${Background})` }} 
+      className="  bg-none justify-center border rounded flex flex-col items-center gap-2 h-full p-[16px] py-2 w-full">
         <div >
           <p className="text-xl md:text-3xl  text-[#777] ">Apple MacBook Pro </p>
           <p className="text-xl md:text-3xl  text-[#777] flex justify-center">
@@ -79,6 +83,8 @@ const NewProductFirstUi = () => {
           </div>
         </div>
       </div>
+
+      
     </>
   );
 };

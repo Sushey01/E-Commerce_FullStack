@@ -49,7 +49,7 @@ const BlackFridaySaleSlider = () => {
           centerMode: true,
           centerPadding: "30px",
           dots: false,
-          infinite:true,
+          // infinite:true,
           nextArrow: null,
           prevArrow: null,
         },
