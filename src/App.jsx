@@ -19,7 +19,6 @@ import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
 import CheckoutPage from "./checkout/CheckoutPage";
-import LoginMob from "./login/LoginMob";
 
 const App = () => {
   return (
