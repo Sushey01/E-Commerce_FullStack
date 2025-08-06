@@ -2,10 +2,9 @@ import SectionWiseProductSlider from '../components/SectionWiseProductSlider'
 import FeatureCardV1 from '../components/FeatureCardV1'
 import MonthlySaleCard from '../components/MonthlySaleCard'
 import LaptopCard from '../components/LaptopCard'
-import ProductCard from '../components/ProductCardSkeleton'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-
+import ProductCard from '../components/ProductCardSkeleton';
 import featureProducts from '../data/featureProducts'
 import monthlySaleProducts from '../data/monthlyProducts'
 import laptopProducts from '../data/laptopProducts'
@@ -61,7 +60,7 @@ const DynamicPageSlider = () => {
         cards={renderCards(featureProductsState, 'feature')}
         buttonText="Shop Now"
         onButtonClick={() => navigate('/products')}
-        settings={{ slidesToShow: 5, nextArrow:true, prevArrow:true, }}
+        settings={{ slidesToShow: 5, }}
       />
 
       <SectionWiseProductSlider

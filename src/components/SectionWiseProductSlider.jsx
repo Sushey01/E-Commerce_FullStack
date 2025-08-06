@@ -4,8 +4,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-
-
 const SectionWiseProductSlider = ({
   title,
   cards = [],
@@ -13,27 +11,23 @@ const SectionWiseProductSlider = ({
   onButtonClick,
   settings = {},
 }) => {
-
-
-
   const PrevArrow = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    className="absolute z-10 left-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-md border hover:shadow-lg"
-  >
-    <ChevronLeft className="w-6 h-6 text-gray-600" />
-  </button>
-);
+    <button
+      onClick={onClick}
+      className="absolute z-10 left-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-md border hover:shadow-lg"
+    >
+      <ChevronLeft className="w-6 h-6 text-gray-600" />
+    </button>
+  );
 
-const NextArrow = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    className="absolute z-10 right-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-md border hover:shadow-lg"
-  >
-    <ChevronRight className="w-6 h-6 text-gray-600" />
-  </button>
-);
-
+  const NextArrow = ({ onClick }) => (
+    <button
+      onClick={onClick}
+      className="absolute z-10 right-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-md border hover:shadow-lg"
+    >
+      <ChevronRight className="w-6 h-6 text-gray-600" />
+    </button>
+  );
 
   const defaultSettings = {
     dots: false,
@@ -41,41 +35,45 @@ const NextArrow = ({ onClick }) => (
     speed: 500,
     slidesToShow: 3, // default value
     slidesToScroll: 1,
-    nextArrow:<NextArrow/>,
-    prevArrow:<PrevArrow/>,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 3,
-          centerPadding: "0px", 
+        settings: {
+          slidesToShow: 3,
+          centerPadding: "0px",
           centerMode: false,
-          infinte:false,
+          infinte: false,
         },
       },
       {
         breakpoint: 640,
-        settings: { slidesToShow: 2,   centerPadding: "0px", 
-          centerMode: false, infinte:false, },
+        settings: {
+          slidesToShow: 2,
+          centerPadding: "0px",
+          centerMode: false,
+          infinte: false,
+        },
       },
-      
-        {
-      breakpoint: 480, // very small phones, maybe 1 slide?
-      settings: {
-        slidesToShow: 2
-        ,
-        centerMode: true,     // Enable centerMode only if showing 1 slide
-        centerPadding: "60px",
-        infinte:true,
-      },
-    },
 
+      {
+        breakpoint: 480, // very small phones, maybe 1 slide?
+        settings: {
+          slidesToShow: 2,
+          centerMode: true, // Enable centerMode only if showing 1 slide
+          centerPadding: "60px",
+          infinite: true,
+          nextArrow:null,
+          prevArrow:null,
+        },
+      },
     ],
     ...settings, // user overrides go here
 
     //Applying centerMode only when slidesToShow ===1
     // centerMode: settings.slidesToShow===2,
     // centerPadding: settings.slidesToShow===2 ? "60px":"0px",
-
   };
 
   if (!cards.length) return null;

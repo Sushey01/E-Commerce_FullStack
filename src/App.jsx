@@ -5,20 +5,20 @@ import Navbar from "./components/Navbar";
 import Footer from "./pages/Footer";
 
 import HeroSection from "./pages/HeroSection";
-import MonthlySale from "./pages/MonthlySale";
 import BlackFridaySales from "./pages/BlackFridaySales";
-import Laptop from "./pages/Laptop";
 import NewProduct from "./pages/NewProduct";
 import FlashSaleContainer from "./pages/FlashSaleContainer";
 import CartPage from "./components/CartPage";
 import Wishlist from "./pages/WishList";
 import HomeProduct from "./pages/HomeProduct";
 import ProductDetail from "./pages/ProductDetail";
-import TestPageSlider from "./pages/TestPageSlider";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
-import CheckoutPage from "./checkout/CheckoutPage";
+import CheckoutPage from "./checkout/CheckoutPage"
+
+
+
 
 const App = () => {
   return (
