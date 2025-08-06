@@ -18,6 +18,10 @@ const DynamicPageSlider = () => {
 
   const navigate = useNavigate()
 
+
+
+
+
   useEffect(() => {
     // simulate API fetch with 1.5 seconds delay
     setTimeout(() => {
@@ -57,7 +61,7 @@ const DynamicPageSlider = () => {
         cards={renderCards(featureProductsState, 'feature')}
         buttonText="Shop Now"
         onButtonClick={() => navigate('/products')}
-        settings={{ slidesToShow: 5 }}
+        settings={{ slidesToShow: 5, nextArrow:true, prevArrow:true, }}
       />
 
       <SectionWiseProductSlider

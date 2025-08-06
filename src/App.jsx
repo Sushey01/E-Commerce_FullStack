@@ -19,46 +19,51 @@ import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
 import CheckoutPage from "./checkout/CheckoutPage";
+import LoginMob from "./login/LoginMob";
 
 const App = () => {
   return (
-    // <Router>
-    //   <Navbar />
+ <Router>
+  <Navbar />
 
-    //   <Routes>
-    //     <Route
-    //       path="/"
-    //       element={
-    //         <>
-    //           <HeroSection />
-    //           <DynamicPageSlider/>
-    //           <BlackFridaySales />
-    //           <NewProduct />
-    //           <FlashSaleContainer />
-    //         </>
-    //       }
-    //     />
-          
+  <Routes>
+    {/* Homepage */}
+    <Route
+      path="/"
+      element={
+        <>
+          <HeroSection />
+          <DynamicPageSlider />
+          <BlackFridaySales />
+          <NewProduct />
+          <FlashSaleContainer />
+        </>
+      }
+    />
 
-    //     <Route path="/cart" element={<CartPage />} />
-    //     <Route path="/profile" element={<ProfileSection />} />
-    //     <Route path="/wishlist" element={<Wishlist />} />
-    //     <Route path="/details" element={<ProductDetail />} />
+    {/* Cart, Profile, Wishlist */}
+    <Route path="/cart" element={<CartPage />} />
+    <Route path="/profile" element={<ProfileSection />} />
+    <Route path="/wishlist" element={<Wishlist />} />
 
+    {/* Product Detail */}
+    <Route path="/details/:id" element={<ProductDetail />} />
 
-    //     {/* Products routes with nested layout */}
-    //     <Route path="/products" element={<ProductLayout />}>
-    //       <Route index element={<HomeProduct />} />
-    //       <Route path=":id" element={<ProductDetail />} />
-          
-    //     </Route>
-    //   </Routes>
+    {/* Checkout */}
+    <Route path="/checkout" element={<CheckoutPage />} />
 
-    //   <Footer />
-    // </Router>
-    <>
-    <CheckoutPage/>
-    </>
+    {/* Product Listing Pages (nested) */}
+    <Route path="/products" element={<ProductLayout />}>
+      <Route index element={<HomeProduct />} />
+      <Route path=":id" element={<ProductDetail />} />
+    </Route>
+  </Routes>
+
+  <Footer />
+</Router>
+    // <>
+    // <CheckoutPage/>
+    // </>
   );
 };
 

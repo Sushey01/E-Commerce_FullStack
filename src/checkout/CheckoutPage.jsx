@@ -12,6 +12,7 @@ import OrderProduct from "./OrderProduct";
 import Apple from "../assets/images/apple.svg";
 import MasterCard from "../assets/images/mastercard.png";
 import Visa from "../assets/images/visa.png";
+import LoginMob from "../login/LoginMob";
 
 const CheckoutPage = () => {
   return (

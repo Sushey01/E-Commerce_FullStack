@@ -2,7 +2,9 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Navbar from "./Navbar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+
 
 const SectionWiseProductSlider = ({
   title,
@@ -11,12 +13,36 @@ const SectionWiseProductSlider = ({
   onButtonClick,
   settings = {},
 }) => {
+
+
+
+  const PrevArrow = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="absolute z-10 left-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-md border hover:shadow-lg"
+  >
+    <ChevronLeft className="w-6 h-6 text-gray-600" />
+  </button>
+);
+
+const NextArrow = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="absolute z-10 right-0 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-md border hover:shadow-lg"
+  >
+    <ChevronRight className="w-6 h-6 text-gray-600" />
+  </button>
+);
+
+
   const defaultSettings = {
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3, // default value
     slidesToScroll: 1,
+    nextArrow:<NextArrow/>,
+    prevArrow:<PrevArrow/>,
     responsive: [
       {
         breakpoint: 1024,

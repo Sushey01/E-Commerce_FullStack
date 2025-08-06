@@ -45,8 +45,8 @@ const OrderProduct = () => {
         <MoveRight />
       </button>
 
-      <div className="flex items-start gap-2 text-xs text-gray-500">
-        <input type="checkbox" className="mt-1" />
+      <div className="flex items-center gap-2 text-xs text-gray-500">
+        <input type="checkbox" />
         <p>
           By confirming the order, I accept the{" "}
           <span className="text-blue-600 underline cursor-pointer">terms of the user</span> agreement.
