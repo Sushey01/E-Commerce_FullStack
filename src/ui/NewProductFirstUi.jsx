@@ -30,7 +30,7 @@ const NewProductFirstUi = () => {
           <div className="flex justify-center ">
             <img src={Iphone} alt="img" className="max-w-[180px] sm:max-w-full" />
           </div>
-          <p className="flex text-center text-xs md:text-[16px]">
+          <p className="flex text-center text-gray-400 text-xs md:text-[16px]">
             Gaming PC Element 9260 PRO Level Desktop Intel Core i7-9700F 3.0GHz
             | NVIDIA 16GB DDR4 | 240GB SSD
           </p>

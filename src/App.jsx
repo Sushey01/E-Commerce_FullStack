@@ -18,46 +18,47 @@ import TestPageSlider from "./pages/TestPageSlider";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
+import CheckoutPage from "./checkout/CheckoutPage";
 
 const App = () => {
   return (
-    <Router>
-      <Navbar />
+    // <Router>
+    //   <Navbar />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <HeroSection />
-              <DynamicPageSlider/>
-              <BlackFridaySales />
-              <NewProduct />
-              <FlashSaleContainer />
-            </>
-          }
-        />
+    //   <Routes>
+    //     <Route
+    //       path="/"
+    //       element={
+    //         <>
+    //           <HeroSection />
+    //           <DynamicPageSlider/>
+    //           <BlackFridaySales />
+    //           <NewProduct />
+    //           <FlashSaleContainer />
+    //         </>
+    //       }
+    //     />
           
 
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/profile" element={<ProfileSection />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/details" element={<ProductDetail />} />
+    //     <Route path="/cart" element={<CartPage />} />
+    //     <Route path="/profile" element={<ProfileSection />} />
+    //     <Route path="/wishlist" element={<Wishlist />} />
+    //     <Route path="/details" element={<ProductDetail />} />
 
 
-        {/* Products routes with nested layout */}
-        <Route path="/products" element={<ProductLayout />}>
-          <Route index element={<HomeProduct />} />
-          <Route path=":id" element={<ProductDetail />} />
+    //     {/* Products routes with nested layout */}
+    //     <Route path="/products" element={<ProductLayout />}>
+    //       <Route index element={<HomeProduct />} />
+    //       <Route path=":id" element={<ProductDetail />} />
           
-        </Route>
-      </Routes>
+    //     </Route>
+    //   </Routes>
 
-      <Footer />
-    </Router>
-    // <>
-    // <ProfileSection/>
-    // </>
+    //   <Footer />
+    // </Router>
+    <>
+    <CheckoutPage/>
+    </>
   );
 };
 
