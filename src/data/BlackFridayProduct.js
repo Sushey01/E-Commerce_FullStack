@@ -1,6 +1,6 @@
 // src/data/blackFridayProducts.js
 import Iphone from "../assets/images/iphone.webp";
-import Headphone from "../assets/images/headphone.avif";
+import Headphone from "../assets/images/headphone.png";
 import Watch from "../assets/images/megawatch.webp";
 
 

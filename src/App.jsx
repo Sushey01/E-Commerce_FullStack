@@ -16,6 +16,7 @@ import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
 import CheckoutPage from "./checkout/CheckoutPage"
+import CategoryPage from "./pages/CategoryPage";
 
 
 
@@ -32,6 +33,7 @@ const App = () => {
       element={
         <>
           <HeroSection />
+          <CategoryPage/>
           <DynamicPageSlider />
           <BlackFridaySales />
           <NewProduct />

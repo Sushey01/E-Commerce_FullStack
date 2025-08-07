@@ -27,9 +27,12 @@ const NextArrow = ({ onClick }) => (
 const BlackFridaySaleSlider = () => {
   const settings = {
     dots: true,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 4,
+    autoplay:true,
+    pauseOnHover:true,
+    autoPlaySpeed:2000,
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
