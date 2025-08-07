@@ -8,7 +8,7 @@ import Headphone from "../assets/images/headphone.png"
 
 
 
-const CategoryData = [
+const categoryProductData = [
   {
     title: "Smartphones",
     items: "iPhone, Samsung, OnePlus",
@@ -59,4 +59,4 @@ const CategoryData = [
   },
 ];
 
-export default CategoryData;
+export default categoryProductData;
