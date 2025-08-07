@@ -8,7 +8,7 @@ const ProductLayout = () => {
     <div className="w-full flex-col  pb-2 flex gap-3 ">
       <div className="hidden md:flex flex-row p-3 py-2">
         <div className="hidden  lg:block relative w-[20%] z-50 ">
-          <SideDropDown IsLayout={true}/>
+          <SideDropDown IsLayout={true} initialOpen={false}/>
         </div>
         <div className="lg:w-[80%] md:w-full">
           <HomeProductHead />

@@ -13,9 +13,9 @@ import {
 } from "react-icons/fa";
 import { RiArrowRightSLine } from "react-icons/ri";
 
-const SideDropDown = ({IsLayout= true}) => {
+const SideDropDown = ({IsLayout= true, initialOpen=true}) => {
     const [showList, setShowList] = useState(null)
-    const [showCategory, setShowCategory]= useState(true)
+    const [showCategory, setShowCategory]= useState(initialOpen)
 
     const toggleCategory = (index)=>{
         setShowList(showList === index?null:index)
@@ -23,6 +23,10 @@ const SideDropDown = ({IsLayout= true}) => {
 
 
 
+    // Update when initialopen changes
+    useEffect(()=>{
+      setShowCategory(initialOpen);
+    }, [initialOpen])
 
 
 // useEffect(() => {

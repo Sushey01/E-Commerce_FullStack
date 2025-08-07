@@ -38,7 +38,7 @@ const CategorySlider = () => {
   };
 
   return (
-    <div className="p-1 pt-3" >
+    <div className="p-1 md:p-0 pt-3" >
       <h2 className="text-2xl flex  justify-center text-gray-500 px-2 font-semibold mb-4">Shop by Category</h2>
       <Slider {...settings}>
         {categoryData.map((category, index) => (
