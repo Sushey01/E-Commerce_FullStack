@@ -24,6 +24,10 @@ const SideDropDown = ({IsLayout= true, initialOpen=true}) => {
 
 
     // Update when initialopen changes
+    // This ensures that if initialOpen changes after render, showCategory updates to match.
+    // Not always required, but helpful if your page/layout updates dynamically.
+
+
     useEffect(()=>{
       setShowCategory(initialOpen);
     }, [initialOpen])

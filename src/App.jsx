@@ -32,12 +32,15 @@ const App = () => {
       path="/"
       element={
         <>
-          <HeroSection />
+        <div className="px-0 md:px-6">
+ <HeroSection />
           <CategoryPage/>
           <DynamicPageSlider />
           <BlackFridaySales />
           <NewProduct />
           <FlashSaleContainer />
+        </div>
+         
         </>
       }
     />
