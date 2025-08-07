@@ -1,5 +1,5 @@
 import Iphone from "../assets/images/iphone.webp"
-import Laptop from "../assets/images/laptop.webp"
+import Laptop from "../assets/images/laptop.png"
 import Watch from "../assets/images/megawatch.webp"
 import Gaming from "../assets/images/gaming.png"
 import Camera from "../assets/images/camera.png"

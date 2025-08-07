@@ -3,13 +3,12 @@ import React from "react";
 const CategorySectionCard = ({ title, items, image }) => {
   return (
     <div className="group bg-[#efecec] border rounded-md transition duration-300 ease-in-out hover:shadow-lg cursor-pointer overflow-hidden">
-
       {/* Text Section */}
-      <div className="p-4 gap-2 flex flex-col">
-        <div className="border-b-2 w-1/2 border-gray-400">
+      <div className="p-4 py-3 gap-2 flex flex-col">
+        <div className="border-b-2 w-1/3 border-gray-400">
           <p className="text-xl md:text-2xl pb-1">{title}</p>
         </div>
-        <p className="text-sm md:text-lg text-gray-700">{items}</p>
+        <p className="text-sm md:text-lg text-gray-700 line-clamp-1">{items}</p>
       </div>
 
       {/* Image Section */}
