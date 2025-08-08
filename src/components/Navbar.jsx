@@ -263,6 +263,7 @@ const Navbar = () => {
                   <li
                     onClick={() => {
                       setShowProfileMenu(false);
+                      navigate("/loginPage")
                       // Handle logout logic here
                       console.log("Signed out");
                     }}

@@ -17,6 +17,7 @@ import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
 import CheckoutPage from "./checkout/CheckoutPage"
 import CategoryPage from "./pages/CategoryPage";
+import LoginPage from "./pages/LoginPage"
 
 
 
@@ -49,6 +50,7 @@ const App = () => {
     <Route path="/cart" element={<CartPage />} />
     <Route path="/profile" element={<ProfileSection />} />
     <Route path="/wishlist" element={<Wishlist />} />
+    <Route path="/loginPage" element={<LoginPage />} />
 
     {/* Product Detail */}
     <Route path="/details/:id" element={<ProductDetail />} />
