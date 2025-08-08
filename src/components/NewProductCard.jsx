@@ -3,7 +3,7 @@ import Iphone from "../assets/images/iphone.webp";
 
 const NewProductCard = () => {
   return (
-    <div className=" flex flex-col justify-center h-auto border rounded-lg p-2   bg-[#f7f7f7] w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+    <div className=" flex flex-col justify-center h-auto border rounded-lg p-2   bg-[#f7f7f7] w-full min-w-[120px] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
       <div className="relative w-full flex justify-center">
         <img
           src={Iphone}
@@ -34,12 +34,12 @@ const NewProductCard = () => {
         </p>
 
         <div className="flex  justify-center gap-2 items-center">
-          <p className="text-[#0296a0]  font-semibold text-xs md:text-sm">Rs. 50,000</p>
-          <p className=" text-[10px] md:text-sm text-gray-500 line-through">Rs. 55,000</p>
+          <p className="text-[#0296a0]  font-semibold text-[10px] md:text-sm">Rs. 50,000</p>
+          <p className=" text-[8px] md:text-sm text-gray-500 line-through">Rs. 55,000</p>
         </div>
 
         <div className="flex justify-center  sm:justify-start justify-self-center">
-          <button className="px-4  text-xs md:text-sm py-1 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-[80%] md:w-full ">
+          <button className="px-4  text-[10px] md:text-sm py-1 rounded-full bg-[#0296a0] text-white hover:bg-[#027c89] transition w-[100%] md:w-full ">
             Buy Now
           </button>
         </div>
