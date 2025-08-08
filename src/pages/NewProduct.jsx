@@ -1,15 +1,16 @@
 import React from "react";
 import NewProductCard from "../components/NewProductCard";
 import NewProductFirstUi from "../ui/NewProductFirstUi";
-import NewProductSlider from "../slider/NewProductSlider"; // make sure this path is correct
+import NewProductSlider from "../slider/NewProductSlider";
 import { Link } from "react-router-dom";
 
 const NewProduct = () => {
   const productList = Array.from({ length: 8 });
 
   return (
-    <>
-      <div className="flex justify-between px-3 py-2">
+    <div className="w-full overflow-x-hidden box-border">
+      {/* Header */}
+      <div className="flex justify-between items-center px-3 py-2">
         <p className="text-[#777777] text-2xl md:text-3xl">New Product</p>
         <button className="flex gap-2 items-center">
           <p className="text-[#0296a0] md:text-xl underline decoration-[#0296a0]">
@@ -18,7 +19,6 @@ const NewProduct = () => {
           <svg
             width="15"
             height="12"
-            color="blue"
             viewBox="0 0 12 9"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,22 +33,29 @@ const NewProduct = () => {
         </button>
       </div>
 
-      <div className="overflow-hidden h-full flex px-2 pr-1 py-2 gap-2 w-full lg:flex-row md:flex-col flex-col mb-6">
-        <div className="w-full h-full lg:w-[40%]">
+      {/* Main Content Section */}
+      <div className="flex flex-col md:flex-col lg:flex-row gap-2 px-2 py-2 w-full box-border">
+        {/* Left Section (First UI) */}
+        <div className="w-full lg:w-[40%] h-full box-border">
           <NewProductFirstUi />
         </div>
-        <div className="w-full lg:w-[60%] ">
-          <div className="block md:hidden pb-4 w-full ">
+
+        {/* Right Section (Slider + Grid) */}
+        <div className="w-full lg:w-[60%] box-border">
+          {/* Slider: visible only on small screens */}
+          <div className="block md:hidden w-full overflow-hidden">
             <NewProductSlider products={productList} slidesToShow={2} />
           </div>
-          <div className="hidden h-full md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
+
+          {/* Grid: visible only on medium and large screens */}
+          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
             {productList.map((_, i) => (
               <NewProductCard key={i} />
             ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
