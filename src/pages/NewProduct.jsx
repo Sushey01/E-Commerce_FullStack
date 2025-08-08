@@ -34,21 +34,21 @@ const NewProduct = () => {
       </div>
 
       {/* Main Content Section */}
-      <div className="flex flex-col md:flex-col lg:flex-row gap-2 px-2 py-2 w-full box-border">
-        {/* Left Section (First UI) */}
-        <div className="w-full lg:w-[40%] h-full box-border">
+      <div className="flex flex-col md:flex-col lg:flex-row items-stretch gap-2 px-2 py-2 w-full box-border mb-6">
+        {/* Left section */}
+        <div className="w-full lg:w-[40%]">
           <NewProductFirstUi />
         </div>
 
-        {/* Right Section (Slider + Grid) */}
-        <div className="w-full lg:w-[60%] box-border">
-          {/* Slider: visible only on small screens */}
-          <div className="block md:hidden w-full overflow-hidden">
+        {/* Right section */}
+        <div className="w-full lg:w-[60%] flex flex-col justify-between">
+          {/* Slider on mobile only */}
+          <div className="block md:hidden w-full pb-4">
             <NewProductSlider products={productList} slidesToShow={2} />
           </div>
 
-          {/* Grid: visible only on medium and large screens */}
-          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
+          {/* Grid on md+ screens */}
+          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 h-full">
             {productList.map((_, i) => (
               <NewProductCard key={i} />
             ))}
