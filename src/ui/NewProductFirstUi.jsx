@@ -8,8 +8,8 @@ const NewProductFirstUi = () => {
   return (
     <>
       <div 
-      style={{ backgroundImage: `url(${Background})` }} 
-      className="  bg-none justify-center border rounded flex flex-col items-center gap-2 h-full p-[16px] py-2 w-full">
+      // style={{ backgroundImage: `url(${Background})` }} 
+      className="  bg-[#FFF2E3] justify-center border rounded flex flex-col items-center gap-2 h-full p-[16px] py-2 w-full">
         <div >
           <p className="text-xl md:text-3xl  text-[#777] ">Apple MacBook Pro </p>
           <p className="text-xl md:text-3xl  text-[#777] flex justify-center">
