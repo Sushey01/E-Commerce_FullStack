@@ -15,58 +15,54 @@ import ProductDetail from "./pages/ProductDetail";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
-import CheckoutPage from "./checkout/CheckoutPage"
+import CheckoutPage from "./checkout/CheckoutPage";
 import CategoryPage from "./pages/CategoryPage";
-import LoginPage from "./pages/LoginPage"
-
-
-
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   return (
- <Router>
-  <Navbar />
+    <Router>
+      <Navbar />
 
-  <Routes>
-    {/* Homepage */}
-    <Route
-      path="/"
-      element={
-        <>
-        <div className="px-0 md:px-6">
- <HeroSection />
-          <CategoryPage/>
-          <DynamicPageSlider />
-          <BlackFridaySales />
-          <NewProduct />
-          <FlashSaleContainer />
-        </div>
-         
-        </>
-      }
-    />
+      <Routes>
+        {/* Homepage */}
+        <Route
+          path="/"
+          element={
+            <>
+              <div className="px-0 md:px-6">
+                <HeroSection />
+                <CategoryPage />
+                <DynamicPageSlider />
+                <BlackFridaySales />
+                <NewProduct />
+                <FlashSaleContainer />
+              </div>
+            </>
+          }
+        />
 
-    {/* Cart, Profile, Wishlist */}
-    <Route path="/cart" element={<CartPage />} />
-    <Route path="/profile" element={<ProfileSection />} />
-    <Route path="/wishlist" element={<Wishlist />} />
-    <Route path="/loginPage" element={<LoginPage />} />
+        {/* Cart, Profile, Wishlist */}
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/profile" element={<ProfileSection />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/loginPage" element={<LoginPage />} />
 
-    {/* Product Detail */}
-    <Route path="/details/:id" element={<ProductDetail />} />
+        {/* Product Detail */}
+        <Route path="/details/:id" element={<ProductDetail />} />
 
-    {/* Checkout */}
-    <Route path="/checkout" element={<CheckoutPage />} />
+        {/* Checkout */}
+        <Route path="/checkout" element={<CheckoutPage />} />
 
-    {/* Product Listing Pages (nested) */}
-    <Route path="/products" element={<ProductLayout />}>
-      <Route index element={<HomeProduct />} />
-      <Route path=":id" element={<ProductDetail />} />
-    </Route>
-  </Routes>
+        {/* Product Listing Pages (nested) */}
+        <Route path="/products" element={<ProductLayout />}>
+          <Route index element={<HomeProduct />} />
+          <Route path=":id" element={<ProductDetail />} />
+        </Route>
+      </Routes>
 
-  <Footer />
-</Router>
+      <Footer />
+    </Router>
     // <>
     // <CheckoutPage/>
     // </>

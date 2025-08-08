@@ -3,7 +3,7 @@ import CategorySlider from '../category/CategorySlider'
 
 const CategoryPage = () => {
   return (
-    <div className='overflow-hidden' >
+    <div className='overflow-hidden mb-6' >
       <CategorySlider/>
     </div>
   )

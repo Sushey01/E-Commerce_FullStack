@@ -80,7 +80,7 @@ const SectionWiseProductSlider = ({
 
   return (
     <>
-      <div className="overflow-hidden p-1 text-center flex flex-col gap-3 py-3">
+      <div className="overflow-hidden p-1 text-center flex flex-col gap-3 py-3 mb-6">
         <div className="flex justify-between px-3">
           <h2 className="text-2xl text-[#777]">{title}</h2>
           <button className="flex items-center gap-1" onClick={onButtonClick}>
@@ -107,7 +107,7 @@ const SectionWiseProductSlider = ({
 
         <Slider {...defaultSettings}>
           {cards.map((card, idx) => (
-            <div key={idx} className="px-1">
+            <div key={idx} className="px-1.5">
               {card}
             </div>
           ))}

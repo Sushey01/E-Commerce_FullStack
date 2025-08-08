@@ -26,7 +26,7 @@ const MonthlySaleCard = ({
       </p>
 
       {/* ⭐ Rating */}
-      <div className="flex justify-center items-center gap-1 text-yellow-400 text-sm mb-2">
+      <div className="flex items-center gap-1 text-yellow-400  mb-2">
         {[...Array(5)].map((_, i) => (
           <svg
             key={i}
@@ -34,22 +34,22 @@ const MonthlySaleCard = ({
             fill="currentColor"
             strokeWidth="0"
             viewBox="0 0 576 512"
-            height="14"
-            width="14"
+            height="10"
+            width="10"
             style={{ color: "#ffc107" }}
             xmlns="http://www.w3.org/2000/svg"
           >
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
           </svg>
         ))}
-        <span className="ml-1  text-[10px] line-clamp-1 lg:text-sm text-gray-600">
+        <span className="  text-[10px] text-start line-clamp-1 md:text-sm text-gray-600">
           {reviewsCount}
         </span>
       </div>
 
       {/* 💰 Pricing */}
       <div className="mb-2 flex  gap-2 justify-center">
-        <p className="  text-[5px] md:text-xs  text-gray-400 line-through flex items-center">
+        <p className="  text-[7px] md:text-xs  text-gray-400 line-through flex items-center">
           {actualPrice}
         </p>
         <p className="text-[10px] md:text-sm font-bold text-green-600">
@@ -59,22 +59,22 @@ const MonthlySaleCard = ({
 
       {/* 📦 Stock & Sales Info */}
       <div className=" items-center justify-center gap-3 mb-2 hidden md:flex">
-        <p className="md:text-sm  text-gray-600 line-clamp-1 ">
+        <p className=" text-xs md:text-sm  text-gray-600 line-clamp-1 ">
           {totalSold}
         </p>
-        <div className="flex items-center gap-1   md:text-sm text-gray-800">
+        <div className="flex items-center gap-1   text-sm text-gray-800">
           <svg
             stroke="currentColor"
             fill="currentColor"
             strokeWidth="0"
             viewBox="0 0 512 512"
-            height="16"
-            width="16"
+            height="10"
+            width="10"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path d="M362.6 192.9L345 174.8c-.7-.8-1.8-1.2-2.8-1.2-1.1 0-2.1.4-2.8 1.2l-122 122.9-44.4-44.4c-.8-.8-1.8-1.2-2.8-1.2-1 0-2 .4-2.8 1.2l-17.8 17.8c-1.6 1.6-1.6 4.1 0 5.7l56 56c3.6 3.6 8 5.7 11.7 5.7 5.3 0 9.9-3.9 11.6-5.5h.1l133.7-134.4c1.4-1.7 1.4-4.2-.1-5.7z" />
           </svg>
-          <span className="line-clamp-1 md:text-sm">{stockLeft}</span>
+          <span className="line-clamp-1 text-sm">{stockLeft}</span>
         </div>
       </div>
 

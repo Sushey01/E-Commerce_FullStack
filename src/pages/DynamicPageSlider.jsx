@@ -37,7 +37,7 @@ const DynamicPageSlider = () => {
       return Array(5)
         .fill(0)
         .map((_, i) => (
-          <div key={i} className="flex-shrink-0">
+          <div key={i} className="flex-shrink-0 ">
             <ProductCard type={type} isLoading />
           </div>
         ))

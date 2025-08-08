@@ -64,7 +64,7 @@ const BlackFridaySaleSlider = () => {
     <div className="relative ">
       <Slider {...settings}>
         {blackFridayProducts.map((product, index) => (
-          <div key={index} className="px-1">
+          <div key={index} className="px-1.5">
             <BlackFridaySalesCard {...product} />
           </div>
         ))}

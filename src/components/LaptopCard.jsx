@@ -15,8 +15,8 @@ const LaptopCard = ({reviewsCount, title, price, image}) => {
                   fill="currentColor"
                   strokeWidth="0"
                   viewBox="0 0 576 512"
-                  height="14"
-                  width="14"
+                  height="10"
+                  width="10"
                   style={{ color: "#ffc107" }}
                   xmlns="http://www.w3.org/2000/svg"
                 >

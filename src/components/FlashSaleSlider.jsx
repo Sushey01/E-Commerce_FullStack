@@ -63,7 +63,7 @@ export default function FlashSaleSlider({ products }) {
     <div className="relative w-full px-0 pb-6">
       <Slider {...settings}>
         {products.map((product) => (
-          <div key={product.id} className="px-1">
+          <div key={product.id} className="px-1.5">
             <MonthlySaleCard {...product} />
           </div>
         ))}

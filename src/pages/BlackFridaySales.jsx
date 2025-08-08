@@ -26,7 +26,7 @@ const BlackFridaySales = () => {
         </button>
         
       </div>
-   <div className=" grid grid-cols-1  lg:grid-cols-1 p-1 overflow-hidden">
+   <div className=" grid grid-cols-1  lg:grid-cols-1 p-1 overflow-hidden mb-6">
   <BlackFridaySaleSlider />
 </div>
 
