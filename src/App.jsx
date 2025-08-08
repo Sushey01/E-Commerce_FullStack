@@ -30,7 +30,7 @@ const App = () => {
           path="/"
           element={
             <>
-              <div className="px-0 md:px-6">
+              <div className="px-0 lg:px-6">
                 <HeroSection />
                 <CategoryPage />
                 <DynamicPageSlider />

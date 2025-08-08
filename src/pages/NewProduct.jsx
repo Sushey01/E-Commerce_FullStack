@@ -36,7 +36,7 @@ const NewProduct = () => {
       {/* Main Content Section */}
       <div className="flex flex-col md:flex-col lg:flex-row items-stretch gap-2 px-2 py-2 w-full box-border mb-6">
         {/* Left section */}
-        <div className="w-full lg:w-[40%]">
+        <div className="w-full  lg:w-[40%]">
           <NewProductFirstUi />
         </div>
 
