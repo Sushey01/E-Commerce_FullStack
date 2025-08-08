@@ -76,7 +76,7 @@ const Footer2 = () => {
         <div className="flex flex-col gap-3 min-w-[180px]">
           <p className="text-[#666] text-lg font-semibold">Download App</p>
           <div className="flex md:flex-col justify-center gap-3 w-full ">
-            <button className="border rounded-full bg-black py-2 px-4 flex items-center gap-2">
+            <button className="border rounded-full bg-black py-2 px-4 justify-center flex items-center gap-2">
               <img src={Apple} alt="apple" className="w-7 h-7" />
               <div>
                 <p className="text-white text-[11px]">Available on</p>
@@ -84,7 +84,7 @@ const Footer2 = () => {
               </div>
             </button>
 
-            <button className="border rounded-full bg-black py-2 px-4 flex items-center gap-2">
+            <button className="border rounded-full bg-black py-2 px-4 flex justify-center items-center gap-2">
               <img src={PlayStore} alt="playstore" className="w-7 h-7" />
               <div>
                 <p className="text-white text-[11px]">Available on</p>

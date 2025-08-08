@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../login/login";
+import LoginDesk from "../login/LoginDesk";
 import LoginMob from "../login/LoginMob";
 
 const LoginPage = () => {
@@ -9,7 +9,7 @@ const LoginPage = () => {
       {/* Desktop/tablet view: show both components */}
       <div className="hidden md:flex w-full max-w-5xl">
         <div className="w-1/2">
-          <Login />
+          <LoginDesk />
         </div>
         <div className="w-1/2">
           <LoginMob />

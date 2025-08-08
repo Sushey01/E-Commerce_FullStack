@@ -1,7 +1,7 @@
 import { Smile } from 'lucide-react'
 import React from 'react'
 
-const Login = () => {
+const LoginDesk = () => {
   return (
     <div className='flex flex-col p-6 justify-between bg-gray-100 rounded-md md:rounded-br-none md:rounded-tr-none shadow-lg w-full h-full animate-fade-in'>
       <p className='text-2xl font-semibold mb-2 animate-slide-in-down'>
@@ -23,4 +23,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginDesk;
