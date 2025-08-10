@@ -1,19 +1,26 @@
 import React from 'react';
-import botIcon from './bot-icon.png'; // Your bot icon image
+import botIcon from '../assets/images/ai.png'; 
+import { X } from 'lucide-react';
 
-const CustomerCareChat = () => {
+const CustomerCareChat = ({onClose}) => {
   return (
-    <div className="w-72 font-sans border border-gray-300 rounded-lg overflow-hidden">
-      {/* Header */}
-      <div className="bg-purple-700 text-white px-4 py-2 flex items-center gap-2.5">
-        <img
-          src={botIcon}
-          alt="Bot"
-          className="w-10 h-10 animate-float"
-        />
-        <p className="m-0 font-bold">Customer Support</p>
-      </div>
-
+    <div className="relative bottom-14 w-72 right-5 font-sans border border-gray-300 rounded-lg bg-white overflow-hidden">
+    {/* Header */}
+<div className="bg-purple-700 text-white px-4 py-2 flex items-center gap-2.5">
+  <img
+    src={botIcon}
+    alt="Bot"
+    className="w-10 h-10 animate-float"
+  />
+  <p className="m-0 font-bold">Customer Support</p>
+  <button
+    onClick={onClose}
+    className="ml-auto p-1 rounded hover:bg-purple-600 cursor-pointer"
+    aria-label="Close chat"
+  >
+    <X size={20} color="white" />
+  </button>
+</div>
       {/* Timestamp */}
       <p className="text-center my-2 text-xs text-gray-500">2:56 PM</p>
 
