@@ -1,26 +1,22 @@
-import React from 'react';
-import botIcon from '../assets/images/ai.png'; 
-import { X } from 'lucide-react';
+import React from "react";
+import botIcon from "../assets/images/ai.png";
+import { X } from "lucide-react";
 
-const CustomerCareChat = ({onClose}) => {
+const CustomerCareChat = ({ onClose }) => {
   return (
     <div className="relative bottom-14 w-72 right-5 font-sans border border-gray-300 rounded-lg bg-white overflow-hidden">
-    {/* Header */}
-<div className="bg-purple-700 text-white px-4 py-2 flex items-center gap-2.5">
-  <img
-    src={botIcon}
-    alt="Bot"
-    className="w-10 h-10 animate-float"
-  />
-  <p className="m-0 font-bold">Customer Support</p>
-  <button
-    onClick={onClose}
-    className="ml-auto p-1 rounded hover:bg-purple-600 cursor-pointer"
-    aria-label="Close chat"
-  >
-    <X size={20} color="white" />
-  </button>
-</div>
+      {/* Header */}
+      <div className="bg-purple-700 text-white px-4 py-2 flex items-center gap-2.5">
+        <img src={botIcon} alt="Bot" className="w-10 h-10 animate-float" />
+        <p className="m-0 font-bold">Customer Support</p>
+        <button
+          onClick={onClose}
+          className="ml-auto p-1 rounded hover:bg-purple-600 cursor-pointer"
+          aria-label="Close chat"
+        >
+          <X size={20} color="white" />
+        </button>
+      </div>
       {/* Timestamp */}
       <p className="text-center my-2 text-xs text-gray-500">2:56 PM</p>
 
@@ -28,7 +24,9 @@ const CustomerCareChat = ({onClose}) => {
       <div className="px-4 pb-4">
         <p className="font-bold mb-2">Answer Bot</p>
         <div className="bg-gray-200 p-2.5 rounded-xl text-sm">
-          Hello! I am automated assistant ready to help. By using this chat, you consent to it being recorded and used by us and third parties. We can help you for contact and product details.
+          Hello! I am automated assistant ready to help. By using this chat, you
+          consent to it being recorded and used by us and third parties. We can
+          help you for contact and product details.
         </div>
 
         {/* Input */}
