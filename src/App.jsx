@@ -18,7 +18,6 @@ import ProfileSection from "./pages/ProfileSection";
 import CheckoutPage from "./checkout/CheckoutPage";
 import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
-import CustomerCareChat from "./components/CustomerCareChat";
 
 const App = () => {
   return (
@@ -56,8 +55,7 @@ const App = () => {
         <Route path="/checkout" element={<CheckoutPage />} />
 
 
-        {/* Checkout */}
-        <Route path="/chatbot" element={<CustomerCareChat />} />
+      
 
         {/* Product Listing Pages (nested) */}
         <Route path="/products" element={<ProductLayout />}>

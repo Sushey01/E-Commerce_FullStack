@@ -36,12 +36,12 @@ const NewProduct = () => {
       {/* Main Content Section */}
       <div className="flex flex-col md:flex-col lg:flex-row items-stretch gap-2 px-2 py-2 w-full box-border mb-6">
         {/* Left section */}
-        <div className="w-full  lg:w-[40%]">
+        <div className="w-full  lg:w-[35%]">
           <NewProductFirstUi />
         </div>
 
         {/* Right section */}
-        <div className="w-full lg:w-[60%] flex flex-col justify-between">
+        <div className="w-full lg:w-[65%] flex flex-col justify-between">
           {/* Slider on mobile only */}
           <div className="block md:hidden w-full pb-4">
             <NewProductSlider products={productList} slidesToShow={2} />
