@@ -4,8 +4,8 @@ import ProductImage1 from "../assets/images/laptop1.webp";
 import ProductImage2 from "../assets/images/laptop2.webp";
 import ProductImage3 from "../assets/images/laptop3.webp";
 
-const ProductDetailPhoto = () => {
-  const images = [ProductImage, ProductImage1, ProductImage2, ProductImage3];
+const ProductDetailPhoto = ({images, outOfStock}) => {
+  // const images = [ProductImage, ProductImage1, ProductImage2, ProductImage3];
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
   return (

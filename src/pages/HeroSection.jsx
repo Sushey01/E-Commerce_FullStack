@@ -12,7 +12,7 @@ const HeroSection = () => {
       </div>
 
       {/* Slider: full width on mobile and tablet, 75% on desktop */}
-      <div className="w-full lg:w-3/4 lg:min-h-[400px] ">
+      <div className="w-full lg:w-3/4  lg:min-h-[400px] ">
         <MegaSaleSlider />
       </div>
     </div>

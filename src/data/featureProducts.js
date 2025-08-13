@@ -1,4 +1,7 @@
 import Iphone from '../assets/images/iphone.webp';
+import Samsung from "../assets/images/samsung.png";
+import Xaomi from "../assets/images/xaomi.png";
+import Honor from "../assets/images/honor.png"
 
 const featureProducts = [
   {
@@ -7,7 +10,7 @@ const featureProducts = [
     title2: '& Tablets',
     subtitle: 'Up to 20% off today!',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/1',
     image: Iphone,
   },
   {
@@ -16,8 +19,8 @@ const featureProducts = [
     title2: 'Galaxy',
     subtitle: 'Save 10% this week!',
     label: 'Shop Now',
-    link: '/products/details',
-    image: Iphone,
+    link: '/products/2',
+    image: Samsung,
   },
   {
     id: '3',
@@ -25,8 +28,8 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
-    image: Iphone,
+    link: '/products/3',
+    image: Xaomi,
   },
   {
     id: '4',
@@ -34,16 +37,16 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
-    image: Iphone,
+    link: '/products/4',
+    image: Honor,
   },
   {
     id: '5',
-    title1: 'Xiaomi',
+    title1: 'Iphone',
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/5',
     image: Iphone,
   },
   {
@@ -52,17 +55,17 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
-    image: Iphone,
+    link: '/products/6',
+    image: Xaomi,
   },
   {
     id: '7',
-    title1: 'Xiaomi',
+    title1: 'Samsung',
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
-    image: Iphone,
+    link: '/products/7',
+    image: Samsung,
   },
   {
     id: '8',
@@ -70,7 +73,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/8',
     image: Iphone,
   },
 ];
