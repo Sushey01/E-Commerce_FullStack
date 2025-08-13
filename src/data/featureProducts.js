@@ -1,4 +1,7 @@
 import Iphone from '../assets/images/iphone.webp';
+// import Samsung from "../assets/images/samsung.png";
+import Xaomi from "../assets/images/xaomi.png";
+import Honor from "../assets/images/honor.png"
 
 const featureProducts = [
   {
@@ -17,7 +20,7 @@ const featureProducts = [
     subtitle: 'Save 10% this week!',
     label: 'Shop Now',
     link: '/products/details',
-    image: Iphone,
+    image: Xaomi,
   },
   {
     id: '3',
@@ -26,7 +29,7 @@ const featureProducts = [
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Iphone,
+    image: Xaomi,
   },
   {
     id: '4',
@@ -35,7 +38,7 @@ const featureProducts = [
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Iphone,
+    image: Honor,
   },
   {
     id: '5',
@@ -44,7 +47,7 @@ const featureProducts = [
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Iphone,
+    image: Xaomi,
   },
   {
     id: '6',
@@ -53,7 +56,7 @@ const featureProducts = [
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Iphone,
+    image: Xaomi,
   },
   {
     id: '7',
@@ -62,7 +65,7 @@ const featureProducts = [
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Iphone,
+    image: Honor,
   },
   {
     id: '8',
