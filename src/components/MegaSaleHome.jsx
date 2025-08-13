@@ -101,7 +101,7 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
             </div>
           </div>
         </div>
-        <div className="content-center ">
+        <div className="content-center items-center flex ">
           <img src={Watch} alt="watch" />
         </div>
       </div>
