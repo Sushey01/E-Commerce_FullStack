@@ -1,5 +1,5 @@
 import Iphone from '../assets/images/iphone.webp';
-// import Samsung from "../assets/images/samsung.png";
+import Samsung from "../assets/images/samsung.png";
 import Xaomi from "../assets/images/xaomi.png";
 import Honor from "../assets/images/honor.png"
 
@@ -20,7 +20,7 @@ const featureProducts = [
     subtitle: 'Save 10% this week!',
     label: 'Shop Now',
     link: '/products/details',
-    image: Xaomi,
+    image: Samsung,
   },
   {
     id: '3',
@@ -42,12 +42,12 @@ const featureProducts = [
   },
   {
     id: '5',
-    title1: 'Xiaomi',
+    title1: 'Iphone',
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Xaomi,
+    image: Iphone,
   },
   {
     id: '6',
@@ -60,12 +60,12 @@ const featureProducts = [
   },
   {
     id: '7',
-    title1: 'Xiaomi',
+    title1: 'Samsung',
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
     link: '/products/details',
-    image: Honor,
+    image: Samsung,
   },
   {
     id: '8',
