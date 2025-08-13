@@ -8,7 +8,7 @@ const NewProduct = () => {
   const productList = Array.from({ length: 8 });
 
   return (
-    <div className="w-full overflow-x-hidden box-border">
+    <div className="w-full md:mb-8 overflow-hidden box-border">
       {/* Header */}
       <div className="flex justify-between items-center px-3 py-2">
         <p className="text-[#777777] text-2xl md:text-3xl">New Product</p>
@@ -43,7 +43,7 @@ const NewProduct = () => {
         {/* Right section */}
         <div className="w-full lg:w-[65%] flex flex-col justify-between">
           {/* Slider on mobile only */}
-          <div className="block md:hidden w-full pb-4">
+          <div className="block md:hidden w-full ">
             <NewProductSlider products={productList} slidesToShow={2} />
           </div>
 
