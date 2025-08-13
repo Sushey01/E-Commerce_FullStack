@@ -10,7 +10,7 @@ const featureProducts = [
     title2: '& Tablets',
     subtitle: 'Up to 20% off today!',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/1',
     image: Iphone,
   },
   {
@@ -19,7 +19,7 @@ const featureProducts = [
     title2: 'Galaxy',
     subtitle: 'Save 10% this week!',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/2',
     image: Samsung,
   },
   {
@@ -28,7 +28,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/3',
     image: Xaomi,
   },
   {
@@ -37,7 +37,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/4',
     image: Honor,
   },
   {
@@ -46,7 +46,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/5',
     image: Iphone,
   },
   {
@@ -55,7 +55,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/6',
     image: Xaomi,
   },
   {
@@ -64,7 +64,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/7',
     image: Samsung,
   },
   {
@@ -73,7 +73,7 @@ const featureProducts = [
     title2: 'Gaming',
     subtitle: 'Flat 20% off',
     label: 'Shop Now',
-    link: '/products/details',
+    link: '/products/8',
     image: Iphone,
   },
 ];
