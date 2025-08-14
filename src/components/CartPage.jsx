@@ -82,7 +82,7 @@ const CartPage = () => {
           {items.map((item) => (
             <div
               key={item.id}
-              className="bg-gray-100 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-4"
+              className="bg-gray-100 rounded-lg p-4 flex flex-row gap-4 items-start md:items-center justify-between mb-4"
             >
               {/* Image */}
               <img
@@ -93,8 +93,8 @@ const CartPage = () => {
 
               {/* Product Info */}
               <div className="flex-1 space-y-1">
-                <p className="text-base font-semibold leading-snug">{item.title}</p>
-                <p className="text-sm text-gray-600">{item.details}</p>
+                <p className="text-base font-semibold leading-snug line-clamp-2">{item.title}</p>
+                <p className="text-sm text-gray-600 line-clamp-2">{item.details}</p>
                 <p className="text-sm text-gray-500">{item.warranty}</p>
               </div>
 
