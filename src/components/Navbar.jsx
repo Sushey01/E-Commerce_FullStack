@@ -27,7 +27,9 @@ const Navbar = () => {
   return (
     <>
       <RedirectTopButton />
+      <div className="md:block hidden">
       <HelpCustomerChat />
+      </div>
       <div className="block lg:hidden ">
         <BottomNavBarMobile />
       </div>

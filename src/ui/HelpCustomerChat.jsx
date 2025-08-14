@@ -12,7 +12,7 @@ const HelpCustomerChat = ({onClick}) => {
         className="fixed bottom-6 right-6 z-50 w-12 h-12 border rounded-full lg:flex justify-center items-center bg-white shadow-md hover:bg-blue-100 transition duration-300 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <MessageCircleQuestionMark className="w-5 h-5 text-blue-500" />
+        <MessageCircleQuestionMark className="w-5 h-5 md:block bottom-3.5 text-blue-500 absolute justify-self-center" />
       </div>
 
       {/* Chat popup, show only if isOpen is true */}

@@ -18,6 +18,7 @@ import ProfileSection from "./pages/ProfileSection";
 import CheckoutPage from "./checkout/CheckoutPage";
 import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
+import CustomerCareChat from "./components/CustomerCareChat";
 
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/profile" element={<ProfileSection />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/loginPage" element={<LoginPage />} />
+        <Route path="/messages" element={<CustomerCareChat />} />
 
         {/* Product Detail */}
         <Route path="/products/:id" element={<ProductDetail />} />
