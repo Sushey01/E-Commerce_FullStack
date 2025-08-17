@@ -26,6 +26,8 @@ const Navbar = () => {
 
   return (
     <>
+    {/* <div className="max-w-[1400px] mx-auto w-full"> */}
+
       <RedirectTopButton />
       <div className="md:block hidden">
       <HelpCustomerChat />
@@ -33,6 +35,7 @@ const Navbar = () => {
       <div className="block lg:hidden ">
         <BottomNavBarMobile />
       </div>
+    {/* </div> */}
 
       {/* Sidebar sliding panel */}
       {menuOpen && (

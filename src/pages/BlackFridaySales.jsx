@@ -8,7 +8,7 @@ const BlackFridaySales = () => {
         <div className="px-3 py-2  flex justify-between">
         <p className="text-[#777777] text-2xl md:text-3xl">Black Friday Sales</p>
         <button className="flex gap-2  items-center">
-            <p className='text-[#0296a0] md:text-xl underline decoration-[#0296a0] '>Shop Now</p>
+            <p className='text-[#0296a0] md:text-[16px] underline decoration-[#0296a0] '>Shop Now</p>
                  <svg
               width="15"
               height="12"

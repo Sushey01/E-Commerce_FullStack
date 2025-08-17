@@ -3,7 +3,7 @@ import Watch from "../assets/images/megawatch.webp";
 
 const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
   return (
-    <div className=" w-full p-3 lg:p-11  md:h-[90vh] h-[60vh] content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg  ">
+    <div className=" w-full p-3 lg:p-11  md:h-[100vh] content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg  ">
       <div className=" block md:hidden p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
         <p className="text-[#E43100]  font-normal text-center aria-hidden:true  md:text-start text-sm md:text-base">
           👌 Mega Sale Madness! Enjoy 30% off ✌️
@@ -25,7 +25,7 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
             battery that lasts up to 7 days!
           </p>
 
-          <button className=" content-center items-center gap-2  md:hover:bg-blue-600 border flex  p-2 px-3 mb-4 md:rounded-md  rounded-full bg-[#0296a0]">
+          <button className=" content-center items-center gap-2  md:hover:bg-[#027e87] border flex  p-2 px-3 mb-4 md:rounded-md  rounded-full bg-[#0296a0]">
             <p className="text-[#fff] hidden md:block font-semibold  md:text-[20px]">
               Shop Now
             </p>
