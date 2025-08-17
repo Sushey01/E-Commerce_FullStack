@@ -1,36 +1,35 @@
 import React from "react";
 import Watch from "../assets/images/megawatch.webp";
 
-const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
+const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, title, description, label, image }) => {
   return (
     <div className=" w-full p-3 lg:p-11  md:h-[100vh] content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg  ">
       <div className=" block md:hidden p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
         <p className="text-[#E43100]  font-normal text-center aria-hidden:true  md:text-start text-sm md:text-base">
-          👌 Mega Sale Madness! Enjoy 30% off ✌️
+          {bannerText}
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-2 w-full gap-5">
         <div className="w-full">
           <div className=" hidden md:block p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
             <p className="text-[#E43100]  font-normal aria-hidden:true md:text-start text-sm md:text-base">
-              👌 Mega Sale Madness! Enjoy 30% off ✌️
+              {bannerText}
             </p>
           </div>
           <h1 className="text-[#777]  text-[16px] md:text-4xl mb-4 font-bold text-start">
-            Experience the future of Smartwatches!
+            {title}
           </h1>
 
-          <p className="text-[#777] hidden md:block text-base md:text-[18px] w- mb-4">
-            A sleek design with AI voice assistant, IP68 water resistance, and a
-            battery that lasts up to 7 days!
+          <p className="text-[rgb(119,119,119)] hidden md:block text-base md:text-[18px] w- mb-4">
+            {description}
           </p>
 
           <button className=" content-center items-center gap-2  md:hover:bg-[#027e87] border flex  p-2 px-3 mb-4 md:rounded-md  rounded-full bg-[#0296a0]">
             <p className="text-[#fff] hidden md:block font-semibold  md:text-[20px]">
-              Shop Now
+              {label}
             </p>
             <p className="text-[#fff] block md:hidden font-semibold  text-sm">
-              Shop Now
+              {label}
             </p>
             <svg
               width="12"
@@ -102,7 +101,7 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide }) => {
           </div>
         </div>
         <div className="content-center items-center flex ">
-          <img src={Watch} alt="watch" />
+          <img src={image} alt="{title}" />
         </div>
       </div>
     </div>
