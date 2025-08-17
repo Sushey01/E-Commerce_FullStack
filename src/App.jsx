@@ -23,6 +23,8 @@ import CustomerCareChat from "./components/CustomerCareChat";
 const App = () => {
   return (
     <Router>
+      <main className="max-w-[1400px] mx-auto w-full">
+
       <Navbar />
 
       <Routes>
@@ -67,6 +69,7 @@ const App = () => {
       </Routes>
 
       <Footer />
+            </main>
     </Router>
     // <>
     // <CheckoutPage/>
