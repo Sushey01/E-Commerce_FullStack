@@ -1,13 +1,16 @@
-// src/api/productAPI.js
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = "https://fakestoreapi.com";
+export const productsApi = createApi({
+  reducerPath: "productsApi",
+  baseQuery: fetchBaseQuery({ baseUrl: "http://127.0.0.1:8000/api/" }), // ✅ use Laravel API
+  endpoints: (builder) => ({
+    getProducts: builder.query({
+      query: () => "products",
+    }),
+    getProductById: builder.query({
+      query: (id) => `products/${id}`,
+    }),
+  }),
+});
 
-export async function getAllProducts() {
-  const response = await fetch(`${BASE_URL}/products`);
-  return response.json();
-}
-
-export async function getProductById(id) {
-  const response = await fetch(`${BASE_URL}/products/${id}`);
-  return response.json();
-}
+export const { useGetProductsQuery, useGetProductByIdQuery } = productsApi;

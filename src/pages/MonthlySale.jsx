@@ -1,7 +1,12 @@
 import React from 'react';
 import MonthlySaleCard from '../components/MonthlySaleCard';
+import { useDispatch } from 'react-redux';
+// import { addToWishlist } from '../features/wishlistSlice';
 
 const MonthlySale = () => {
+
+  const dispatch = useDispatch()
+
   return (
     <>
       {/* Header Section */}

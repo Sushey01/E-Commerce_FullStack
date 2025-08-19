@@ -20,6 +20,7 @@ import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
 import CustomerCareChat from "./components/CustomerCareChat";
 import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
+import MonthlySalePageRedux from "./pages/MonthlySalePageRedux";
 
 const App = () => {
   return (
@@ -73,7 +74,7 @@ const App = () => {
             </main>
     </Router>
     // <>
-    // <CheckoutPage/>
+    // <MonthlySalePageRedux/>
     // </>
   );
 };

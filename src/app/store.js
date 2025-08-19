@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { productsApi } from '../features/productsSlice.js/productsApiSlice';
+import { productsApi } from '../api/ProductApi';
 
 export const store = configureStore({
   reducer: {
@@ -8,3 +8,5 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(productsApi.middleware),
 });
+
+export default store;
