@@ -3,7 +3,7 @@ import Watch from "../assets/images/megawatch.webp";
 
 const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, title, description, label, image }) => {
   return (
-    <div className=" w-full p-3 lg:p-11  lg:h-[100vh] content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg  ">
+    <div className=" w-full p-3 lg:p-11 h-full lg:h-[100vh] content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg  ">
       <div className=" block md:hidden p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
         <p className="text-[#E43100]  font-normal text-center aria-hidden:true  md:text-start text-sm md:text-base">
           {bannerText}
@@ -48,7 +48,7 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, ti
           </button>
           <div className="hidden md:flex  gap-3  content-center">
             <p className="text-[#0296a0]  font-normal  md:text-[25px]">02/03</p>
-            <div className="content-center flex gap-3">
+            <div className=" flex gap-3">
               <button onClick={onPrev}>
                 <svg width="11" height="19" viewBox="0 0 11 19" fill="none">
                   <path
@@ -101,7 +101,7 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, ti
           </div>
         </div>
         <div className="content-center items-center flex ">
-          <img src={image} alt="{title}" />
+          <img src={image} className="object-contain max-h-[300px] md:max-h-[400px] w-auto" alt="{title}" />
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ import CheckoutPage from "./checkout/CheckoutPage";
 import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
 import CustomerCareChat from "./components/CustomerCareChat";
+import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
 
 const App = () => {
   return (

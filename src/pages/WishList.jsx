@@ -2,6 +2,9 @@ import React from "react";
 import Sunglass from "../assets/images/sunglass.webp";
 
 const Wishlist = () => {
+
+  
+
   const wishlistItems = [
     {
       store: "Emommcerce Bazar",

@@ -1,5 +1,6 @@
 import React from "react";
 import Iphone from "../assets/images/iphone.webp";
+import HoverAddCartWishShare from "./HoverAddCartWishShare";
 
 const MonthlySaleCard = ({
   discount,
@@ -13,7 +14,7 @@ const MonthlySaleCard = ({
   label,
 }) => {
   return (
-<div className="p-3 py-2 bg-[#f7f7f7] border rounded-md hover:shadow w-full h-full">
+    <div className="group cursor-pointer p-3 py-2 relative bg-[#f7f7f7] border rounded-md hover:shadow w-full h-full">
       <div className="flex relative justify-center items-center mb-3">
         <div className="absolute top-0 left-0 border rounded-3xl bg-red-600 p-1.5 text-white">
           <p className="text-[10px] md:text-sm">{discount}</p>
@@ -79,13 +80,19 @@ const MonthlySaleCard = ({
       </div>
 
       {/* 🛒 CTA */}
-    {/* <div className="w-full flex justify-center"> */}
-  <button className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:hover:bg-[#0296a0] md:hover:text-white transition">
-    {label}
-  </button>
-{/* </div> */}
+      {/* <div className="w-full flex justify-center"> */}
+      <button className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition">
+        {label}
+      </button>
+      {/* </div> */}
 
-     
+      <div className="absolute hidden group-hover:flex transition-transform duration-500 md:right-3 right-0 top-0">
+        <HoverAddCartWishShare 
+        onAddToCart={()=>onAddToCart({title, discountedPrice, image})}
+        onAddtoWishList={()=>onAddtoWishList({title, discountedPrice, image})}
+        onShare={()=>console.log('Share clicked')}
+        />
+      </div>
     </div>
   );
 };
