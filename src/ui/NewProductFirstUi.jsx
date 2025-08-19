@@ -1,10 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ButtonUi from "./OfferButton";
 import Iphone from "../assets/images/iphone.webp";
 import Background from "../assets/images/newproductbg.jpg"
 import NewImage from "../assets/images/watch.jpg"
 
 const NewProductFirstUi = () => {
+  
+  const [timeleft, setTimeLeft]=useState({
+    days:0,
+    hours:0,
+    minutes:0,
+    seconds:0,
+  })
+
+  //Example: offer ends in 2 days from now
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate()+2);
+
+  useEffect(()=>{
+    const timer = setInterval(()=>{
+      const now = new Date();
+      const diff = endDate -now;
+
+      if (diff <=0){
+        clearInterval(timer);
+        return;
+      }
+
+
+      const days = Math.floor(diff /(1000*60*60*24));
+      const hours = Math.floor((diff/(1000*60*60))%24);
+      const minutes = Math.floor((diff /(1000*60))%60);
+      const seconds = Math.floor((diff/(1000)%60));
+
+      setTimeLeft({days, hours, minutes, seconds})
+    }, 1000);
+
+    return ()=>clearInterval(timer);
+  }, []);
+
   return (
     <>
       <div 
@@ -22,10 +56,10 @@ const NewProductFirstUi = () => {
             End offer in:
           </p>
           <div className="sm:flex-col  justify-center gap-2 flex md:flex-row">
-            <ButtonUi />
-            <ButtonUi />
-            <ButtonUi />
-            <ButtonUi />
+            <ButtonUi value={timeleft.days} label="Days"/>
+            <ButtonUi value={timeleft.hours} label="Hours"/>
+            <ButtonUi value={timeleft.minutes} label="Minutes"/>
+            <ButtonUi value={timeleft.seconds} label="Seconds"/>
           </div>
           <div className="flex justify-center ">
             <img src={Iphone} alt="img" className="max-w-[180px] sm:max-w-full" />

@@ -1,11 +1,11 @@
 import React from 'react'
 
-const ButtonUi = () => {
+const ButtonUi = ({value, label}) => {
   return (
     <>
       <button className=' p-1 border-1 rounded flex flex-col items-center bg-[#e17900] cursor-pointer'>
-        <p className='text-white text-xs'>24</p>
-        <p className='text-white text-[10px]'>Minutes</p>
+        <p className='text-white text-xs'>{value}</p>
+        <p className='text-white text-[10px]'>{label}</p>
       </button>
     </>
   )
