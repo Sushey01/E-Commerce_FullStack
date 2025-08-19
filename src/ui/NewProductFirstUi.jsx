@@ -17,6 +17,8 @@ const NewProductFirstUi = () => {
   const endDate = new Date();
   endDate.setDate(endDate.getDate()+2);
 
+  //1000 * 60 * 60 * 24 = 86,400,000 ms = 1 day
+
   useEffect(()=>{
     const timer = setInterval(()=>{
       const now = new Date();
