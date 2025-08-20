@@ -1,30 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sunglass from "../assets/images/sunglass.webp";
+import { ShoppingCart } from "lucide-react";
 
 const Wishlist = () => {
+  const data = localStorage.getItem('wishlist');
+  const [wishlistItems, setWishlistItems] = useState(JSON.parse(data));
 
   
-
-  const wishlistItems = [
-    {
-      store: "Emommcerce Bazar",
-      name: "Hair Trimming Vintage",
-      details:
-        "T9 Electric Hair Clipper Hair Cutting Machine Professional Eyewear size: One size || Frame Color: Black No Warranty",
-      price: 437,
-      image: "sunglass",
-      quantity: "01",
-    },
-    {
-      store: "Emommcerce Bazar",
-      name: "Trimmer Pro",
-      details:
-        "Electric Trimmer for men || Warranty: 1 year",
-      price: 499,
-      image: "sunglass",
-      quantity: "01",
-    },
-  ];
+  // const wishlistItems = [
+  //   {
+  //     store: "Emommcerce Bazar",
+  //     name: "Hair Trimming Vintage",
+  //     details:
+  //       "T9 Electric Hair Clipper Hair Cutting Machine Professional Eyewear size: One size || Frame Color: Black No Warranty",
+  //     price: 437,
+  //     image: "sunglass",
+  //     quantity: "01",
+  //   },
+  //   {
+  //     store: "Emommcerce Bazar",
+  //     name: "Trimmer Pro",
+  //     details:
+  //       "Electric Trimmer for men || Warranty: 1 year",
+  //     price: 499,
+  //     image: "sunglass",
+  //     quantity: "01",
+  //   },
+  // ];
 
   const WishlistItem = ({ item }) => (
     <div className="bg-white shadow-sm rounded-lg p-4 mb-4">
@@ -87,20 +89,7 @@ const Wishlist = () => {
           className="w-8 h-8 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full"
           title="Add to Cart"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.2 6.4a1 1 0 001 .6h10.4a1 1 0 001-.8l1.2-6.2M7 13h10"
-            />
-          </svg>
+       <ShoppingCart className="w-4 h-4"/>
         </button>
       </div>
     </div>
@@ -139,3 +128,8 @@ const Wishlist = () => {
 };
 
 export default Wishlist;
+
+
+
+
+

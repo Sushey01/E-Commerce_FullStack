@@ -1,8 +1,8 @@
-
-
 import React from "react";
-import Iphone from "../assets/images/iphone.webp";
 import HoverAddCartWishShare from "./HoverAddCartWishShare";
+import { useDispatch } from "react-redux";
+import { addToWishlist } from "../features/wishlistSlice";
+import { addToCartlist } from "../features/cartlistSlice";
 
 const MonthlySaleCard = ({
   discount,
@@ -13,23 +13,46 @@ const MonthlySaleCard = ({
   discountedPrice,
   totalSold,
   stockLeft,
+  onAddToCart = () => {},
+  onAddToWishList = () => {},
   label,
 }) => {
+  const dispatch = useDispatch();
+
+  // Handler for adding product to wishlist
+  const handleAddToWishlist = () => {
+    const item = {
+      store: "Emommcerce Bazar", // optional dynamic store name
+      name: title,
+      details: "",
+      price: discountedPrice,
+      image: image,
+      quantity: "01",
+    };
+    dispatch(addToWishlist(item));
+    onAddToWishList(item); // in case parent wants callback
+  };
+
+  const handleAddToCart = ()=>{
+    const item = {title, discountedPrice, image};
+    dispatch(addToCartlist(item))
+    onAddToCart(item)
+  }
+
   return (
-<div className="relative p-3 py-2 group cursor-pointer bg-[#f7f7f7] border rounded-md hover:shadow w-full h-full">
+    <div className="relative p-3 py-2 group cursor-pointer bg-[#f7f7f7] border rounded-md hover:shadow w-full h-full">
       <div className="flex relative justify-center items-center mb-3">
         <div className="absolute top-0 left-0 border rounded-3xl bg-red-600 p-1.5 text-white">
           <p className="text-[10px] md:text-sm">{discount}</p>
         </div>
-        <img src={image} alt="iPhone" className="w-[75%] rounded" />
+        <img src={image} alt={title} className="w-[75%] rounded" />
       </div>
 
       <p className="text-sm md:text-lg font-semibold mb-1 text-center line-clamp-1">
         {title}
       </p>
 
-      {/* ⭐ Rating */}
-      <div className="flex items-center gap-1 text-yellow-400  mb-2">
+      <div className="flex items-center gap-1 text-yellow-400 mb-2">
         {[...Array(5)].map((_, i) => (
           <svg
             key={i}
@@ -45,14 +68,11 @@ const MonthlySaleCard = ({
             <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z" />
           </svg>
         ))}
-        <span className="  text-[10px] text-start line-clamp-1 md:text-sm text-gray-600">
-          {reviewsCount}
-        </span>
+        <span className="text-[10px] md:text-sm text-gray-600">{reviewsCount}</span>
       </div>
 
-      {/* 💰 Pricing */}
-      <div className="mb-2 flex  gap-2 justify-center">
-        <p className="  text-[7px] md:text-xs  text-gray-400 line-through flex items-center">
+      <div className="mb-2 flex gap-2 justify-center">
+        <p className="text-[7px] md:text-xs text-gray-400 line-through flex items-center">
           {actualPrice}
         </p>
         <p className="text-[10px] md:text-sm font-bold text-green-600">
@@ -60,12 +80,9 @@ const MonthlySaleCard = ({
         </p>
       </div>
 
-      {/* 📦 Stock & Sales Info */}
-      <div className=" items-center justify-center gap-3 mb-2 hidden md:flex">
-        <p className=" text-xs md:text-sm  text-gray-600 line-clamp-1 ">
-          {totalSold}
-        </p>
-        <div className="flex items-center gap-1   text-sm text-gray-800">
+      <div className="items-center justify-center gap-3 mb-2 hidden md:flex">
+        <p className="text-xs md:text-sm text-gray-600 line-clamp-1">{totalSold}</p>
+        <div className="flex items-center gap-1 text-sm text-gray-800">
           <svg
             stroke="currentColor"
             fill="currentColor"
@@ -81,22 +98,19 @@ const MonthlySaleCard = ({
         </div>
       </div>
 
-      {/* 🛒 CTA */}
-    {/* <div className="w-full flex justify-center"> */}
-  <button className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition">
-    {label}
-  </button>
-{/* </div> */}
+      <button
+        className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition"
+        onClick={() => onAddToCart({ title, discountedPrice, image })}
+      >
+        {label}
+      </button>
 
-<div className="absolute hidden group-hover:flex transition-transform duration-500 md:right-3 right-0 top-0">
-    <HoverAddCartWishShare
-  product={{ title, image, discountedPrice }}
-  onAddToCart={() => onAddToCart({ title, discountedPrice, image })}
-  onAddToWishList={() => onAddToWishList({ title, discountedPrice, image })}
-  onShare={() => console.log('Share clicked')}
-/>
+      <div className="absolute hidden group-hover:flex transition-transform duration-500 md:right-3 right-0 top-0">
+        <HoverAddCartWishShare
+          product={{ title, image, discountedPrice }}
+          onShare={() => console.log("Share clicked")}
+        />
       </div>
-     
     </div>
   );
 };

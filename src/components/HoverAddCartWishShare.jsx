@@ -1,19 +1,31 @@
 import { Heart, Share2, ShoppingCart } from 'lucide-react';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { addToWishlist } from '../features/wishlistSlice';
+import { addToCartlist } from '../features/cartlistSlice';
 
-const HoverAddCartWishShare = ({ onAddToCart, onAddToWishList, onShare }) => {
+
+const HoverAddCartWishShare = ({ product }) => {
+  const dispatch = useDispatch();
+  const onAddToWishList = () => {
+    dispatch(addToWishlist(product));
+  }
+
+  const onAddToCart =()=>{
+    dispatch(addToCartlist(product))
+  }
   return (
     <div className='md:p-1.5 p-1 flex flex-col gap-2 border cursor-pointer bg-[#f69620]'>
       
-      <div className='border p-1 rounded-full flex justify-center bg-white' onClick={onAddToCart}>
-        <ShoppingCart className='w-4 h-4'/>
+      <div className='border p-1 rounded-full flex justify-center bg-white' >
+        <ShoppingCart className='w-4 h-4' onClick={onAddToCart}/>
       </div>
       
       <div className='border p-1 rounded-full flex justify-center hover:text-red-400 bg-white' onClick={onAddToWishList}>
-        <Heart className='w-4 h-4'/>
+        <Heart className='w-4 h-4' />
       </div>
       
-      <div className='border p-1 rounded-full flex justify-center bg-white' onClick={onShare}>
+      <div className='border p-1 rounded-full flex justify-center bg-white' >
         <Share2 className='w-4 h-4'/>
       </div>
       

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MonthlySaleCard from '../components/MonthlySaleCard';
 import { useDispatch } from 'react-redux';
+
 import { addToWishlist } from '../features/wishlistSlice';
 // import { addToCart } from '../features/cartSlice';
 

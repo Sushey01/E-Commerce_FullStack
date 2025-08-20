@@ -4,38 +4,42 @@ import { BsTrash } from "react-icons/bs";
 import Sunglass from "../assets/images/sunglass.webp";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      seller: "Emommcerce Bazar",
-      title: "Hair Trimming Vintage T9 Electric Hair Clipper Hair Cutting Machine Professional",
-      details: "Eyewear size: One size ‖ Frame Color: Black",
-      warranty: "No Warranty",
-      price: 437,
-      quantity: 1,
-      image: Sunglass,
-    },
-    {
-      id: 2,
-      seller: "Gadget Mart",
-      title: "Wireless Earbuds with Charging Case - Black Edition",
-      details: "Bluetooth 5.3 ‖ Battery: 20hrs",
-      warranty: "6 Months Warranty",
-      price: 899,
-      quantity: 2,
-      image: Sunglass,
-    },
-    {
-      id: 3,
-      seller: "Emommcerce Bazar",
-      title: "T9 Electric Hair Clipper – Limited Edition",
-      details: "Eyewear size: One size ‖ Frame Color: Black",
-      warranty: "No Warranty",
-      price: 437,
-      quantity: 1,
-      image: Sunglass,
-    },
-  ]);
+
+  const data = localStorage.getItem('cartlist');
+  const [cartItems, setCartItems] = useState(JSON.parse(data))
+
+  // const [cartItems, setCartItems] = useState([
+  //   {
+  //     id: 1,
+  //     seller: "Emommcerce Bazar",
+  //     title: "Hair Trimming Vintage T9 Electric Hair Clipper Hair Cutting Machine Professional",
+  //     details: "Eyewear size: One size ‖ Frame Color: Black",
+  //     warranty: "No Warranty",
+  //     price: 437,
+  //     quantity: 1,
+  //     image: Sunglass,
+  //   },
+  //   {
+  //     id: 2,
+  //     seller: "Gadget Mart",
+  //     title: "Wireless Earbuds with Charging Case - Black Edition",
+  //     details: "Bluetooth 5.3 ‖ Battery: 20hrs",
+  //     warranty: "6 Months Warranty",
+  //     price: 899,
+  //     quantity: 2,
+  //     image: Sunglass,
+  //   },
+  //   {
+  //     id: 3,
+  //     seller: "Emommcerce Bazar",
+  //     title: "T9 Electric Hair Clipper – Limited Edition",
+  //     details: "Eyewear size: One size ‖ Frame Color: Black",
+  //     warranty: "No Warranty",
+  //     price: 437,
+  //     quantity: 1,
+  //     image: Sunglass,
+  //   },
+  // ]);
 
   const handleDelete = (id) => {
     setCartItems((items) => items.filter((item) => item.id !== id));
@@ -108,16 +112,17 @@ const CartPage = () => {
                 <div className="flex border border-orange-500 rounded overflow-hidden text-sm">
                   <button
                     className="px-3 py-1 font-bold"
-                    onClick={() => handleQuantityChange(item.id, +1)}
+                                        onClick={() => handleQuantityChange(item.id, -1)}
+
                   >
-                    +
+                    -
                   </button>
                   <span className="px-3 py-1 bg-white">{item.quantity}</span>
                   <button
                     className="px-3 py-1 font-bold"
-                    onClick={() => handleQuantityChange(item.id, -1)}
+                    onClick={() => handleQuantityChange(item.id, +1)}
                   >
-                    -
+                    +
                   </button>
                 </div>
 
