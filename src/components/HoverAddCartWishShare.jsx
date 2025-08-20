@@ -11,9 +11,15 @@ const HoverAddCartWishShare = ({ product }) => {
     dispatch(addToWishlist(product));
   }
 
-  const onAddToCart =()=>{
-    dispatch(addToCartlist(product))
-  }
+ const onAddToCart = () => {
+  // Always attach a unique id if not present
+  const productWithId = {
+    ...product,
+    id: product.id ?? Date.now() + Math.random() // fallback unique id
+  };
+  dispatch(addToCartlist(productWithId));
+};
+
   return (
     <div className='md:p-1.5 p-1 flex flex-col gap-2 border cursor-pointer bg-[#f69620]'>
       

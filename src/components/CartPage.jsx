@@ -1,64 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { FaTrash, FaHeart, FaStore } from "react-icons/fa";
 import { BsTrash } from "react-icons/bs";
 import Sunglass from "../assets/images/sunglass.webp";
+import {
+  removeFromCartlist,
+  addToCartlist,
+} from "../features/cartlistSlice";
 
 const CartPage = () => {
+  const cartItems = useSelector((state) => state.cartlist.items);
+  const dispatch = useDispatch();
 
-  const data = localStorage.getItem('cartlist');
-  const [cartItems, setCartItems] = useState(JSON.parse(data))
+  // 🔄 keep localStorage in sync with Redux
+  useEffect(() => {
+    localStorage.setItem("cartlist", JSON.stringify(cartItems));
+  }, [cartItems]);
 
-  // const [cartItems, setCartItems] = useState([
-  //   {
-  //     id: 1,
-  //     seller: "Emommcerce Bazar",
-  //     title: "Hair Trimming Vintage T9 Electric Hair Clipper Hair Cutting Machine Professional",
-  //     details: "Eyewear size: One size ‖ Frame Color: Black",
-  //     warranty: "No Warranty",
-  //     price: 437,
-  //     quantity: 1,
-  //     image: Sunglass,
-  //   },
-  //   {
-  //     id: 2,
-  //     seller: "Gadget Mart",
-  //     title: "Wireless Earbuds with Charging Case - Black Edition",
-  //     details: "Bluetooth 5.3 ‖ Battery: 20hrs",
-  //     warranty: "6 Months Warranty",
-  //     price: 899,
-  //     quantity: 2,
-  //     image: Sunglass,
-  //   },
-  //   {
-  //     id: 3,
-  //     seller: "Emommcerce Bazar",
-  //     title: "T9 Electric Hair Clipper – Limited Edition",
-  //     details: "Eyewear size: One size ‖ Frame Color: Black",
-  //     warranty: "No Warranty",
-  //     price: 437,
-  //     quantity: 1,
-  //     image: Sunglass,
-  //   },
-  // ]);
-
+  // Delete one
   const handleDelete = (id) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
+    dispatch(removeFromCartlist(id));
   };
 
+  // Delete all
+  const handleDeleteAll = () => {
+    cartItems.forEach((item) => dispatch(removeFromCartlist(item.id)));
+  };
+
+  // Change qty (re-add same item with updated quantity)
   const handleQuantityChange = (id, change) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + change) }
-          : item
-      )
-    );
+    const item = cartItems.find((it) => it.id === id);
+    if (!item) return;
+
+    const updated = {
+      ...item,
+      quantity: Math.max(1, (item.quantity ?? 1) + change),
+    };
+
+    // Remove old + re-add updated
+    dispatch(removeFromCartlist(id));
+    dispatch(addToCartlist(updated));
   };
 
-  // Group items by seller
+  // Group by seller
   const groupedItems = cartItems.reduce((acc, item) => {
-    if (!acc[item.seller]) acc[item.seller] = [];
-    acc[item.seller].push(item);
+    const seller = item.seller ?? "Unknown Seller";
+    if (!acc[seller]) acc[seller] = [];
+    acc[seller].push(item);
     return acc;
   }, {});
 
@@ -70,15 +58,16 @@ const CartPage = () => {
         <button className="bg-gray-100 text-black px-4 py-1 rounded-full flex items-center gap-2 text-sm">
           🗂️ Select All ({cartItems.length})
         </button>
-        <button className="bg-black text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm">
+        <button
+          className="bg-black text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
+          onClick={handleDeleteAll}
+        >
           Delete All <BsTrash />
         </button>
       </div>
 
-      {/* Render grouped items */}
       {Object.entries(groupedItems).map(([seller, items]) => (
         <div key={seller} className="mb-8">
-          {/* Seller title */}
           <div className="flex items-center gap-2 text-lg font-semibold border-b border-gray-300 pb-2 mb-4">
             <FaStore className="text-gray-700" /> {seller}
           </div>
@@ -88,36 +77,38 @@ const CartPage = () => {
               key={item.id}
               className="bg-gray-100 rounded-lg p-4 flex flex-row gap-4 items-start md:items-center justify-between mb-4"
             >
-              {/* Image */}
               <img
-                src={item.image}
+                src={item.image ?? Sunglass}
                 alt={item.title}
                 className="w-24 h-24 object-cover rounded-lg"
               />
 
-              {/* Product Info */}
               <div className="flex-1 space-y-1">
-                <p className="text-base font-semibold leading-snug line-clamp-2">{item.title}</p>
-                <p className="text-sm text-gray-600 line-clamp-2">{item.details}</p>
-                <p className="text-sm text-gray-500">{item.warranty}</p>
+                <p className="text-base font-semibold leading-snug line-clamp-2">
+                  {item.title}
+                </p>
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {item.details ?? ""}
+                </p>
+                <p className="text-sm text-gray-500">{item.warranty ?? ""}</p>
               </div>
 
-              {/* Right Side: Price, Qty, Actions */}
               <div className="flex flex-col gap-3 items-end min-w-[150px]">
-                <div className="text-lg font-bold text-gray-800">Rs.{item.price}</div>
+                <div className="text-lg font-bold text-gray-800">
+                  Rs.{item.price ?? 0}
+                </div>
                 <div className="text-sm font-medium text-gray-600">
-                  Qty: {item.quantity.toString().padStart(2, "0")}
+                  Qty: {(item.quantity ?? 1).toString().padStart(2, "0")}
                 </div>
 
                 <div className="flex border border-orange-500 rounded overflow-hidden text-sm">
                   <button
                     className="px-3 py-1 font-bold"
-                                        onClick={() => handleQuantityChange(item.id, -1)}
-
+                    onClick={() => handleQuantityChange(item.id, -1)}
                   >
                     -
                   </button>
-                  <span className="px-3 py-1 bg-white">{item.quantity}</span>
+                  <span className="px-3 py-1 bg-white">{item.quantity ?? 1}</span>
                   <button
                     className="px-3 py-1 font-bold"
                     onClick={() => handleQuantityChange(item.id, +1)}
@@ -142,6 +133,10 @@ const CartPage = () => {
           ))}
         </div>
       ))}
+
+      {cartItems.length === 0 && (
+        <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
+      )}
     </div>
   );
 };
