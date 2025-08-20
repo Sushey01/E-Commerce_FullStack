@@ -1,4 +1,3 @@
-// Wishlist.jsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromWishlist } from "../features/wishlistSlice";
@@ -9,8 +8,8 @@ const Wishlist = () => {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.items) || [];
 
-  const removeItem = (title) => {
-    dispatch(removeFromWishlist(title));
+  const removeItem = (id) => {
+    dispatch(removeFromWishlist(id));
   };
 
   const WishlistItem = ({ item }) => (
@@ -29,9 +28,7 @@ const Wishlist = () => {
         </div>
         <div className="text-right">
           <p className="font-semibold text-gray-800">Rs.{item.price || 0}</p>
-          <p className="text-sm text-gray-600">
-            Qty: {(item.quantity || 1).toString().padStart(2, "0")}
-          </p>
+          <p className="text-sm text-gray-600">Qty: {(item.quantity || 1).toString().padStart(2, "0")}</p>
         </div>
       </div>
 
@@ -39,7 +36,7 @@ const Wishlist = () => {
         <button
           className="w-8 h-8 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-600 rounded-full"
           title="Remove"
-          onClick={() => removeItem(item.title)}
+          onClick={() => removeItem(item.id)}
         >
           ✖
         </button>
@@ -74,8 +71,8 @@ const Wishlist = () => {
           <h3 className="text-lg font-semibold text-gray-700 border-b border-gray-300 pb-1 mb-3">
             🏬 {store}
           </h3>
-          {items.map((item, index) => (
-            <WishlistItem key={index} item={item} />
+          {items.map((item) => (
+            <WishlistItem key={item.id} item={item} />
           ))}
         </div>
       ))}
