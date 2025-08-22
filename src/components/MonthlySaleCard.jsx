@@ -98,12 +98,13 @@ const MonthlySaleCard = ({
         </div>
       </div>
 
-      <button
-        className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition"
-        onClick={() => onAddToCart({ title, discountedPrice, image })}
-      >
-        {label}
-      </button>
+     <button
+  className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition"
+  onClick={handleAddToCart}  // use the internal handler
+>
+  {label}
+</button>
+        
 
       <div className="absolute hidden group-hover:flex transition-transform duration-500 md:right-3 right-0 top-0">
         <HoverAddCartWishShare

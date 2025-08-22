@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { ShoppingCart } from "lucide-react";
 import { toast } from "react-toastify";
 
 const savedItems = [];
@@ -16,15 +17,20 @@ const cartlistSlice = createSlice({
   name: "cartlist",
   initialState,
   reducers: {
-    addToCartlist: (state, action) => {
-      const exists = state.items.find(item => item.id === action.payload.id);
-      if (!exists) {
-        state.items.push({ ...action.payload, id: Date.now(), quantity: 1 });
-      } else {
-        exists.quantity += 1;
-      }
-      localStorage.setItem("cartlist", JSON.stringify(state.items));
-    },
+addToCartlist: (state, action) => {
+  const exists = state.items.find(item => item.id === action.payload.id);
+
+  if (exists) {
+    exists.quantity += 1;
+  } else {
+    state.items.push({ ...action.payload, quantity: 1 });
+  }
+
+  localStorage.setItem("cartlist", JSON.stringify(state.items));
+  // toast.success(`${action.payload.name} added to cart 🛒`);
+},
+
+
     removeFromCartlist: (state, action) => {
       state.items = state.items.filter(item => item.id !== action.payload);
       localStorage.setItem("cartlist", JSON.stringify(state.items));

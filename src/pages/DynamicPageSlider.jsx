@@ -17,10 +17,6 @@ const DynamicPageSlider = () => {
 
   const navigate = useNavigate()
 
-
-
-
-
   useEffect(() => {
     // simulate API fetch with 1.5 seconds delay
     setTimeout(() => {

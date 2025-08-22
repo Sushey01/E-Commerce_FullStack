@@ -39,6 +39,7 @@ const App = () => {
                 <HeroSection />
                 <CategoryPage />
                 <DynamicPageSlider />
+                
                 <BlackFridaySales />
                 <NewProduct />
                 <FlashSaleContainer />
