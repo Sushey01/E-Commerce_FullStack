@@ -1,48 +1,68 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ShoppingCart } from "lucide-react";
-import { toast } from "react-toastify";
+  
+const savedItems = JSON.parse(localStorage.getItem("cartlist") || "[]");
 
-const savedItems = [];
+const initialState = { 
+  items: Array.isArray(savedItems)
+    ? savedItems.map(item => ({ ...item, quantity: item.quantity ?? 1 }))
+    : []
+};
 
-//alternative way to give unique id
-//product passed from monthlycard and inside product added unique id
-// const handleAddToCart = (product)=>{
-//     const itemWithId ={...product, id:Date.now()} //unique id  
-//     dispatch(addToCartlist(itemWithId))
-// }
-
-const initialState = { items: savedItems.map(item => ({ ...item, quantity: item.quantity ?? 1 })) };
 
 const cartlistSlice = createSlice({
   name: "cartlist",
   initialState,
   reducers: {
-addToCartlist: (state, action) => {
-  const exists = state.items.find(item => item.id === action.payload.id);
+    addToCartlist: (state, action) => {
+      const { id, style, capacity, color } = action.payload;
 
-  if (exists) {
-    exists.quantity += 1;
-  } else {
-    state.items.push({ ...action.payload, quantity: 1 });
-  }
+      // Check if this exact variant exists
+      const exists = state.items.find(item => 
+        item.id === id &&
+        item.style === style &&
+        item.capacity === capacity &&
+        item.color === color
+      );
+
+      if (exists) {
+        exists.quantity += action.payload.quantity ?? 1;
+      } else {
+        state.items.push({ ...action.payload, quantity: action.payload.quantity ?? 1 });
+      }
+
+      localStorage.setItem("cartlist", JSON.stringify(state.items));
+      // toast.success(`${action.payload.name} added to cart 🛒`);
+    },
+
+   removeFromCartlist: (state, action) => {
+  const { id, style, capacity, color } = action.payload;
+
+  state.items = state.items.filter(
+    item =>
+      item.id !== id ||
+      item.style !== style ||
+      item.capacity !== capacity ||
+      item.color !== color
+  );
 
   localStorage.setItem("cartlist", JSON.stringify(state.items));
-  // toast.success(`${action.payload.name} added to cart 🛒`);
 },
 
 
-    removeFromCartlist: (state, action) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
-      localStorage.setItem("cartlist", JSON.stringify(state.items));
-    },
     updateQuantity: (state, action) => {
-      const { id, change } = action.payload;
-      const item = state.items.find(item => item.id === id);
+      const { id, style, capacity, color, change } = action.payload;
+      const item = state.items.find(item =>
+        item.id === id &&
+        item.style === style &&
+        item.capacity === capacity &&
+        item.color === color
+      );
       if (item) {
         item.quantity = Math.max(1, (item.quantity ?? 1) + change);
       }
       localStorage.setItem("cartlist", JSON.stringify(state.items));
     },
+
     clearCart: (state) => {
       state.items = [];
       localStorage.setItem("cartlist", JSON.stringify(state.items));

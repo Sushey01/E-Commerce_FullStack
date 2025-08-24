@@ -1,8 +1,14 @@
 import React from "react";
 import Iphone from "../assets/images/iphone.webp";
 import HoverAddCartWishShare from "./HoverAddCartWishShare";
+import { useNavigate } from "react-router-dom";
 
-const MonthlySaleCardRedux = ({
+
+
+const MonthlySaleCardRedux =
+
+({
+  id,
   discount,
   image,
   title,
@@ -15,6 +21,8 @@ const MonthlySaleCardRedux = ({
   onAddToWishList,
   label,
 }) => {
+const navigate=useNavigate()
+
   return (
     <div className="group cursor-pointer p-3 py-2 relative bg-[#f7f7f7] border rounded-md hover:shadow w-full h-full">
       <div className="flex relative justify-center items-center mb-3">
@@ -83,7 +91,7 @@ const MonthlySaleCardRedux = ({
 
       {/* 🛒 CTA */}
       {/* <div className="w-full flex justify-center"> */}
-      <button className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition">
+      <button className="w-full text-[#0296a0] text-xs md:text-sm p-1.5 border rounded-full md:group-hover:bg-[#0296a0] md:group-hover:text-white transition"onClick={() => navigate(`/product/${id}`)}>
         {label}
       </button>
       {/* </div> */}
