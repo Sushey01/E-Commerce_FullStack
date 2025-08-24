@@ -52,25 +52,25 @@ const ProductDetailInfo = ({ product }) => {
     // console.log("Dispatched cart item:", cartItem); // Log dispatched item
 
     // Save to localStorage
-    const existingCart = JSON.parse(localStorage.getItem("cartlist") || "[]");
-    const existingItemIndex = existingCart.findIndex(
-      (item) =>
-        item.id === cartItem.id &&
-        item.style === cartItem.style &&
-        item.capacity === cartItem.capacity &&
-        item.color === cartItem.color
-    );
-    let updatedCart;
-    if (existingItemIndex >= 0) {
-      updatedCart = [...existingCart];
-      updatedCart[existingItemIndex].quantity += cartItem.quantity;
-    } else {
-      updatedCart = [...existingCart, cartItem];
-    }
-    localStorage.setItem("cartlist", JSON.stringify(updatedCart));
-    // console.log("Cart saved to localStorage:", updatedCart); // Log to verify
+    // const existingCart = JSON.parse(localStorage.getItem("cartlist") || "[]");
+    // const existingItemIndex = existingCart.findIndex(
+    //   (item) =>
+    //     item.id === cartItem.id &&
+    //     item.style === cartItem.style &&
+    //     item.capacity === cartItem.capacity &&
+    //     item.color === cartItem.color
+    // );
+    // let updatedCart;
+    // if (existingItemIndex >= 0) {
+    //   updatedCart = [...existingCart];
+    //   updatedCart[existingItemIndex].quantity += cartItem.quantity;
+    // } else {
+    //   updatedCart = [...existingCart, cartItem];
+    // }
+    // localStorage.setItem("cartlist", JSON.stringify(updatedCart));
+    // // console.log("Cart saved to localStorage:", updatedCart); // Log to verify
 
-    alert(`${cartItem.name} added to cart!`);
+    // alert(`${cartItem.name} added to cart!`);
   };
 
   // Handle quantity increment/decrement

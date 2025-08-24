@@ -25,7 +25,7 @@ const cartlistSlice = createSlice({
       );
 
       if (exists) {
-        exists.quantity += action.payload.quantity ?? 1;
+        exists.quantity = action.payload.quantity ?? exists.quantity;
       } else {
         state.items.push({ ...action.payload, quantity: action.payload.quantity ?? 1 });
       }
