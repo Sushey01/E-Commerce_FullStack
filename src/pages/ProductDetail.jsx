@@ -5,14 +5,15 @@ import mockProduct from "../data/mockData";
 import { useParams } from "react-router-dom";
 import mockProducts from "../data/mockData";
 import featureProducts from "../DummySection/Data";
+import products from "../data/products";
 
 const ProductDetail = () => {
 
   const {id} = useParams(); // get id from URL
 
   // find the product that matches the id
-  const product = featureProducts.find((item)=>item.id===id);
-  console.log(product,'ssshkjhskjhskjh')
+  const product = products.find((item)=>item.id===id);
+  // console.log(product,'ssshkjhskjhskjh')
 
   if (!product) {
     return <p>Product not found!</p>

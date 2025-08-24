@@ -1,0 +1,167 @@
+// src/data/products.js
+
+import Iphone from "../assets/images/iphone.webp";
+import Samsung from "../assets/images/samsung.png";
+import Xaomi from "../assets/images/xaomi.png";
+import Honor from "../assets/images/honor.png";
+import Laptop1 from "../assets/images/laptop.webp";
+import Laptop2 from "../assets/images/laptop1.webp";
+import Laptop3 from "../assets/images/laptop2.webp";
+import Laptop4 from "../assets/images/laptop3.webp";
+
+const products = [
+  {
+    id: "1",
+    title1: "iPad",
+    title2: "& Tablets",
+    subtitle: "Up to 20% off today!",
+    label: "Shop Now",
+    link: "/products/1",
+    images: [Laptop1, Laptop2, Laptop3],
+    price: 250000,
+    oldPrice: 280000,
+    description: "Liquid Retina XDR Display, M2 Max Chip with 12–Core CPU",
+    reviews: 25,
+    rating: 4.5,
+    outOfStock: false,
+    variant: {
+      style: ["Apple M1 Max Chip"],
+      capacity: ["512 GB", "1 TB"],
+      color: ["#f87171", "#fbbf24"],
+    },
+    image: Iphone, // Feature slider
+  },
+  {
+    id: "2",
+    title1: "Samsung",
+    title2: "Galaxy",
+    subtitle: "Save 10% this week!",
+    label: "Shop Now",
+    link: "/products/2",
+    images: [Samsung, Laptop1, Laptop2],
+    price: 60000,
+    oldPrice: 70000,
+    description: "High performance gaming phone with AMOLED Display",
+    reviews: 95,
+    rating: 4.3,
+    outOfStock: false,
+    // No variant
+    image: Samsung,
+  },
+  {
+    id: "3",
+    title1: "Xiaomi",
+    title2: "Gaming",
+    subtitle: "Flat 20% off",
+    label: "Shop Now",
+    link: "/products/3",
+    images: [Xaomi, Laptop3, Laptop4],
+    price: 80000,
+    oldPrice: 90000,
+    description: "Sleek design, powerful camera, and fast performance",
+    reviews: 120,
+    rating: 4.7,
+    outOfStock: false,
+    variant: {
+      style: ["Base", "Plus", "Ultra"],
+      capacity: ["128 GB", "256 GB", "512 GB"],
+      color: ["#000000", "#ffffff", "#ff0000"],
+    },
+    image: Xaomi,
+  },
+  {
+    id: "4",
+    title1: "Honor",
+    title2: "Magic 5",
+    subtitle: "Flat 20% off",
+    label: "Shop Now",
+    link: "/products/4",
+    images: [Honor, Laptop1, Laptop2],
+    price: 50000,
+    oldPrice: 55000,
+    description: "Premium smartphone with advanced AI features",
+    reviews: 60,
+    rating: 4.2,
+    outOfStock: false,
+    // No variant
+    image: Honor,
+  },
+  {
+    id: "5",
+    title1: "iPhone",
+    title2: "Gaming",
+    subtitle: "Flat 20% off",
+    label: "Shop Now",
+    link: "/products/5",
+    images: [Iphone, Laptop3, Laptop4],
+    price: 120000,
+    oldPrice: 130000,
+    description: "High-end smartphone with excellent camera quality",
+    reviews: 80,
+    rating: 4.6,
+    outOfStock: false,
+    variant: {
+      style: ["Standard", "Pro"],
+      capacity: ["128 GB", "256 GB", "512 GB"],
+      color: ["#000000", "#ffffff"],
+    },
+    image: Iphone,
+  },
+  {
+    id: "6",
+    title1: "Xiaomi",
+    title2: "Gaming",
+    subtitle: "Flat 20% off",
+    label: "Shop Now",
+    link: "/products/6",
+    images: [Xaomi, Laptop1, Laptop2],
+    price: 60000,
+    oldPrice: 70000,
+    description: "Affordable gaming phone with good performance",
+    reviews: 45,
+    rating: 4.1,
+    outOfStock: false,
+    // No variant
+    image: Xaomi,
+  },
+  {
+    id: "7",
+    title1: "Samsung",
+    title2: "Gaming",
+    subtitle: "Flat 20% off",
+    label: "Shop Now",
+    link: "/products/7",
+    images: [Samsung, Laptop3, Laptop4],
+    price: 90000,
+    oldPrice: 100000,
+    description: "Samsung high-performance gaming phone",
+    reviews: 50,
+    rating: 4.4,
+    outOfStock: false,
+    variant: {
+      style: ["Standard", "Pro"],
+      capacity: ["128 GB", "256 GB", "512 GB"],
+      color: ["#000000", "#ff0000"],
+    },
+    image: Samsung,
+  },
+  {
+    id: "8",
+    title1: "Xiaomi",
+    title2: "Gaming",
+    subtitle: "Flat 20% off",
+    label: "Shop Now",
+    link: "/products/8",
+    images: [Iphone, Laptop1, Laptop2],
+    price: 60000,
+    oldPrice: 70000,
+    description: "Budget Xiaomi phone with nice display",
+    reviews: 35,
+    rating: 4.0,
+    outOfStock: false,
+    // No variant
+    image: Iphone,
+  },
+];
+
+export default products;

@@ -8,6 +8,7 @@ import ProductCard from '../components/ProductCardSkeleton';
 import featureProducts from '../data/featureProducts'
 import monthlySaleProducts from '../data/monthlyProducts'
 import laptopProducts from '../data/laptopProducts'
+import products from '../data/products'
 
 const DynamicPageSlider = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -20,7 +21,7 @@ const DynamicPageSlider = () => {
   useEffect(() => {
     // simulate API fetch with 1.5 seconds delay
     setTimeout(() => {
-      setFeatureProductsState(featureProducts)
+      setFeatureProductsState(products)
       setMonthlySaleProductsState(monthlySaleProducts)
       setLaptopProductsState(laptopProducts)
       setIsLoading(false)

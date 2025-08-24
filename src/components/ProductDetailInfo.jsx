@@ -111,7 +111,7 @@ const ProductDetailInfo = ({ product }) => {
       {/* Price */}
       <div className="mt-4 text-xl flex font-bold text-black">
         {formatPrice(product.price || 60000)}
-        <p>{product.oldPrice}</p>
+        {/* <p>{product.oldPrice}</p> */}
         
         {product.oldPrice && (
           <span className="line-through text-gray-400 text-base ml-2">
