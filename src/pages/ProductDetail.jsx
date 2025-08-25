@@ -4,7 +4,6 @@ import ProductDetailInfo from "../components/ProductDetailInfo";
 import mockProduct from "../data/mockData";
 import { useParams } from "react-router-dom";
 import mockProducts from "../data/mockData";
-import featureProducts from "../DummySection/Data";
 import products from "../data/products";
 
 const ProductDetail = () => {

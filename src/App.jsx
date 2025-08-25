@@ -21,7 +21,6 @@ import LoginPage from "./pages/LoginPage";
 import CustomerCareChat from "./components/CustomerCareChat";
 import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
 import MonthlySalePageRedux from "./pages/MonthlySalePageRedux";
-import Page from "./DummySection/Page";
 
 const App = () => {
   return (
