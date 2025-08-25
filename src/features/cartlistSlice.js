@@ -39,10 +39,12 @@ const cartlistSlice = createSlice({
 
   state.items = state.items.filter(
     item =>
-      item.id !== id ||
-      item.style !== style ||
-      item.capacity !== capacity ||
-      item.color !== color
+      !(
+        item.id === id &&
+        item.style === style &&
+        item.capacity === capacity &&
+        item.color === color
+      )
   );
 
   localStorage.setItem("cartlist", JSON.stringify(state.items));
