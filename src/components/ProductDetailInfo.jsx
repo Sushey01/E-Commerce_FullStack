@@ -5,23 +5,30 @@ import { addToCartlist } from "../features/cartlistSlice";
 import { formatPrice } from "../utils/formatPrice";
 
 const ProductDetailInfo = ({ product }) => {
-  const { register, handleSubmit, watch, setValue, formState: { errors },reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm({
     defaultValues: {
       variations: {},
       quantity: 1,
-      LocalProductID: product.id,
+      // LocalProductID: product.id,
     },
   });
   const dispatch = useDispatch();
   const quantity = watch("quantity");
 
-  const handleVariations= (key,value) => {
-    console.log([key,value],'sdfsdfsdf');
-    setValue('variations',{
-      ...watch('variations'),
-      [key]:value
-    })
-  }
+  const handleVariations = (key, value) => {
+    console.log([key, value], "sdfsdfsdf");
+    setValue("variations", {
+      ...watch("variations"),
+      [key]: value,
+    });
+  };
 
   // Handle form submission
   const onSubmit = (data) => {
@@ -31,24 +38,23 @@ const ProductDetailInfo = ({ product }) => {
       return;
     }
 
-  const cartItem = {
-  id: product.id,
-  name: `${product.title1} ${product.subtitle || ""}`.trim(),
-  price: product.price || 60000,
-  oldPrice: product.oldPrice || null,   // ✅ keep old price if exists
-  quantity: data.quantity,
-  image: product.image || "",
-  variations:data.variations,
-  LocalProductID:product.id ,
-};
+    const cartItem = {
+      id: product.id,
+      name: `${product.title1} ${product.subtitle || ""}`.trim(),
+      price: product.price || 60000,
+      oldPrice: product.oldPrice || null, // ✅ keep old price if exists
+      quantity: data.quantity,
+      image: product.image || "",
+      variations: data.variations,
+      // LocalProductID:product.id ,
+    };
 
-console.log(cartItem,'ssssssssssss');
+    console.log(cartItem, "ssssssssssss");
     // Dispatch to Redux
     dispatch(addToCartlist(cartItem));
-    setValue('variations',{})
-    reset();  
+    setValue("variations", {});
+    reset();
     // console.log("Dispatched cart item:", cartItem); // Log dispatched item
-
   };
 
   // Handle quantity increment/decrement
@@ -57,12 +63,10 @@ console.log(cartItem,'ssssssssssss');
   };
 
   // Calculate discounted price
-  const discountedAmount = product.oldPrice && product.price
-    ? product.oldPrice - product.price
-    : 0;
-  const discountDisplay = discountedAmount > 0
-    ? `Save ${formatPrice(discountedAmount)}`
-    : "";
+  const discountedAmount =
+    product.oldPrice && product.price ? product.oldPrice - product.price : 0;
+  const discountDisplay =
+    discountedAmount > 0 ? `Save ${formatPrice(discountedAmount)}` : "";
 
   return (
     <div className="max-w-3xl mx-auto p-4 md:p-8 bg-white rounded-md shadow-sm relative">
@@ -76,21 +80,23 @@ console.log(cartItem,'ssssssssssss');
       <h1 className="text-2xl md:text-3xl font-semibold leading-tight">
         {product.title1} {product.subtitle || ""}
       </h1>
-      <p className="text-gray-600 mt-2">{product.subtitle || "No description available"}</p>
+      <p className="text-gray-600 mt-2">
+        {product.subtitle || "No description available"}
+      </p>
 
       {/* Rating */}
       <div className="flex items-center mt-3">
         <div className="text-yellow-400 text-lg">★★★★★</div>
-        <p className="ml-2 text-gray-500 text-sm">{product.reviews || 0} Reviews</p>
+        <p className="ml-2 text-gray-500 text-sm">
+          {product.reviews || 0} Reviews
+        </p>
       </div>
-
-      
 
       {/* Price */}
       <div className="mt-4 text-xl flex font-bold text-black">
         {formatPrice(product.price || 60000)}
         {/* <p>{product.oldPrice}</p> */}
-        
+
         {product.oldPrice && (
           <span className="line-through text-gray-400 text-base ml-2">
             {formatPrice(product.oldPrice)}
@@ -107,42 +113,43 @@ console.log(cartItem,'ssssssssssss');
         {/* Variants */}
         {product?.variant && Object.keys(product.variant).length > 0 && (
           <>
-           {Object.entries(product.variant).map(([key, values]) => (
-  <div className="mt-6" key={key}>
-    <p className="font-medium text-sm text-gray-700 mb-1">{key}</p>
-    <div className="flex gap-4 flex-wrap">
-      {values.map((value) => (
-        <label key={value} className="cursor-pointer">
-          <input
-            type="radio"
-            name={key}
-            onChange={(e) => handleVariations(key,e.target.value)}
-            value={value}
-            className="hidden peer"   // ✅ hide radio, but still keeps it functional
-          />
+            {Object.entries(product.variant).map(([key, values]) => (
+              <div className="mt-6" key={key}>
+                <p className="font-medium text-sm text-gray-700 mb-1">{key}</p>
+                <div className="flex gap-4 flex-wrap">
+                  {values.map((value) => (
+                    <label key={value} className="cursor-pointer">
+                      <input
+                        type="radio"
+                        name={key}
+                        onChange={(e) => handleVariations(key, e.target.value)}
+                        value={value}
+                        className="hidden peer" // ✅ hide radio, but still keeps it functional
+                      />
 
-          {key.toLowerCase() === "color" ? (
-            // 🎨 show actual color circle
-            <span
-              className="w-7 h-7 rounded-full border border-gray-300 block peer-checked:ring-2 peer-checked:ring-teal-600"
-              style={{ backgroundColor: value }}
-            ></span>
-          ) : (
-            // 📝 show text for other variants
-            <span className="px-3 py-1 border rounded text-sm peer-checked:bg-teal-600 peer-checked:text-white">
-              {value}
-            </span>
-          )}
-        </label>
-      ))}
-    </div>
+                      {key.toLowerCase() === "color" ? (
+                        // 🎨 show actual color circle
+                        <span
+                          className="w-7 h-7 rounded-full border border-gray-300 block peer-checked:ring-2 peer-checked:ring-teal-600"
+                          style={{ backgroundColor: value }}
+                        ></span>
+                      ) : (
+                        // 📝 show text for other variants
+                        <span className="px-3 py-1 border rounded text-sm peer-checked:bg-teal-600 peer-checked:text-white">
+                          {value}
+                        </span>
+                      )}
+                    </label>
+                  ))}
+                </div>
 
-    {errors[key] && (
-      <p className="text-red-500 text-sm mt-1">{errors[key].message}</p>
-    )}
-  </div>
-))}
-
+                {errors[key] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[key].message}
+                  </p>
+                )}
+              </div>
+            ))}
           </>
         )}
 
