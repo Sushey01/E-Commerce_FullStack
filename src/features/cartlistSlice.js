@@ -3,9 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const savedItems = JSON.parse(localStorage.getItem("cartlist") || "[]");
 
 const initialState = { 
-  items: Array.isArray(savedItems)
-    ? savedItems.map(item => ({ ...item, quantity: item.quantity ?? 1 }))
-    : []
+  items: savedItems
 };
 
 
@@ -14,20 +12,20 @@ const cartlistSlice = createSlice({
   initialState,
   reducers: {
     addToCartlist: (state, action) => {
-      const { id, style, capacity, color } = action.payload;
+      const payload = action.payload;
 
-      // Check if this exact variant exists
-      const exists = state.items.find(item => 
-        item.id === id &&
-        item.style === style &&
-        item.capacity === capacity &&
-        item.color === color
+      const exists = state.items.find(
+        (item) =>
+          item.id === payload.id &&
+          item.variations &&
+          Object.keys(payload.variations).every(
+            (key) => item.variations[key] === payload.variations[key]
+          )
       );
-
       if (exists) {
-        exists.quantity = action.payload.quantity ?? exists.quantity;
+        exists.quantity += action.payload.quantity ;
       } else {
-        state.items.push({ ...action.payload, quantity: action.payload.quantity ?? 1 });
+        state.items.push({ ...action.payload, quantity: action.payload.quantity   ?? 1 });
       }
 
       localStorage.setItem("cartlist", JSON.stringify(state.items));
@@ -40,10 +38,7 @@ const cartlistSlice = createSlice({
   state.items = state.items.filter(
     item =>
       !(
-        item.id === id &&
-        item.style === style &&
-        item.capacity === capacity &&
-        item.color === color
+        item.id === id 
       )
   );
 
@@ -54,10 +49,7 @@ const cartlistSlice = createSlice({
     updateQuantity: (state, action) => {
       const { id, style, capacity, color, change } = action.payload;
       const item = state.items.find(item =>
-        item.id === id &&
-        item.style === style &&
-        item.capacity === capacity &&
-        item.color === color
+        item.id === id
       );
       if (item) {
         item.quantity = Math.max(1, (item.quantity ?? 1) + change);

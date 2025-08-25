@@ -5,23 +5,26 @@ import { addToCartlist } from "../features/cartlistSlice";
 import { formatPrice } from "../utils/formatPrice";
 
 const ProductDetailInfo = ({ product }) => {
-  const { register, handleSubmit, watch, setValue, formState: { errors },reset } = useForm({
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
-      variations: {},
+      style: product.variant?.style?.[0] || "",
+      capacity: product.variant?.size?.[0] || "",
+      color: product.variant?.color?.[0] || "",
       quantity: 1,
       LocalProductID: product.id,
     },
   });
+
   const dispatch = useDispatch();
   const quantity = watch("quantity");
+  const style = watch("style");
+  const capacity = watch("capacity");
+  const color = watch("color");
 
-  const handleVariations= (key,value) => {
-    console.log([key,value],'sdfsdfsdf');
-    setValue('variations',{
-      ...watch('variations'),
-      [key]:value
-    })
-  }
+  // Log product only once on mount
+  React.useEffect(() => {
+    console.log("Product prop:", product);
+  }, [product]);
 
   // Handle form submission
   const onSubmit = (data) => {
@@ -32,21 +35,22 @@ const ProductDetailInfo = ({ product }) => {
     }
 
   const cartItem = {
-  id: product.id,
-  name: `${product.title1} ${product.subtitle || ""}`.trim(),
-  price: product.price || 60000,
-  oldPrice: product.oldPrice || null,   // ✅ keep old price if exists
-  quantity: data.quantity,
-  image: product.image || "",
-  variations:data.variations,
+//   id: product.id,
+//   name: `${product.title1} ${product.subtitle || ""}`.trim(),
+//   price: product.price || 60000,
+//   oldPrice: product.oldPrice || null,   // ✅ keep old price if exists
+//   quantity: data.quantity,
+//   image: product.image || "",
+//   style: data.style,
+//   capacity: data.capacity,
+//   color: data.color,
+variants: {...data},
   LocalProductID:product.id ,
 };
 
-console.log(cartItem,'ssssssssssss');
+
     // Dispatch to Redux
     dispatch(addToCartlist(cartItem));
-    setValue('variations',{})
-    reset();  
     // console.log("Dispatched cart item:", cartItem); // Log dispatched item
 
   };
@@ -115,8 +119,9 @@ console.log(cartItem,'ssssssssssss');
         <label key={value} className="cursor-pointer">
           <input
             type="radio"
-            name={key}
-            onChange={(e) => handleVariations(key,e.target.value)}
+            {...register(key, {
+              required: `Please select a ${key}`,
+            })}
             value={value}
             className="hidden peer"   // ✅ hide radio, but still keeps it functional
           />
