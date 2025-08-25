@@ -54,6 +54,8 @@ const ProductDetailInfo = ({ product }) => {
     dispatch(addToCartlist(cartItem));
     setValue("variations", {});
     reset();
+
+    alert(`${cartItem.name} is added to cart !`)
     // console.log("Dispatched cart item:", cartItem); // Log dispatched item
   };
 

@@ -44,6 +44,28 @@ const CartPage = () => {
     );
   };
 
+
+  // Add to Wishlist
+  const handleAddToWishlist = (item)=> {
+    const data = localStorage.getItem("wishlist");
+    const wishlist = data ? JSON.parse(data):[];
+
+    // check if item already exists in wishlist
+    const exists = wishlist.some(
+      (w)=>
+        w.id === item.id &&
+      JSON.stringify(w.variations)===JSON.stringify(item.variations)
+    )
+
+    if (!exists) {
+      wishlist.push(item);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      alert("Added to Wishlist");
+    } else {
+      alert("Already added in Wishlist")
+    }
+  }
+
   // Group items by seller
   const groupedItems = cartItems.reduce((acc, item) => {
     const seller = item.seller ?? "Unknown Seller";
@@ -142,8 +164,10 @@ const CartPage = () => {
                   >
                     <FaTrash />
                   </button>
-                  <button className="bg-gray-200 p-2 rounded-full">
-                    <FaHeart />
+                  <button 
+                  onClick={()=>handleAddToWishlist(item)}
+                  className="bg-gray-200 p-2 rounded-full hover:bg-white">
+                    <FaHeart className="hover:text-red-500 " />
                   </button>
                 </div>
               </div>
