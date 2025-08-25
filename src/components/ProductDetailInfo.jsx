@@ -129,29 +129,43 @@ const ProductDetailInfo = ({ product }) => {
         {/* Variants */}
         {product?.variant && Object.keys(product.variant).length > 0 && (
           <>
-            {Object.entries(product.variant).map(([key, values]) => (
-              <div className="mt-6" key={key}>
-                <p className="font-medium text-sm text-gray-700 mb-1">{key}</p>
-                <div className="flex gap-4 flex-wrap">
-                  {values.map((value) => (
-                    <label key={value} className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        {...register(key, {
-                          required: `Please select a ${key}`,
-                        })}
-                        value={value}
-                        className="form-radio text-black"
-                      />
-                      <span className="text-sm">{value}</span>
-                    </label>
-                  ))}
-                </div>
-                {errors[key] && (
-                  <p className="text-red-500 text-sm mt-1">{errors[key].message}</p>
-                )}
-              </div>
-            ))}
+           {Object.entries(product.variant).map(([key, values]) => (
+  <div className="mt-6" key={key}>
+    <p className="font-medium text-sm text-gray-700 mb-1">{key}</p>
+    <div className="flex gap-4 flex-wrap">
+      {values.map((value) => (
+        <label key={value} className="cursor-pointer">
+          <input
+            type="radio"
+            {...register(key, {
+              required: `Please select a ${key}`,
+            })}
+            value={value}
+            className="hidden peer"   // ✅ hide radio, but still keeps it functional
+          />
+
+          {key.toLowerCase() === "color" ? (
+            // 🎨 show actual color circle
+            <span
+              className="w-7 h-7 rounded-full border border-gray-300 block peer-checked:ring-2 peer-checked:ring-teal-600"
+              style={{ backgroundColor: value }}
+            ></span>
+          ) : (
+            // 📝 show text for other variants
+            <span className="px-3 py-1 border rounded text-sm peer-checked:bg-teal-600 peer-checked:text-white">
+              {value}
+            </span>
+          )}
+        </label>
+      ))}
+    </div>
+
+    {errors[key] && (
+      <p className="text-red-500 text-sm mt-1">{errors[key].message}</p>
+    )}
+  </div>
+))}
+
           </>
         )}
 

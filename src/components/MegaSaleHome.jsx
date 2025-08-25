@@ -100,9 +100,14 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, ti
             </div>
           </div>
         </div>
-        <div className="content-center items-center flex ">
-          <img src={image} className="object-contain max-h-[300px] md:max-h-[400px] w-auto" alt="{title}" />
-        </div>
+      <div className="flex items-center justify-center h-[250px] md:h-[400px] lg:h-[500px]">
+  <img
+    src={image}
+    alt={title}
+    className="object-contain w-full h-full"
+  />
+</div>
+
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ const MonthlySaleCard = ({
         {title}
       </p>
 
-      <div className="flex items-center gap-1 text-yellow-400 mb-2">
+      <div className="flex items-center justify-center gap-1 text-yellow-400 mb-2">
         {[...Array(5)].map((_, i) => (
           <svg
             key={i}

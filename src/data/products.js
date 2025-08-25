@@ -27,7 +27,7 @@ const products = [
     variant: {
       style: ["Apple M1 Max Chip"],
       capacity: ["512 GB", "1 TB"],
-      color: ["#f87171", "#fbbf24"],
+      color: ["Red", "Yellow"],
     },
     image: Iphone, // Feature slider
   },
@@ -65,7 +65,7 @@ const products = [
     variant: {
       style: ["Base", "Plus", "Ultra"],
       capacity: ["128 GB", "256 GB", "512 GB"],
-      color: ["#000000", "#ffffff", "#ff0000"],
+     color: ["Black", "White", "Red"],
     },
     image: Xaomi,
   },
@@ -103,7 +103,7 @@ const products = [
     variant: {
       style: ["Standard", "Pro"],
       capacity: ["128 GB", "256 GB", "512 GB"],
-      color: ["#000000", "#ffffff"],
+      color: ["Black", "White"],
     },
     image: Iphone,
   },
@@ -141,7 +141,7 @@ const products = [
     variant: {
       style: ["Standard", "Pro"],
       capacity: ["128 GB", "256 GB", "512 GB"],
-      color: ["#000000", "#ff0000"],
+      color: ["Black", "Red"],
     },
     image: Samsung,
   },
