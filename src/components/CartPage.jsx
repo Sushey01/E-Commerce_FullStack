@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTrash, FaHeart, FaStore } from "react-icons/fa";
 import { BsTrash } from "react-icons/bs";
 import Sunglass from "../assets/images/sunglass.webp";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CartPage = () => {
   // Load cart from localStorage safely
@@ -44,27 +46,26 @@ const CartPage = () => {
     );
   };
 
-
   // Add to Wishlist
-  const handleAddToWishlist = (item)=> {
+  const handleAddToWishlist = (item) => {
     const data = localStorage.getItem("wishlist");
-    const wishlist = data ? JSON.parse(data):[];
+    const wishlist = data ? JSON.parse(data) : [];
 
     // check if item already exists in wishlist
     const exists = wishlist.some(
-      (w)=>
+      (w) =>
         w.id === item.id &&
-      JSON.stringify(w.variations)===JSON.stringify(item.variations)
-    )
+        JSON.stringify(w.variations) === JSON.stringify(item.variations)
+    );
 
     if (!exists) {
       wishlist.push(item);
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
-      alert("Added to Wishlist");
+      toast.success(`${item.name || item.title} is added to wishlist!`);
     } else {
-      alert("Already added in Wishlist")
+      toast.success(`${item.name || item.title} already added in cart!`);
     }
-  }
+  };
 
   // Group items by seller
   const groupedItems = cartItems.reduce((acc, item) => {
@@ -76,6 +77,17 @@ const CartPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-4 border rounded-xl shadow-sm">
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <h2 className="text-2xl font-bold mb-4">🛒 My Cart</h2>
 
       <div className="flex justify-between items-center mb-6">
@@ -164,9 +176,10 @@ const CartPage = () => {
                   >
                     <FaTrash />
                   </button>
-                  <button 
-                  onClick={()=>handleAddToWishlist(item)}
-                  className="bg-gray-200 p-2 rounded-full hover:bg-white">
+                  <button
+                    onClick={() => handleAddToWishlist(item)}
+                    className="bg-gray-200 p-2 rounded-full hover:bg-white"
+                  >
                     <FaHeart className="hover:text-red-500 " />
                   </button>
                 </div>
@@ -184,4 +197,3 @@ const CartPage = () => {
 };
 
 export default CartPage;
-
