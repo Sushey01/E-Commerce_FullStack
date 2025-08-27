@@ -22,8 +22,28 @@ const ProductDetailInfo = ({ product }) => {
   const dispatch = useDispatch();
   const quantity = watch("quantity");
 
+  // Create default variations object based on product variants
+  const getDefaultVariations = () => {
+    // Check if product has no variants or if variants are empty
+    if (!product?.variant || Object.keys(product.variant).length === 0) {
+      return {};
+    }
+    // Create an empty object to store default variant selections
+    const defaultVariations = {};
+    // Loop through each variant (e.g., color, size) and its values (e.g., ["Red", "Blue"])
+    Object.entries(product.variant).forEach(([key, values]) => {
+      // Check if values exist and are not empty
+      if (values && values.length > 0) {
+        // Pick the first value as the default for this variant
+        defaultVariations[key] = values[0];
+      }
+    });
+    // Return the object with default selections
+    return defaultVariations;
+  };
+
   const handleVariations = (key, value) => {
-    console.log([key, value], "sdfsdfsdf");
+    // console.log([key, value], "sdfsdfsdf");
     setValue("variations", {
       ...watch("variations"),
       [key]: value,
@@ -53,9 +73,9 @@ const ProductDetailInfo = ({ product }) => {
     // Dispatch to Redux
     dispatch(addToCartlist(cartItem));
     setValue("variations", {});
-    reset();
+    reset(defaultValues);
 
-    alert(`${cartItem.name} is added to cart !`)
+    alert(`${cartItem.name} is added to cart !`);
     // console.log("Dispatched cart item:", cartItem); // Log dispatched item
   };
 
@@ -124,8 +144,12 @@ const ProductDetailInfo = ({ product }) => {
                       <input
                         type="radio"
                         name={key}
-                        onChange={(e) => handleVariations(key, e.target.value)}
                         value={value}
+                        {...register(`variations.${key}`, {
+                          required: `Please select a ${key}`,
+                        })}
+                        onChange={() => handleVariations(key, value)}
+                        defaultChecked={getDefaultVariations()[key] === value}
                         className="hidden peer" // ✅ hide radio, but still keeps it functional
                       />
 

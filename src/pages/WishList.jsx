@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeFromWishlist } from "../features/wishlistSlice";
 import Sunglass from "../assets/images/sunglass.webp";
 import { ShoppingCart } from "lucide-react";
+import { addToCartlist } from "../features/cartlistSlice";
 
 const Wishlist = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,10 @@ const Wishlist = () => {
   const removeItem = (id) => {
     dispatch(removeFromWishlist(id));
   };
+
+const addItem = (id)=>{
+  dispatch(addToCartlist(id))
+}
 
   const WishlistItem = ({ item }) => (
     <div className="bg-white shadow-sm rounded-lg p-4 mb-4">
@@ -44,6 +49,7 @@ const Wishlist = () => {
         <button
           className="w-8 h-8 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full"
           title="Add to Cart"
+          onClick={()=> addItem(item.id)}
         >
           <ShoppingCart className="w-4 h-4" />
         </button>

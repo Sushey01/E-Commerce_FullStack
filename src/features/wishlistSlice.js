@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addToCartlist } from "./cartlistSlice";
 
 const savedItems = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -19,6 +20,16 @@ const wishlistSlice = createSlice({
       }
       localStorage.setItem("wishlist", JSON.stringify(state.items));
     },
+
+    addToCartlist: (state, action)=>{
+      const exists = state.items.find(item=>item.title===action.payload.title);
+      if (!exists){
+        const newItem = {...action.payload, id:Date.now()+Math.random()};
+        state.items.push(newItem);
+      }
+      localStorage.setItem("cartlist", JSON.stringify(state.items))
+    },
+    
     removeFromWishlist: (state, action) => {
       state.items = state.items.filter(item => item.id !== action.payload);
       localStorage.setItem("wishlist", JSON.stringify(state.items));
