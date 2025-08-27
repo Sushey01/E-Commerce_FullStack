@@ -20,18 +20,18 @@ const MonthlySaleCard = ({
   const dispatch = useDispatch();
 
   // Handler for adding product to wishlist
-  const handleAddToWishlist = () => {
-    const item = {
-      store: "Emommcerce Bazar", // optional dynamic store name
-      name: title,
-      details: "",
-      price: discountedPrice,
-      image: image,
-      quantity: "01",
-    };
-    dispatch(addToWishlist(item));
-    onAddToWishList(item); // in case parent wants callback
-  };
+  // const handleAddToWishlist = () => {
+  //   const item = {
+  //     store: "Emommcerce Bazar", // optional dynamic store name
+  //     name: title,
+  //     details: "",
+  //     price: discountedPrice,
+  //     image: image,
+  //     quantity: "01",
+  //   };
+  //   dispatch(addToWishlist(item));
+  //   onAddToWishList(item); // in case parent wants callback
+  // };
 
   const handleAddToCart = ()=>{
     const item = {title, discountedPrice, image};

@@ -5,7 +5,7 @@ import { addToWishlist } from '../features/wishlistSlice';
 import { addToCartlist } from '../features/cartlistSlice';
 
 
-const HoverAddCartWishShare = ({ product }) => {
+const HoverAddCartWishShare = ({ product = {} }) => {
   const dispatch = useDispatch();
   const onAddToWishList = () => {
     dispatch(addToWishlist(product));
