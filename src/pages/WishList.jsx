@@ -4,18 +4,26 @@ import { removeFromWishlist } from "../features/wishlistSlice";
 import Sunglass from "../assets/images/sunglass.webp";
 import { ShoppingCart } from "lucide-react";
 import { addToCartlist } from "../features/cartlistSlice";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const Wishlist = () => {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.items) || [];
 
+ 
+
   const removeItem = (id) => {
     dispatch(removeFromWishlist(id));
   };
 
-const addItem = (id)=>{
-  dispatch(addToCartlist(id))
-}
+const addItem = (item) => {
+  dispatch(addToCartlist(item)); // pass the whole object
+  toast.success(`${item.name||item.title} added to cart!`)
+  console.log("toast object:", toast)
+};
+
 
   const WishlistItem = ({ item }) => (
     <div className="bg-white shadow-sm rounded-lg p-4 mb-4">
@@ -49,7 +57,7 @@ const addItem = (id)=>{
         <button
           className="w-8 h-8 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full"
           title="Add to Cart"
-          onClick={()=> addItem(item.id)}
+          onClick={()=> addItem(item)}
         >
           <ShoppingCart className="w-4 h-4" />
         </button>
@@ -66,10 +74,23 @@ const addItem = (id)=>{
 
   return (
     <div className="max-w-2xl mx-auto p-4">
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <h2 className="text-2xl font-bold text-gray-800 mb-4">My Wishlist</h2>
 
       {wishlistItems.length === 0 && (
-        <p className="text-center text-gray-500 mt-6">Your wishlist is empty.</p>
+        <p className="text-center text-gray-500 mt-6">
+          Your wishlist is empty.
+        </p>
       )}
 
       {Object.entries(groupedByStore).map(([store, items]) => (

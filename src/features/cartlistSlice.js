@@ -26,7 +26,14 @@ const cartlistSlice = createSlice({
       if (exists) {
         exists.quantity += action.payload.quantity ;
       } else {
-        state.items.push({ ...action.payload, quantity: action.payload.quantity   ?? 1 });
+state.items.push({
+  id: action.payload.id,
+  name: action.payload.name,
+  price: action.payload.price,
+  image: action.payload.image,
+  variations: action.payload.variations || {},
+  quantity: action.payload.quantity ?? 1,
+});
       }
 
       localStorage.setItem("cartlist", JSON.stringify(state.items));
