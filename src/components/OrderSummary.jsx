@@ -13,24 +13,29 @@ const OrderSummary = () => {
       </button>
       <p>Use this personalized guide to get your store up and running.</p>
       <div className="grid">
-        <table className="border-b-2">
-          <tr>
-            <td>Subtotal</td>
-            <td>1 item</td>
-            <td>$1,500</td>
-          </tr>
-
-          <tr>
-            <td>Discount</td>
-            <td>Customer</td>
-            <td>-$1.00</td>
-          </tr>
-          <tr>
-            <td>Shipping</td>
-            <td>Free shipping</td>
-            <td>$0.00</td>
-          </tr>
-          
+        <table class="w-full border-collapse border-b-2">
+          <tbody>
+            <tr>
+              <td class="p-2">Subtotal</td>
+              <td class="p-2 text-center">1 item</td>
+              <td class="p-2 text-right">$1,500</td>
+            </tr>
+            <tr>
+              <td class="p-2">Discount</td>
+              <td class="p-2 text-center">New customer</td>
+              <td class="p-2 text-right text-red-500">-$1.00</td>
+            </tr>
+            <tr>
+              <td class="p-2">Shipping</td>
+              <td class="p-2 text-center">Free shipping</td>
+              <td class="p-2 text-right">$0.00</td>
+            </tr>
+            <tr class=" border-gray-200 font-bold">
+              <td class="p-2">Total</td>
+              <td></td>
+              <td class="p-2 text-right">$1,499</td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <div className="flex justify-between">

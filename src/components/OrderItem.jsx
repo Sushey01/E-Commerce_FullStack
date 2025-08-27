@@ -4,7 +4,7 @@ import React from 'react'
 
 const OrderItem = () => {
   return (
-    <div >
+    <div className='p-2' >
       <div className='flex justify-between p-3'>
         <p>Order Item</p>
         <ChevronDown/>
