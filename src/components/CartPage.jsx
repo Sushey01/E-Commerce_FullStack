@@ -3,9 +3,14 @@ import { FaTrash, FaHeart, FaStore } from "react-icons/fa";
 import { BsTrash } from "react-icons/bs";
 import Sunglass from "../assets/images/sunglass.webp";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 const CartPage = () => {
+
+  const navigate = useNavigate()
+
+
   // Load cart from localStorage safely
   const data = localStorage.getItem("cartlist");
   const initialCart = data ? JSON.parse(data) : [];
@@ -182,7 +187,7 @@ const CartPage = () => {
         <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
       )}
 
-      <button>
+      <button onClick={()=>navigate("/form")}>
         Checkout
       </button>
     </div>

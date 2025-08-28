@@ -93,7 +93,6 @@ const OrderPage = () => {
         <OrderProfileSection />
         </div>
       </div>
-      <OrderContactForm/>
     </div>
   );
 };

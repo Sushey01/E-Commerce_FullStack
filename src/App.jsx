@@ -22,64 +22,62 @@ import CustomerCareChat from "./components/CustomerCareChat";
 import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
 import MonthlySalePageRedux from "./pages/MonthlySalePageRedux";
 import OrderPage from "./order/OrderPage";
+import OrderContactForm from "./order/OrderContactForm";
 
 const App = () => {
   return (
-    // <Router>
-    //   <main className="max-w-[1400px] mx-auto w-full">
-
-    //   <Navbar />
-
-    //   <Routes>
-    //     {/* Homepage */}
-    //     <Route
-    //       path="/"
-    //       element={
-    //         <>
-    //           <div className="px-0 lg:px-6">
-    //             <HeroSection />
-    //             <CategoryPage />
-    //             <DynamicPageSlider />
-                
-    //             <BlackFridaySales />
-    //             <NewProduct />
-    //             <FlashSaleContainer />
-    //           </div>
-    //         </>
-    //       }
-    //     />
-
-    //     {/* Cart, Profile, Wishlist */}
-    //     <Route path="/cart" element={<CartPage />} />
-    //     <Route path="/profile" element={<ProfileSection />} />
-    //     <Route path="/wishlist" element={<Wishlist />} />
-    //     <Route path="/loginPage" element={<LoginPage />} />
-    //     <Route path="/messages" element={<CustomerCareChat />} />
-
-    //     {/* Product Detail */}
-    //     <Route path="/products/:id" element={<ProductDetail />} />
-
-    //     {/* Checkout */}
-    //     <Route path="/checkout" element={<CheckoutPage />} />
-
-
-      
-
-    //     {/* Product Listing Pages (nested) */}
-    //     <Route path="/products" element={<ProductLayout />}>
-    //       <Route index element={<HomeProduct />} />
-    //       <Route path=":id" element={<ProductDetail />} />
-    //     </Route>
-    //   </Routes>
-
-    //   <Footer />
-    //         </main>
-    // </Router>
     <Router>
-     <Routes>
-    <Route path="order" element={<OrderPage />} />
-  </Routes>
+      <main className="max-w-[1400px] mx-auto w-full">
+        <Navbar />
+
+        <Routes>
+          {/* Homepage */}
+          <Route
+            path="/"
+            element={
+              <>
+                <div className="px-0 lg:px-6">
+                  <HeroSection />
+                  <CategoryPage />
+                  <DynamicPageSlider />
+
+                  <BlackFridaySales />
+                  <NewProduct />
+                  <FlashSaleContainer />
+                </div>
+              </>
+            }
+          />
+
+          {/* Cart, Profile, Wishlist */}
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/profile" element={<ProfileSection />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/loginPage" element={<LoginPage />} />
+          <Route path="/messages" element={<CustomerCareChat />} />
+          <Route path="order" element={<OrderPage />} />
+          <Route path="form" element={<OrderContactForm />} />
+
+          {/* Product Detail */}
+          <Route path="/products/:id" element={<ProductDetail />} />
+
+          {/* Checkout */}
+          <Route path="/checkout" element={<CheckoutPage />} />
+
+          {/* Product Listing Pages (nested) */}
+          <Route path="/products" element={<ProductLayout />}>
+            <Route index element={<HomeProduct />} />
+            <Route path=":id" element={<ProductDetail />} />
+          </Route>
+        </Routes>
+
+        <Footer />
+      </main>
     </Router>
+    //   <Router>
+    //    <Routes>
+    // </Routes>
+    //   </Router>
   );
 };
 
