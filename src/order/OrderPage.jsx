@@ -9,6 +9,7 @@ import {
   User,
 } from "lucide-react";
 import OrderProfileSection from "./OrderProfileSection";
+import OrderContactForm from "./OrderContactForm";
 
 const OrderPage = () => {
   return (
@@ -92,6 +93,7 @@ const OrderPage = () => {
         <OrderProfileSection />
         </div>
       </div>
+      <OrderContactForm/>
     </div>
   );
 };
