@@ -1,64 +1,86 @@
-import { ChevronDown } from 'lucide-react';
-import React from 'react'
+import { ChevronDown } from "lucide-react";
+import React from "react";
 
 const OrderSummary = () => {
   return (
-    <div className="p-3 border rounded-sm bg-gray-100">
-      <div className="flex justify-between p-3">
-        <p>Order Summary</p>
-        <ChevronDown />
+    <div className="p-4 border rounded-md bg-gray-50 space-y-4">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <p className="font-semibold">Order Summary</p>
+        <ChevronDown size={18} className="text-gray-500" />
       </div>
-      <button className="border rounded-full p-1.5 text-yellow-300 bg-yellow-200">
-        Payment pending
-      </button>
-      <p>Use this personalized guide to get your store up and running.</p>
-      <div className="grid">
-        <table class="w-full border-collapse border-b-2">
+
+      {/* Status Badge */}
+      <span className="inline-block border rounded-full px-3 py-1 text-xs font-medium text-yellow-700 bg-yellow-100">
+        Payment Pending
+      </span>
+
+      <p className="text-sm text-gray-500">
+        Use this personalized guide to get your store up and running.
+      </p>
+
+      {/* Order Breakdown */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-b">
           <tbody>
-            <tr>
-              <td class="p-2">Subtotal</td>
-              <td class="p-2 text-center">1 item</td>
-              <td class="p-2 text-right">$1,500</td>
+            <tr className="border-t">
+              <td className="p-2 text-gray-700">Subtotal</td>
+              <td className="p-2 text-center text-sm text-gray-500">1 item</td>
+              <td className="p-2 text-right font-medium">$1,500.00</td>
             </tr>
-            <tr>
-              <td class="p-2">Discount</td>
-              <td class="p-2 text-center">New customer</td>
-              <td class="p-2 text-right text-red-500">-$1.00</td>
+            <tr className="border-t">
+              <td className="p-2 text-gray-700">Discount</td>
+              <td className="p-2 text-center text-sm text-gray-500">
+                New customer
+              </td>
+              <td className="p-2 text-right text-red-500 font-medium">
+                - $1.00
+              </td>
             </tr>
-            <tr>
-              <td class="p-2">Shipping</td>
-              <td class="p-2 text-center">Free shipping</td>
-              <td class="p-2 text-right">$0.00</td>
+            <tr className="border-t">
+              <td className="p-2 text-gray-700">Shipping</td>
+              <td className="p-2 text-center text-sm text-gray-500">
+                Free shipping
+              </td>
+              <td className="p-2 text-right font-medium">$0.00</td>
             </tr>
-            <tr class=" border-gray-200 font-bold">
-              <td class="p-2">Total</td>
+            <tr className="border-t font-semibold">
+              <td className="p-2">Total</td>
               <td></td>
-              <td class="p-2 text-right">$1,499</td>
+              <td className="p-2 text-right">$1,499.00</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between">
+
+      {/* Payment Info */}
+      <div className="flex justify-between text-sm text-gray-700">
         <p>Paid by customer</p>
-        <p>$0.00</p>
+        <p className="font-medium">$0.00</p>
       </div>
-      <div className="flex justify-between">
-        <p>Paid due when invoice is sent</p>
-        <p>Edit</p>
+      <div className="flex justify-between text-sm text-gray-700">
+        <p>Payment due when invoice is sent</p>
+        <button className="text-purple-700 font-medium hover:underline">
+          Edit
+        </button>
       </div>
-      <div className="p-4 flex justify-between">
-        <p>Review your order at a glance on the Order Summary page.</p>
+
+      {/* Bottom Actions */}
+      <div className="p-4 flex justify-between items-center bg-white border rounded-md">
+        <p className="text-sm text-gray-600 max-w-md">
+          Review your order at a glance on the Order Summary page.
+        </p>
         <div className="flex gap-2">
-          <button className="p-2 border rounded-md bg-white">
-            <p>Send invoice</p>
+          <button className="px-4 py-2 border rounded-md bg-white text-sm">
+            Send invoice
           </button>
-          <button className="bg-purple-700 border rounded-md p-2">
-            <p>Collect payment</p>
+          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-sm">
+            Collect payment
           </button>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default OrderSummary
+export default OrderSummary;
