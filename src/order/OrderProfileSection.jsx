@@ -1,74 +1,105 @@
-import { ChevronDown, Edit3, Mail, Map, ShoppingBag, User } from 'lucide-react'
-import React from 'react'
+import { ChevronDown, Edit3, Mail, Map, ShoppingBag, User } from "lucide-react";
+import React from "react";
+
+// Define data for the sections
+const profileData = [
+  {
+    title: "Notes",
+    icon: <Edit3 size={16} className="text-gray-500 cursor-pointer" />,
+    content: ["First customer and order!"],
+  },
+  {
+    title: "Customer",
+    icon: <ChevronDown size={16} className="text-gray-500 cursor-pointer" />,
+    items: [
+      {
+        icon: <User size={16} className="text-gray-500" />,
+        label: "Shekhar Magar",
+      },
+      {
+        icon: <ShoppingBag size={16} className="text-gray-500" />,
+        label: "1 Order",
+      },
+    ],
+    note: "Customer is tax-exempt",
+  },
+  {
+    title: "Contact Information",
+    icon: <Edit3 size={16} className="text-gray-500 cursor-pointer" />,
+    items: [
+      {
+        icon: <Mail size={16} className="text-gray-500" />,
+        label: "fasttry3@gmail.com",
+      },
+    ],
+    note: "No phone number",
+  },
+  {
+    title: "Shipping Address",
+    icon: <Edit3 size={16} className="text-gray-500 cursor-pointer" />,
+    content: [
+      "Shekhar Magar",
+      "44600 Bhaisepati, Lalitpur",
+      "Nepal Hero",
+      "Nepal State",
+      "+977-9881234757",
+    ],
+    map: true,
+  },
+  {
+    title: "Billing Address",
+    icon: <ChevronDown size={16} className="text-gray-500 cursor-pointer" />,
+    content: ["Same as shipping address"],
+  },
+];
 
 const OrderProfileSection = () => {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="border rounded-md p-3">
-        <div className="flex justify-between">
-          <h1 className="text-sm">Notes</h1>
-          <Edit3 />
-        </div>
-        <p>First customer and order !</p>
-      </div>
+    <div className="flex flex-col gap-4 w-full">
+      {profileData.map((section, idx) => (
+        <div
+          key={idx}
+          className="border rounded-md p-3 bg-white flex flex-col gap-2"
+        >
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-sm font-semibold">{section.title}</h2>
+            {section.icon}
+          </div>
 
-      <div className="border flex flex-col rounded-md p-3">
-        <div className="flex justify-between">
-          <h1 className="text-sm">Customer</h1>
-          <ChevronDown />
-        </div>
-        <div className="flex gap-1 ">
-          <User />
-          <p>Shekhar Magar</p>
-        </div>
+          {/* Items */}
+          {section.items &&
+            section.items.map((item, i) => (
+              <div key={i} className="flex items-center gap-2">
+                {item.icon}
+                <p className="text-sm text-gray-700">{item.label}</p>
+              </div>
+            ))}
 
-        <div className="flex gap-1">
-          <ShoppingBag />
-          <p>1 Order</p>
-        </div>
-        <p>Customer is tax-exempt</p>
-      </div>
+          {/* Content */}
+          {section.content &&
+            section.content.map((text, i) => (
+              <p key={i} className="text-sm text-gray-700">
+                {text}
+              </p>
+            ))}
 
-      <div className="border flex flex-col p-3">
-        <div className="flex justify-between">
-          <p>Contact Information</p>
-          <Edit3 />
-        </div>
-        <div className="flex gap-1">
-          <Mail />
-          <p>fasttry3@gmail.com</p>
-        </div>
-        <p>No phone number</p>
-      </div>
+          {/* Note */}
+          {section.note && (
+            <p className="text-sm text-gray-500">{section.note}</p>
+          )}
 
-      <div className="border flex flex-col p-3">
-        <div className="flex justify-between">
-          <p>Shipping address</p>
-          <Edit3 />
+          {/* Map link */}
+          {section.map && (
+            <div className="flex items-center gap-2 pt-2">
+              <Map size={16} className="text-purple-500" />
+              <p className="text-sm text-purple-500 cursor-pointer">View Map</p>
+            </div>
+          )}
         </div>
-        <div className="flex gap-1 ">
-          <User />
-          <p>Shekhar Magar</p>
-        </div>
-        <p>44600 Bhaisepati, Lalitpur</p>
-        <p>Nepal Hero</p>
-        <p>Nepal State</p>
-        <p>+977-9881234757</p>
-        <div className='pt-2 flex gap-1'>
-            <Map className='text-purple-400'/>
-            <p className='text-purple-400'>View Map</p>
-        </div>
-      </div>
-
-      <div className='flex flex-col border rounded-md p-3'>
-        <div className='flex justify-between'>
-            <p>Billing address</p>
-            <ChevronDown/>
-        </div>
-        <p>Same as shipping address</p>
-      </div>
+      ))}
     </div>
   );
-}
+};
 
-export default OrderProfileSection
+export default OrderProfileSection;

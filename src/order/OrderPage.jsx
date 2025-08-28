@@ -1,7 +1,13 @@
 import React from "react";
 import OrderItem from "../components/OrderItem";
 import OrderSummary from "../components/OrderSummary";
-import { ChevronDown, ChevronLeft, ChevronRight, Pencil, User } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Pencil,
+  User,
+} from "lucide-react";
 import OrderProfileSection from "./OrderProfileSection";
 
 const OrderPage = () => {
@@ -57,27 +63,35 @@ const OrderPage = () => {
         January 8, 2024 at 9:48 pm from Draft Orders
       </p>
 
-      {/* Order Item(s) */}
-      <OrderItem />
+      <div className="flex gap-3 w-full">
+        <div className="flex flex-col w-[80%]">
+          {/* Order Item(s) */}
+          <OrderItem />
 
-      {/* Fulfillment Actions */}
-      <div className="p-4 flex justify-between items-center border rounded-md bg-gray-50">
-        <p className="md:text-sm text-xs text-gray-700">
-          Effortlessly manage your orders with our intuitive Order List Page.
-        </p>
-        <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded-md bg-white text-xs md:text-sm">
-            Fulfill item
-          </button>
-          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs md:text-sm">
-            Create shipping label
-          </button>
+          {/* Fulfillment Actions */}
+          <div className="p-4 flex justify-between items-center border rounded-md bg-gray-50">
+            <p className="md:text-sm text-xs text-gray-700">
+              Effortlessly manage your orders with our intuitive Order List
+              Page.
+            </p>
+            <div className="flex gap-2">
+              <button className="px-4 py-2 border rounded-md bg-white text-xs md:text-sm">
+                Fulfill item
+              </button>
+              <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs md:text-sm">
+                Create shipping label
+              </button>
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <OrderSummary />
+        </div>
+        <div className="w-1/4">
+
+        <OrderProfileSection />
         </div>
       </div>
-
-      {/* Order Summary */}
-      <OrderSummary />
-      <OrderProfileSection/>
     </div>
   );
 };
