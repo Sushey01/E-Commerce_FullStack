@@ -6,11 +6,11 @@ import OrderSummary from "../components/OrderSummary";
 
 const OrderContactForm = () => {
   return (
-    <div className="flex w-full gap-2 p-6">
-      <form className="w-[100%] gap-2 flex flex-col">
+    <div className="border rounded-md bg-gray-50 flex w-full gap-2 p-6">
+      <form className="w-full gap-2 flex flex-col">
         <div className="flex flex-col gap-1">
           <p>Contact Information</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <label className="border rounded px-4 py-2">
               <input type="text" placeholder="First name" />
             </label>
@@ -67,7 +67,7 @@ const OrderContactForm = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <p>Payment Method</p>
           <label className="border items-center rounded px-4 flex gap-2 py-2 ">
             <input
@@ -147,7 +147,7 @@ const OrderContactForm = () => {
               </div>
             </label>
           </div>
-        </div>
+        </div> */}
       </form>
       {/* <div className="flex flex-col w-[30%]">
         <OrderItem />

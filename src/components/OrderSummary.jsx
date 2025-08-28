@@ -1,7 +1,11 @@
 import { ChevronDown } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const OrderSummary = () => {
+
+  const navigate = useNavigate()
+
   return (
     <div className="p-4 border rounded-md bg-gray-50 space-y-4">
       {/* Header */}
@@ -44,6 +48,10 @@ const OrderSummary = () => {
               </td>
               <td className="p-2 text-right font-medium">$0.00</td>
             </tr>
+            <div className="flex gap-2">
+              <input className="border rounded-none p-2" placeholder="Enter Voucher Code"/>
+              <button className="border rounded-none  bg-sky-500 text-white p-2" onClick={onsubmit}>Apply</button>
+            </div>
             <tr className="border-t font-semibold">
               <td className="p-2">Total</td>
               <td></td>
@@ -74,8 +82,8 @@ const OrderSummary = () => {
           <button className="px-4 py-2 border rounded-md bg-white text-xs md:text-sm">
             Send invoice
           </button>
-          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs md:text-sm">
-            Collect payment
+          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs md:text-sm" onClick={()=>navigate("/form")}>
+            Proceed to checkout
           </button>
         </div>
       </div>

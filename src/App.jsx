@@ -23,6 +23,8 @@ import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
 import MonthlySalePageRedux from "./pages/MonthlySalePageRedux";
 import OrderPage from "./order/OrderPage";
 import OrderContactForm from "./order/OrderContactForm";
+import OrderCart from "./order/OrderCart";
+import OrderCartPaymentProcess from "./order/OrderCartPaymentProcess";
 
 const App = () => {
   return (
@@ -56,7 +58,8 @@ const App = () => {
           <Route path="/loginPage" element={<LoginPage />} />
           <Route path="/messages" element={<CustomerCareChat />} />
           <Route path="order" element={<OrderPage />} />
-          <Route path="form" element={<OrderContactForm />} />
+          <Route path="ordercart" element={<OrderCart />} />
+          <Route path="form" element={<OrderCartPaymentProcess />} />
 
           {/* Product Detail */}
           <Route path="/products/:id" element={<ProductDetail />} />

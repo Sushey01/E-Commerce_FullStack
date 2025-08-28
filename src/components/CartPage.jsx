@@ -5,11 +5,8 @@ import Sunglass from "../assets/images/sunglass.webp";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-
 const CartPage = () => {
-
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   // Load cart from localStorage safely
   const data = localStorage.getItem("cartlist");
@@ -24,6 +21,9 @@ const CartPage = () => {
     }))
   );
 
+  // ✅ Selected items state
+  const [selectedItems, setSelectedItems] = useState([]);
+
   // Keep localStorage in sync whenever cartItems change
   useEffect(() => {
     localStorage.setItem("cartlist", JSON.stringify(cartItems));
@@ -32,13 +32,17 @@ const CartPage = () => {
   // Delete a single item
   const handleDelete = (id) => {
     setCartItems((items) => items.filter((item) => item.id !== id));
+    setSelectedItems((sel) => sel.filter((sid) => sid !== id));
   };
 
   // Delete all items
   const handleDeleteAll = () => {
-    localStorage.removeItem(setCartItems([]));
-    // setCartItems([])
+    setCartItems([]);
+    setSelectedItems([]);
+    localStorage.removeItem("cartlist");
   };
+
+
 
   // Change quantity
   const handleQuantityChange = (id, change) => {
@@ -80,20 +84,50 @@ const CartPage = () => {
     return acc;
   }, {});
 
+  // ✅ Toggle Select All
+  const toggleSelectAll = () => {
+    if (selectedItems.length === cartItems.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(cartItems.map((item) => item.id));
+    }
+  };
+
+  // ✅ Toggle single checkbox
+  const toggleSelectItem = (id) => {
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div className="max-w-5xl mx-auto p-4 border rounded-xl shadow-sm">
       <h2 className="text-2xl font-bold mb-4">🛒 My Cart</h2>
 
       <div className="flex justify-between items-center mb-6">
-        <button className="bg-gray-100 text-black px-4 py-1 rounded-full flex items-center gap-2 text-sm">
-          🗂️ Select All ({cartItems.length})
-        </button>
+        {/* ✅ Select All */}
         <button
-          className="bg-black text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
-          onClick={handleDeleteAll}
+          className="bg-gray-100 text-black px-4 py-1 rounded-full flex items-center gap-2 text-sm"
+          onClick={toggleSelectAll}
         >
-          Delete All <BsTrash />
+          <input
+            type="checkbox"
+            checked={
+              selectedItems.length === cartItems.length && cartItems.length > 0
+            }
+            readOnly
+          />
+          Select All ({cartItems.length})
         </button>
+
+        <div className="flex gap-3">
+          <button
+            className="bg-black text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
+            onClick={handleDeleteAll}
+          >
+            Delete All <BsTrash />
+          </button>
+        </div>
       </div>
 
       {Object.entries(groupedItems).map(([seller, items]) => (
@@ -107,6 +141,13 @@ const CartPage = () => {
               key={item.id}
               className="bg-gray-100 rounded-lg p-4 flex flex-row gap-4 items-start md:items-center justify-between mb-4"
             >
+              {/* ✅ Checkbox */}
+              <input
+                type="checkbox"
+                checked={selectedItems.includes(item.id)}
+                onChange={() => toggleSelectItem(item.id)}
+              />
+
               <img
                 src={item.image ?? Sunglass}
                 alt={item.title}
@@ -187,8 +228,12 @@ const CartPage = () => {
         <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
       )}
 
-      <button onClick={()=>navigate("/form")}>
-        Checkout
+      <button
+        onClick={() => navigate("/form")}
+        disabled={selectedItems.length === 0}
+        className="bg-blue-600 text-white float-end px-6 py-2 rounded-lg mt-4 disabled:opacity-50"
+      >
+        Checkout ({selectedItems.length})
       </button>
     </div>
   );
