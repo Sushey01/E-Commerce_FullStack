@@ -67,14 +67,14 @@ const OrderSummary = () => {
 
       {/* Bottom Actions */}
       <div className="p-4 flex justify-between items-center bg-white border rounded-md">
-        <p className="text-sm text-gray-600 max-w-md">
+        <p className="md:text-sm text-xs text-gray-600 max-w-md">
           Review your order at a glance on the Order Summary page.
         </p>
         <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded-md bg-white text-sm">
+          <button className="px-4 py-2 border rounded-md bg-white text-xs md:text-sm">
             Send invoice
           </button>
-          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-sm">
+          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs md:text-sm">
             Collect payment
           </button>
         </div>

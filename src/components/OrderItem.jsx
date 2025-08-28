@@ -1,4 +1,5 @@
 import { ChevronDown, Trash } from "lucide-react";
+import Laptop from "../assets/images/laptop.webp"
 import React from "react";
 
 const OrderItem = ({
@@ -8,7 +9,7 @@ const OrderItem = ({
   quantity = 3,
   variant = "Medium Black",
   status = "Unfulfilled",
-  image,
+  image = Laptop,
 }) => {
   const total = price * quantity;
 
@@ -25,7 +26,7 @@ const OrderItem = ({
         {status}
       </span>
 
-      <p className="text-sm text-gray-500">
+      <p className=" text-xs md:text-sm text-gray-500">
         Use this personalized guide to get your store up and running.
       </p>
 
@@ -48,7 +49,7 @@ const OrderItem = ({
             <p className="text-base font-medium">{title}</p>
 
             <div className="flex items-center gap-2">
-              <button className="border px-2 py-1 rounded-sm text-sm text-gray-600">
+              <button className="border px-2 py-1 rounded-sm text-xs md:text-sm text-gray-600">
                 {quantity} × ${price.toFixed(2)}
               </button>
               <button className="text-sm font-semibold">

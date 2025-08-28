@@ -1,35 +1,43 @@
 import React from "react";
 import OrderItem from "../components/OrderItem";
 import OrderSummary from "../components/OrderSummary";
-import { ChevronDown, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Pencil, User } from "lucide-react";
+import OrderProfileSection from "./OrderProfileSection";
 
 const OrderPage = () => {
   return (
-    <div className="p-6 space-y-6">
-      {/* Header Section */}
-      <div className="flex justify-between items-start">
-        {/* Order Info */}
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold">Order ID: 334902445</h1>
+    <div className="p-4 space-y-6">
+      {/*Profile Section*/}
 
-          <span className="bg-yellow-100 text-yellow-700 border px-3 py-1 rounded-full text-sm">
+      <div className="flex justify-end  ">
+        <User className="border rounded-full p-2 h-10 w-10" />
+      </div>
+      {/* Header Section */}
+      <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
+        {/* Order Info */}
+        <div className="flex  items-center gap-3">
+          <h1 className="text-sm lg:text-lg font-semibold">
+            Order ID: 334902445
+          </h1>
+
+          <span className="bg-yellow-100 flex  md:text-sm text-yellow-700 border px-3 py-1 rounded-full text-xs">
             Payment Pending
           </span>
-          <span className="bg-red-100 text-red-700 border px-3 py-1 rounded-full text-sm">
+          <span className="bg-red-100 text-red-700 border px-3 py-1 rounded-full text-xs md:text-sm">
             Unfulfilled
           </span>
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <button className="bg-gray-200 px-3 py-1.5 border rounded-md text-sm">
+          <button className="bg-gray-200 px-3 py-1.5 border rounded-md text-xs md:text-sm">
             Restock
           </button>
-          <button className="bg-gray-200 flex items-center gap-1 px-3 py-1.5 border rounded-md text-sm">
+          <button className="bg-gray-200 flex items-center gap-1 px-3 py-1.5 border rounded-md text-xs md:text-sm">
             <Pencil size={16} />
             Edit
           </button>
-          <button className="bg-gray-200 flex items-center gap-1 px-3 py-1.5 border rounded-md text-sm">
+          <button className="bg-gray-200 flex items-center gap-1 px-3 py-1.5 border rounded-md text-xs md:text-sm">
             More Actions
             <ChevronDown size={16} />
           </button>
@@ -54,14 +62,14 @@ const OrderPage = () => {
 
       {/* Fulfillment Actions */}
       <div className="p-4 flex justify-between items-center border rounded-md bg-gray-50">
-        <p className="text-sm text-gray-700">
+        <p className="md:text-sm text-xs text-gray-700">
           Effortlessly manage your orders with our intuitive Order List Page.
         </p>
         <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded-md bg-white text-sm">
+          <button className="px-4 py-2 border rounded-md bg-white text-xs md:text-sm">
             Fulfill item
           </button>
-          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-sm">
+          <button className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs md:text-sm">
             Create shipping label
           </button>
         </div>
@@ -69,6 +77,7 @@ const OrderPage = () => {
 
       {/* Order Summary */}
       <OrderSummary />
+      <OrderProfileSection/>
     </div>
   );
 };
