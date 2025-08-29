@@ -1,10 +1,31 @@
 import Visa from "../assets/images/visa.png";
 import MasterCard from "../assets/images/mastercard.png";
-import React from "react";
+import React, { useState } from "react";
 import OrderItem from "../components/OrderItem";
 import OrderSummary from "../components/OrderSummary";
+import { useForm } from "react-hook-form";
 
 const OrderContactForm = () => {
+
+  const [submittedData, setSubmittedData] = useState()
+
+  const {
+    register,
+    handleSubmit,
+    watch, 
+    reset,
+  } = useForm()
+
+  function onSubmit(data){
+    console.log("form data:", data)
+  }
+
+  const handleCancel = (e)=>{
+    e.preventDefault()
+    reset()
+  }
+
+
   return (
     <div className="border rounded-md bg-gray-50 flex w-full gap-2 p-6">
       <form className="w-full gap-2 flex flex-col">
@@ -12,16 +33,24 @@ const OrderContactForm = () => {
           <p>Contact Information</p>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <label className="border rounded px-4 py-2">
-              <input type="text" placeholder="First name" />
+              <input
+              {...register("firstname", {required:true})}
+              type="text" placeholder="First name" />
             </label>
             <label className="border rounded px-4 py-2">
-              <input type="text" placeholder="Last name" />
+              <input
+              {...register("lastname", {required:true})}
+              type="text" placeholder="Last name" />
             </label>
             <label className="border rounded px-4 py-2">
-              <input type="email" placeholder="Email address" />
+              <input
+              {...register("email", {required:true})}
+              type="email" placeholder="Email address" />
             </label>
             <label className="border rounded px-4 py-2">
-              <input type="text" placeholder="Phone number" />
+              <input
+              {...register("phonenumber", {required:true})}
+              type="text" placeholder="Phone number" />
             </label>
           </div>
         </div>
@@ -59,10 +88,28 @@ const OrderContactForm = () => {
               <input type="text" placeholder="City" />
             </label>
             <label className="border rounded px-4 py-2">
-              <input type="email" placeholder="Address" />
+              <input type="text" placeholder="Address" />
             </label>
             <label className="border rounded px-4 py-2">
               <input type="text" placeholder="Postal code.." />
+            </label>
+            <label className="border rounded px-4 py-2">
+              {/* <input type="text" placeholder="Province" /> */}
+              <select>
+                <option>Koshi</option>
+                <option>Madhesh</option>
+                <option>Bagmati</option>
+                <option>Karnali</option>
+                <option>Gandaki</option>
+                <option>Lumbini</option>
+                <option>Sudurpaachim</option>
+              </select>
+            </label>
+            <label className="border rounded px-4 py-2">
+              <input
+                type="text"
+                placeholder="Street or Famous place near you."
+              />
             </label>
           </div>
         </div>
@@ -148,6 +195,14 @@ const OrderContactForm = () => {
             </label>
           </div>
         </div> */}
+        <div className="flex gap-2 justify-end">
+          <button onClick={handleCancel} className="bg-gray-200 py-2 px-4 text-gray-800 border rounded-sm">
+            Cancel
+          </button>
+          <button onClick={handleSubmit(onSubmit)} className="bg-blue-500 hover:bg-blue-700 py-2 px-4 text-white border rounded-sm">
+            Save
+          </button>
+        </div>
       </form>
       {/* <div className="flex flex-col w-[30%]">
         <OrderItem />

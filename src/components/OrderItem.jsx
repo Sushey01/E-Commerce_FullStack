@@ -10,6 +10,7 @@ const OrderItem = ({
   variant = "Medium Black",
   status = "Unfulfilled",
   image = Laptop,
+  // items => []
 }) => {
   const total = price * quantity;
 

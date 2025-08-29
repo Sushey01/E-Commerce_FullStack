@@ -221,20 +221,24 @@ const CartPage = () => {
               </div>
             </div>
           ))}
+          <button
+            onClick={() => navigate("/form", {
+              state: {
+                selectedItems: cartItems.filter((item)=>
+                selectedItems.includes(item.id))
+              }
+            })}
+            disabled={selectedItems.length === 0}
+            className="bg-blue-600 text-white float-end px-6 py-2 rounded-lg mt-4 disabled:opacity-50"
+          >
+            Checkout ({selectedItems.length})
+          </button>
         </div>
       ))}
 
       {cartItems.length === 0 && (
         <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
       )}
-
-      <button
-        onClick={() => navigate("/form")}
-        disabled={selectedItems.length === 0}
-        className="bg-blue-600 text-white float-end px-6 py-2 rounded-lg mt-4 disabled:opacity-50"
-      >
-        Checkout ({selectedItems.length})
-      </button>
     </div>
   );
 };
