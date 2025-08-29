@@ -173,7 +173,7 @@ const OrderContactForm = () => {
         <div className="p-2 flex flex-col w-1/2 bg-gray-100 border rounded-none">
           <div className="flex justify-between">
             <p className="text-sm">Shipping Address</p>
-            <button className="text-blue-500">EDIT</button>
+            <button onClick={()=>setSubmittedData(data)} className="text-blue-500">EDIT</button>
           </div>
           <div className="flex gap-4">
             <p>Name:{submittedData.firstname} {submittedData.lastname}</p>

@@ -203,7 +203,6 @@ const CartPage = () => {
                     +
                   </button>
                 </div>
-
                 <div className="flex gap-2">
                   <button
                     className="text-red-600 bg-red-100 p-2 rounded-full"
