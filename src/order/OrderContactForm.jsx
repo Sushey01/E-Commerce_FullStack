@@ -9,8 +9,9 @@ const OrderContactForm = () => {
 
   const savedContact = JSON.parse(localStorage.getItem("orderinfo") || "[]");
 
-  const initialState ={
-    items:savedContact
+  const handleInformation = (data)=>{
+    const savedContact = localStorage.getItem("orderinfo");
+    const form = data ? JSON.parse(data): [];
   }
 
   const [submittedData, setSubmittedData] = useState();
@@ -153,7 +154,8 @@ const OrderContactForm = () => {
                 Cancel
               </button>
               <button
-                onClick={handleSubmit(onSubmit)}
+                onClick={()=>handleInformation(data)}
+                type="submit"
                 className="bg-blue-500 hover:bg-blue-700 py-2 px-4 text-white border rounded-sm"
               >
                 Save
@@ -168,20 +170,21 @@ const OrderContactForm = () => {
       ) : (
         //Show Billing or Shipping Address.
 
-        <div className="p-2 flex flex-col bg-gray-100 border rounded-none">
+        <div className="p-2 flex flex-col w-1/2 bg-gray-100 border rounded-none">
           <div className="flex justify-between">
             <p className="text-sm">Shipping Address</p>
             <button className="text-blue-500">EDIT</button>
           </div>
           <div className="flex gap-4">
-            <p>Name:{setSubmittedData.firstname} {setSubmittedData.lastname}</p>
-            <p>Number:{setSubmittedData.number}</p>
+            <p>Name:{submittedData.firstname} {submittedData.lastname}</p>
+            <p>Number:{submittedData.phonenumber}</p>
           </div>
           <div className="flex gap-3">
-            <button className="bg-orange-500 text-white text-base">HOME</button>
-            <p>Address:{setSubmittedData.address}</p>
+            <button className="bg-orange-500 border rounded-full px-4 text-white text-base">HOME</button>
+            <p>Address:{submittedData.address}, {submittedData.city}, {submittedData.country}, {submittedData.postalno}</p>
           </div>
         </div>
+        
       )}
     </>
   );
