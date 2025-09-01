@@ -39,13 +39,13 @@ const App = () => {
             element={
               <>
                 <div className="px-0 lg:px-6">
-                  <HeroSection />
-                  <CategoryPage />
+                  {/* <HeroSection />
+                  <CategoryPage /> */}
                   <DynamicPageSlider />
 
-                  <BlackFridaySales />
+                  {/* <BlackFridaySales />
                   <NewProduct />
-                  <FlashSaleContainer />
+                  <FlashSaleContainer /> */}
                 </div>
               </>
             }

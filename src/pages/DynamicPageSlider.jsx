@@ -9,6 +9,7 @@ import featureProducts from '../data/featureProducts'
 import monthlySaleProducts from '../data/monthlyProducts'
 import laptopProducts from '../data/laptopProducts'
 import products from '../data/products'
+import supabase from '../supabase'
 
 const DynamicPageSlider = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -18,15 +19,103 @@ const DynamicPageSlider = () => {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    // simulate API fetch with 1.5 seconds delay
-    setTimeout(() => {
-      setFeatureProductsState(products)
-      setMonthlySaleProductsState(monthlySaleProducts)
-      setLaptopProductsState(laptopProducts)
-      setIsLoading(false)
-    }, 1500)
-  }, [])
+  // useEffect(() => {
+  //   // simulate API fetch with 1.5 seconds delay
+  //   setTimeout(() => {
+  //     setFeatureProductsState(products)
+  //     setMonthlySaleProductsState(monthlySaleProducts)
+  //     setLaptopProductsState(laptopProducts)
+  //     setIsLoading(false)
+  //   }, 1500)
+  // }, [])
+
+useEffect(() => {
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    // setError(null);
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    console.log("Supabase data:", data);
+    console.log("Supabase error:", error);
+
+    if (error) {
+      console.error("Error fetching products:", error);
+      setError("Failed to load products. Please try again later.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (data) {
+      const mappedData = data.map((product) => {
+        const image =
+          product.images && product.images.length > 0
+            ? product.images[0]
+            : "https://via.placeholder.com/150";
+        console.log(`Product ${product.id} image: ${image}`); // Debug image URL
+        return {
+          ...product,
+          image,
+          title1: product.title ? product.title.split(" ")[0] : "Product",
+          title2: product.title
+            ? product.title.split(" ").slice(1).join(" ")
+            : "",
+          subtitle: product.subtitle || "No subtitle",
+          label: "Shop Now",
+          link: `/product/${product.id}`,
+        };
+      });
+
+      const featureProducts = mappedData.filter(
+        (p) => p.category === "feature"
+      );
+      const monthlyProducts = mappedData.filter(
+        (p) => p.category === "monthly"
+      );
+      const laptopProducts = mappedData.filter((p) => p.category === "laptop");
+
+      setFeatureProductsState(featureProducts);
+      setMonthlySaleProductsState(monthlyProducts);
+      setLaptopProductsState(laptopProducts);
+
+      console.log(
+        "Feature products:",
+        featureProducts.length,
+        featureProducts.map((p) => ({ id: p.id, image: p.image }))
+      );
+      console.log(
+        "Monthly products:",
+        monthlyProducts.length,
+        monthlyProducts.map((p) => ({ id: p.id, image: p.image }))
+      );
+      console.log(
+        "Laptop products:",
+        laptopProducts.length,
+        laptopProducts.map((p) => ({ id: p.id, image: p.image }))
+      );
+
+      if (featureProducts.length === 0) {
+        setFeatureProductsState(mappedData);
+        console.warn("No feature products found, using all products");
+      }
+      if (monthlyProducts.length === 0) {
+        setMonthlySaleProductsState(mappedData);
+        console.warn("No monthly products found, using all products");
+      }
+      if (laptopProducts.length === 0) {
+        setLaptopProductsState(mappedData);
+        console.warn("No laptop products found, using all products");
+      }
+    }
+
+    setIsLoading(false);
+  };
+
+  fetchProducts();
+}, []);
 
   // Render cards or skeletons based on loading state
   const renderCards = (products, type) => {
