@@ -3,16 +3,22 @@ import MasterCard from "../assets/images/mastercard.png";
 import React, { useEffect, useState } from "react";
 import OrderItem from "../components/OrderItem";
 import OrderSummary from "../components/OrderSummary";
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 const OrderContactForm = () => {
+  const location = useLocation();
+  const selectedItems = location.state?.selectedItems || [];
+  
+  const [deliveryMethod, setDeliveryMethod]= useState("standard")
+  const shipping = deliveryMethod === "express" ? 5:0;
 
   const savedContact = JSON.parse(localStorage.getItem("orderinfo") || "[]");
 
-  const handleInformation = (data)=>{
+  const handleInformation = (data) => {
     const savedContact = localStorage.getItem("orderinfo");
-    const form = data ? JSON.parse(data): [];
-  }
+    const form = data ? JSON.parse(data) : [];
+  };
 
   const [submittedData, setSubmittedData] = useState();
 
@@ -20,7 +26,7 @@ const OrderContactForm = () => {
 
   function onSubmit(data) {
     setSubmittedData(data);
-    localStorage.setItem("orderinfo", JSON.stringify(data))
+    localStorage.setItem("orderinfo", JSON.stringify(data));
     console.log("form data:", data);
   }
 
@@ -145,7 +151,6 @@ const OrderContactForm = () => {
               </div>
             </div>
 
-      
             <div className="flex gap-2 justify-end">
               <button
                 onClick={handleCancel}
@@ -154,7 +159,7 @@ const OrderContactForm = () => {
                 Cancel
               </button>
               <button
-                onClick={()=>handleInformation(data)}
+                onClick={() => handleInformation(data)}
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 py-2 px-4 text-white border rounded-sm"
               >
@@ -173,18 +178,29 @@ const OrderContactForm = () => {
         <div className="p-2 flex flex-col w-1/2 bg-gray-100 border rounded-none">
           <div className="flex justify-between">
             <p className="text-sm">Shipping Address</p>
-            <button onClick={()=>setSubmittedData(data)} className="text-blue-500">EDIT</button>
+            <button
+              onClick={() => submittedData(data)}
+              className="text-blue-500"
+            >
+              EDIT
+            </button>
           </div>
           <div className="flex gap-4">
-            <p>Name:{submittedData.firstname} {submittedData.lastname}</p>
+            <p>
+              Name:{submittedData.firstname} {submittedData.lastname}
+            </p>
             <p>Number:{submittedData.phonenumber}</p>
           </div>
           <div className="flex gap-3">
-            <button className="bg-orange-500 border rounded-full px-4 text-white text-base">HOME</button>
-            <p>Address:{submittedData.address}, {submittedData.city}, {submittedData.country}, {submittedData.postalno}</p>
+            <button className="bg-orange-500 border rounded-full px-4 text-white text-base">
+              HOME
+            </button>
+            <p>
+              Address:{submittedData.address}, {submittedData.city},{" "}
+              {submittedData.country}, {submittedData.postalno}
+            </p>
           </div>
         </div>
-        
       )}
     </>
   );

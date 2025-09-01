@@ -59,7 +59,7 @@ const App = () => {
           <Route path="/messages" element={<CustomerCareChat />} />
           <Route path="order" element={<OrderPage />} />
           <Route path="ordercart" element={<OrderCart />} />
-          <Route path="form" element={<OrderCartPaymentProcess />} />
+          {/* <Route path="form" element={<OrderCartPaymentProcess />} /> */}
 
           {/* Product Detail */}
           <Route path="/products/:id" element={<ProductDetail />} />

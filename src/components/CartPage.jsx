@@ -221,7 +221,7 @@ const CartPage = () => {
             </div>
           ))}
           <button
-            onClick={() => navigate("/form", {
+            onClick={() => navigate("/order", {
               state: {
                 selectedItems: cartItems.filter((item)=>
                 selectedItems.includes(item.id))

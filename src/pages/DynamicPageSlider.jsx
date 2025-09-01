@@ -117,7 +117,11 @@ useEffect(() => {
   fetchProducts();
 }, []);
 
-  // Render cards or skeletons based on loading state
+
+
+//   Render cards or skeletons based on loading state
+  
+  
   const renderCards = (products, type) => {
     if (isLoading) {
       return Array(5)
