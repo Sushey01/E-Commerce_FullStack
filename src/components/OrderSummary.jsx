@@ -129,7 +129,7 @@ const OrderSummary = ({ order={} }) => {
           </button>
           <button
             className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs "
-            onClick={() => navigate("/form")}
+            onClick={() => navigate("/payment")}
           >
             Proceed to payment
           </button>
