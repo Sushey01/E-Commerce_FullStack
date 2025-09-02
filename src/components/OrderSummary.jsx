@@ -27,6 +27,10 @@ const OrderSummary = ({ order, disableCheckout }) => {
     });
   };
 
+  const handleSendInvoice =()=>{
+    navigate("/invoice", {state:{order:orderState}})
+  }
+
  
 
   const subtotal = Number(orderState.subtotal || 0);
@@ -136,15 +140,17 @@ const OrderSummary = ({ order, disableCheckout }) => {
       {/* Bottom Actions */}
       <div className="p-4 flex justify-between items-center bg-white border rounded-md">
         <p className=" text-xs text-gray-600 max-w-md">
-          Review your order at a glance on the Order Summary page.
+          Review your order.
         </p>
         <div className="flex gap-2">
-          <button className="px-4 py-2  border rounded-md bg-white text-xs ">
+          <button
+          onClick={handleSendInvoice}
+          className="px-4 py-2  border rounded-md bg-white text-xs ">
             Send invoice
           </button>
           <button
           disabled={disableCheckout}
-            className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs "
+            className="px-6 py-2 rounded-md bg-purple-700 text-white text-sm "
             onClick={() => navigate("/payment", {state:{order:orderState}})}
           >
             Proceed to payment

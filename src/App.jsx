@@ -25,6 +25,7 @@ import OrderPage from "./order/OrderPage";
 import OrderContactForm from "./order/OrderContactForm";
 import OrderCartPaymentProcess from "./order/OrderCartPaymentProcess";
 import CheckoutPayment from "./order/CheckoutPayment";
+import Invoice from "./components/Invoice";
 
 const App = () => {
   return (
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/messages" element={<CustomerCareChat />} />
           <Route path="order" element={<OrderPage />} />
           <Route path="payment" element={<CheckoutPayment />} />
+          <Route path="invoice" element={<Invoice />} />
 
           {/* Product Detail */}
           <Route path="/products/:id" element={<ProductDetail />} />

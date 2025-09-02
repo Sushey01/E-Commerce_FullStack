@@ -1,8 +1,6 @@
 import Visa from "../assets/images/visa.png";
 import MasterCard from "../assets/images/mastercard.png";
 import React, { useEffect, useState } from "react";
-import OrderItem from "../components/OrderItem";
-import OrderSummary from "../components/OrderSummary";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -32,7 +30,7 @@ const OrderContactForm = () => {
     const updated = [...saved, data]; // append new address
     localStorage.setItem("orderinfo", JSON.stringify(updated));
     setSubmittedData(data); // show latest
-    console.log("form data:", data);
+    // console.log("form data:", data);
   }
 
   const handleCancel = (e) => {
@@ -176,7 +174,6 @@ const OrderContactForm = () => {
               </button>
             </div>
           </form>
-    
         </div>
       ) : (
         //Show Billing or Shipping Address.
@@ -184,10 +181,7 @@ const OrderContactForm = () => {
         <div className="p-2 flex flex-col w-1/2 bg-gray-100 border rounded-none">
           <div className="flex justify-between">
             <p className="text-sm">Shipping Address</p>
-            <button
-              onClick={handleEdit}
-              className="text-blue-500"
-            >
+            <button onClick={handleEdit} className="text-blue-500">
               EDIT
             </button>
           </div>
@@ -208,6 +202,10 @@ const OrderContactForm = () => {
           </div>
         </div>
       )}
+     {/* {submittedData && 
+     <div>
+        <button onClick={()=>{onsubmit}}>ADD</button>
+      </div>} */}
     </>
   );
 };

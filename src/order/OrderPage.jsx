@@ -8,14 +8,14 @@ const OrderPage = () => {
 
 
 
-  // Add a new address
-  function addAddress(address){
-    // Read addresses
-    const savedAddress = JSON.parse(localStorage.getItem("orderinfo")) || [];
-    const updated = [...savedAddress, address];
-    localStorage.setItem("orderinfo", JSON.stringify(updated));
-    setSubmittedAddress(address); //show the latest one
-  }
+  // // Add a new address
+  // function addAddress(address){
+  //   // Read addresses
+  //   const savedAddress = JSON.parse(localStorage.getItem("orderinfo")) || [];
+  //   const updated = [...savedAddress, address];
+  //   localStorage.setItem("orderinfo", JSON.stringify(updated));
+  //   setSubmittedAddress(address); //show the latest one
+  // }
 
 
   const location = useLocation();
@@ -47,7 +47,7 @@ const OrderPage = () => {
       <div className="flex gap-3 w-full">
         <div className="flex flex-col w-[65%] gap-4">
           {/* Contact Form */}
-          {!submittedAddress ? (
+          {/* {!submittedAddress ? (
             <OrderContactForm onSubmit={(data) => addAddress(data)} defaultValues={submittedAddress} />
           ) : (
             <div className="p-2 flex flex-col w-full bg-gray-100 border rounded-md">
@@ -67,7 +67,8 @@ const OrderPage = () => {
                 Edit
               </button>
             </div>
-          )}
+          )} */}
+          <OrderContactForm/>
 
           {/* Order Item(s) */}
           <OrderItem items={selectedItems} />
