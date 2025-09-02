@@ -1,118 +1,196 @@
-import {
-  CircleCheck,
-  EllipsisVertical,
-  Package,
-  Truck,
-  CheckCircle2,
-  Clock,
-} from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { CircleCheck, EllipsisVertical } from "lucide-react";
+
+// Example fallback timeline
+const defaultTimeline = [
+  {
+    status: "Order confirmed",
+    desc: "Order placed and confirmed",
+    date: new Date().toISOString(),
+  },
+  {
+    status: "Package prepared",
+    desc: "Packed and handed to courier",
+    date: new Date().toISOString(),
+  },
+  {
+    status: "In transit",
+    desc: "Package in transit",
+    date: new Date().toISOString(),
+  },
+  {
+    status: "Out for delivery",
+    desc: "Will be delivered soon",
+    date: new Date().toISOString(),
+  },
+];
 
 const OrderSuccessDetail = () => {
+  const location = useLocation();
+  const order = location.state?.order;
+
+  if (!order) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-600">No order details found.</p>
+      </div>
+    );
+  }
+
+  const {
+    id,
+    items = [],
+    subtotal = 0,
+    shipping = 0,
+    discount = 0,
+    status,
+    created_at,
+    customer_name = "Guest User",
+    customer_email = "N/A",
+    timeline = defaultTimeline,
+  } = order;
+
+  // Generate ID if missing
+  const orderId = id || Math.floor(100000 + Math.random() * 900000);
+
+  // Use provided date or now
+  const createdDate = created_at ? new Date(created_at) : new Date();
+
+  // Totals
+  const total = subtotal + shipping - discount;
+
+  // Delivery progress (Pending -> Shipped -> Delivered)
+  const deliverySteps = ["Pending", "Shipped", "Delivered"];
+  const [currentStep, setCurrentStep] = useState(0);
+
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 space-y-6 w-[400px]">
+    <div className="bg-white rounded-lg shadow p-6 max-w-5xl mx-auto mt-8">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <p className="font-semibold">Order #98745</p>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 bg-green-100 text-green-600 px-2 py-1 rounded-md text-sm">
-            <CircleCheck size={16} />
-            <span>Paid</span>
-          </div>
+      <div className="flex sm:items-center justify-between border-b pb-4">
+        <div>
+          <p className="text-lg font-semibold">Order #{orderId}</p>
+          <p className="text-sm text-gray-500">
+            {createdDate.toLocaleDateString()} • ${total.toFixed(2)}
+          </p>
+        </div>
+        <div className="flex items-center gap-3 mt-3 sm:mt-0">
+          <button className="flex items-center gap-1 bg-green-100 px-3 py-1 rounded-md">
+            <CircleCheck className="text-green-600 w-4 h-4" />
+            <span className="text-green-600 text-sm font-medium">
+              Paid
+            </span>
+          </button>
           <EllipsisVertical className="text-gray-500" />
         </div>
       </div>
 
-      {/* Date + Total */}
-      <div className="text-gray-600 text-sm flex gap-2">
-        <p>Oct 29, 2025</p>
-        <span>•</span>
-        <p className="font-medium">${478.8}</p>
-      </div>
+      {/* Responsive Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        {/* Left: Order Summary */}
+        <div className="lg:col-span-2 space-y-4">
+          <h3 className="font-semibold text-gray-800">Order Summary</h3>
+          {items.length > 0 ? (
+            <div className="space-y-3">
+              {items.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between border-b pb-2"
+                >
+                  <div className="flex items-center gap-3">
+                    {item.image && (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-700">{item.name}</p>
+                      <p className="text-sm text-gray-500">
+                        Qty: {item.quantity}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="font-semibold text-gray-800">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No items in this order.</p>
+          )}
 
-      {/* Order Summary */}
-      <div>
-        <h3 className="text-gray-700 font-semibold mb-3">Order Summary</h3>
-        <div className="flex items-center gap-3">
-          <img
-            src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MXQT2_VW_34FR+watch-44-alum-spacegray-nc-se_VW_34FR+watch-face-44-nike-prideedition-sportband_VW_34FR_GEO_EMEA_LANG_EN?wid=940&hei=1112&fmt=png-alpha&.v=1594155839000"
-            alt="Apple Watch"
-            className="w-16 h-16 rounded-md border"
-          />
+          {/* Totals */}
+          <div className="space-y-1 text-sm text-gray-600 mt-4">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Shipping</span>
+              <span>${shipping.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Discount</span>
+              <span>- ${discount.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between font-semibold text-gray-800">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Customer Info + Timeline */}
+        <div className="space-y-6">
+          {/* Customer */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-800 mb-2">Customer</h3>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center font-bold text-white">
+                {customer_name.charAt(0)}
+              </div>
+              <div>
+                <p className="font-medium">{customer_name}</p>
+                <p className="text-sm text-gray-500">{customer_email}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Timeline */}
           <div>
-            <p className="font-medium">Apple Watch S5 GPS 40MM</p>
-            <p className="text-sm text-gray-500">MWVE2LL/A</p>
-          </div>
-        </div>
-
-        <div className="mt-3 text-sm text-gray-600 space-y-1">
-          <div className="flex justify-between">
-            <span>Subtotal</span>
-            <span>$399.00</span>
-          </div>
-          <div className="flex justify-between">
-            <span>VAT (20.00%)</span>
-            <span>$79.80</span>
-          </div>
-          <div className="flex justify-between font-semibold text-gray-900">
-            <span>Total</span>
-            <span>$478.80</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Customer */}
-      <div>
-        <h3 className="text-gray-700 font-semibold mb-3">Customer</h3>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-yellow-500 text-white flex items-center justify-center font-semibold">
-            SW
-          </div>
-          <div>
-            <p className="font-medium">Sophia Williams</p>
-            <p className="text-sm text-gray-500">sophia@alignui.com</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Timeline */}
-      <div>
-        <h3 className="text-gray-700 font-semibold mb-3">Timeline</h3>
-        <div className="space-y-4 text-sm">
-          <div className="flex gap-3 items-start">
-            <CheckCircle2 className="text-green-500" size={18} />
-            <div>
-              <p className="font-medium">Order confirmed</p>
-              <p className="text-gray-500">Order placed and confirmed</p>
-              <p className="text-gray-400 text-xs">4 NOV 2025, 05:16</p>
+            <h3 className="font-semibold text-gray-800 mb-3">Timeline</h3>
+            <div className="space-y-3">
+              {timeline.map((step, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <CircleCheck className="text-green-500 w-4 h-4 mt-1" />
+                  <div>
+                    <p className="font-medium text-gray-700">{step.status}</p>
+                    <p className="text-sm text-gray-500">{step.desc}</p>
+                    <p className="text-xs text-gray-400">
+                      {new Date(step.date).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
 
-          <div className="flex gap-3 items-start">
-            <Package className="text-blue-500" size={18} />
-            <div>
-              <p className="font-medium">Package prepared</p>
-              <p className="text-gray-500">Packed and handed to DHL Express</p>
-              <p className="text-gray-400 text-xs">5 NOV 2025, 09:45</p>
-            </div>
-          </div>
-
-          <div className="flex gap-3 items-start">
-            <Truck className="text-orange-500" size={18} />
-            <div>
-              <p className="font-medium">In transit</p>
-              <p className="text-gray-500">Package in transit</p>
-              <p className="text-gray-400 text-xs">6 NOV 2025, 14:30</p>
-            </div>
-          </div>
-
-          <div className="flex gap-3 items-start">
-            <Clock className="text-gray-400" size={18} />
-            <div>
-              <p className="font-medium">Out for delivery</p>
-              <p className="text-gray-500">Will be delivered today</p>
-              <p className="text-gray-400 text-xs">6 NOV 2025, 16:45</p>
-            </div>
+            {/* Delivery Progress Button */}
+            {currentStep < deliverySteps.length - 1 && (
+              <button
+                onClick={() => setCurrentStep((prev) => prev + 1)}
+                className="mt-4 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md transition"
+              >
+                Mark as {deliverySteps[currentStep + 1]}
+              </button>
+            )}
+            {currentStep === deliverySteps.length - 1 && (
+              <p className="mt-4 text-green-600 font-semibold">
+                Order Delivered ✅
+              </p>
+            )}
           </div>
         </div>
       </div>
