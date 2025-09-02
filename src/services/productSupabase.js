@@ -5,4 +5,6 @@ export const fetchProducts = async ()=>{
     if (error) throw error;
     console.log("products", datasdfsdf)
     return data;
+
+    
 }

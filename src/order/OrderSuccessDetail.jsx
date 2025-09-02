@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { CircleCheck, EllipsisVertical } from "lucide-react";
+import { createOrder } from "../supabase/orders";
 
 // Example fallback timeline
 const defaultTimeline = [
@@ -51,18 +52,45 @@ const OrderSuccessDetail = () => {
     timeline = defaultTimeline,
   } = order;
 
-  // Generate ID if missing
-  const orderId = id || Math.floor(100000 + Math.random() * 900000);
-
-  // Use provided date or now
-  const createdDate = created_at ? new Date(created_at) : new Date();
-
-  // Totals
+  // 1️⃣ Calculate total first
   const total = subtotal + shipping - discount;
 
-  // Delivery progress (Pending -> Shipped -> Delivered)
+  // 2️⃣ Generate order ID
+  const orderId = id || Math.floor(100000 + Math.random() * 900000);
+
+  // 3️⃣ Prepare order data
+  const orderData = {
+    order_number: orderId,
+    customer_name,
+    customer_email,
+    subtotal,
+    shipping,
+    discount,
+    total,
+  };
+
+  // 4️⃣ Use provided date or now
+  const createdDate = created_at ? new Date(created_at) : new Date();
+
+  // Delivery steps
   const deliverySteps = ["Pending", "Shipped", "Delivered"];
   const [currentStep, setCurrentStep] = useState(0);
+
+  // 5️⃣ Save order to Supabase
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (!saved && items.length > 0) {
+      createOrder(orderData, items)
+        .then((savedOrder) => {
+          if (savedOrder) {
+            console.log("Order saved successfully:", savedOrder);
+            setSaved(true);
+          }
+        })
+        .catch((err) => console.error("Failed to save order:", err));
+    }
+  }, [saved]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6 max-w-5xl mx-auto mt-8">
@@ -77,9 +105,7 @@ const OrderSuccessDetail = () => {
         <div className="flex items-center gap-3 mt-3 sm:mt-0">
           <button className="flex items-center gap-1 bg-green-100 px-3 py-1 rounded-md">
             <CircleCheck className="text-green-600 w-4 h-4" />
-            <span className="text-green-600 text-sm font-medium">
-              Paid
-            </span>
+            <span className="text-green-600 text-sm font-medium">Paid</span>
           </button>
           <EllipsisVertical className="text-gray-500" />
         </div>
@@ -145,7 +171,6 @@ const OrderSuccessDetail = () => {
 
         {/* Right: Customer Info + Timeline */}
         <div className="space-y-6">
-          {/* Customer */}
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="font-semibold text-gray-800 mb-2">Customer</h3>
             <div className="flex items-center gap-3">
@@ -159,7 +184,6 @@ const OrderSuccessDetail = () => {
             </div>
           </div>
 
-          {/* Timeline */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-3">Timeline</h3>
             <div className="space-y-3">
@@ -177,8 +201,7 @@ const OrderSuccessDetail = () => {
               ))}
             </div>
 
-            {/* Delivery Progress Button */}
-            {currentStep < deliverySteps.length - 1 && (
+            {/* {currentStep < deliverySteps.length - 1 && (
               <button
                 onClick={() => setCurrentStep((prev) => prev + 1)}
                 className="mt-4 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md transition"
@@ -190,7 +213,16 @@ const OrderSuccessDetail = () => {
               <p className="mt-4 text-green-600 font-semibold">
                 Order Delivered ✅
               </p>
-            )}
+            )} */}
+
+            <div className="flex justify-end mt-4">
+              <button
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-1 rounded-md shadow-md transition"
+                onClick={() => console.log("Track order clicked")} // placeholder for now
+              >
+                Track Order
+              </button>
+            </div>
           </div>
         </div>
       </div>
