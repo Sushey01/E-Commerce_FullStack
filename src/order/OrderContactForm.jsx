@@ -13,20 +13,25 @@ const OrderContactForm = () => {
   const [deliveryMethod, setDeliveryMethod]= useState("standard")
   const shipping = deliveryMethod === "express" ? 5:0;
 
-  const savedContact = JSON.parse(localStorage.getItem("orderinfo") || "[]");
 
-  const handleInformation = (data) => {
-    const savedContact = localStorage.getItem("orderinfo");
-    const form = data ? JSON.parse(data) : [];
-  };
+  
 
-  const [submittedData, setSubmittedData] = useState();
+  const [submittedData, setSubmittedData] = useState(()=>{
+    const saved = JSON.parse(localStorage.getItem("orderinfo"))||[];
+    return saved.length?saved[saved.length-1]:null;
+  });
 
   const { register, handleSubmit, watch, reset } = useForm();
 
   function onSubmit(data) {
-    setSubmittedData(data);
-    localStorage.setItem("orderinfo", JSON.stringify(data));
+    let saved = JSON.parse(localStorage.getItem("orderinfo"));
+
+    // If saved is null or not an array, initialize as empty array
+    if (!Array.isArray(saved)) saved = [];
+
+    const updated = [...saved, data]; // append new address
+    localStorage.setItem("orderinfo", JSON.stringify(updated));
+    setSubmittedData(data); // show latest
     console.log("form data:", data);
   }
 
@@ -34,6 +39,11 @@ const OrderContactForm = () => {
     e.preventDefault();
     reset();
   };
+
+  const handleEdit = ()=>{
+    reset(submittedData); //populate form with current address
+    setSubmittedData(null); //show form
+  }
 
   return (
     <>
@@ -159,7 +169,6 @@ const OrderContactForm = () => {
                 Cancel
               </button>
               <button
-                onClick={() => handleInformation(data)}
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 py-2 px-4 text-white border rounded-sm"
               >
@@ -167,10 +176,7 @@ const OrderContactForm = () => {
               </button>
             </div>
           </form>
-          {/* <div className="flex flex-col w-[30%]">
-        <OrderItem />
-        <OrderSummary />
-      </div> */}
+    
         </div>
       ) : (
         //Show Billing or Shipping Address.
@@ -179,7 +185,7 @@ const OrderContactForm = () => {
           <div className="flex justify-between">
             <p className="text-sm">Shipping Address</p>
             <button
-              onClick={() => submittedData(data)}
+              onClick={handleEdit}
               className="text-blue-500"
             >
               EDIT

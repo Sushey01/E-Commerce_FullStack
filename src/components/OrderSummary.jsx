@@ -2,10 +2,11 @@ import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const OrderSummary = ({ order={} }) => {
+const OrderSummary = ({ order, disableCheckout }) => {
   const navigate = useNavigate();
 
   // Example: dynamic state for voucher
+  const [orderState, setOrderState] = useState(order);
   const [voucher, setVoucher] = useState("");
   const [discount, setDiscount] = useState(order.discount || 0);
 
@@ -16,12 +17,21 @@ const OrderSummary = ({ order={} }) => {
     //   setDiscount(0);
     // }
 
-    setDiscount(voucher === "WELCOME10"?10:0)
+   const discountValue = voucher === "WELCOME10" ? 10 : 0;
+   setDiscount(discountValue);
+
+    // Update orderState so FinalOrderSummary reflect it
+    setOrderState({
+      ...orderState,
+      discount: discountValue,
+    });
   };
 
-  const subtotal = Number(order.subtotal || 0);
-  const shipping = Number(order.shipping || 0);
-  const total = subtotal - Number(discount || 0) + shipping;
+ 
+
+  const subtotal = Number(orderState.subtotal || 0);
+  const shipping = Number(orderState.shipping || 0);
+  const total = subtotal - Number(orderState.discount || 0) + shipping;
 
 
   return (
@@ -111,12 +121,17 @@ const OrderSummary = ({ order={} }) => {
         <p>Paid by customer</p>
         <p className="font-medium">${order.paid || 0}</p>
       </div>
-      <div className="flex justify-between text-sm text-gray-700">
+
+      {/* <div className="flex justify-between text-sm text-gray-700">
         <p>Payment due when invoice is sent</p>
-        <button className="text-purple-700 font-medium hover:underline">
+        <button
+        onClick={()=>{
+
+        }}
+        className="text-purple-700 font-medium hover:underline">
           Edit
         </button>
-      </div>
+      </div> */}
 
       {/* Bottom Actions */}
       <div className="p-4 flex justify-between items-center bg-white border rounded-md">
@@ -128,8 +143,9 @@ const OrderSummary = ({ order={} }) => {
             Send invoice
           </button>
           <button
+          disabled={disableCheckout}
             className="px-4 py-2 rounded-md bg-purple-700 text-white text-xs "
-            onClick={() => navigate("/payment")}
+            onClick={() => navigate("/payment", {state:{order:orderState}})}
           >
             Proceed to payment
           </button>

@@ -3,27 +3,21 @@ import Credit from "../assets/images/credit.png";
 import Cod from "../assets/images/cod.png";
 import Khalti from "../assets/images/khalti.avif";
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import FinalOrderSummary from "./FinalOrderSummary";
 
-const CheckoutPayment = () => {
-  // Initialize selectedItems as state with dummy data
-  const [selectedItems, setSelectedItems] = useState([
-    { id: 1, name: "Item 1", price: 1500, quantity: 1 },
-    { id: 2, name: "Item 2", price: 1966, quantity: 1 },
-  ]);
+const CheckoutPayment = ({selectedItems = []}) => {
+  const location = useLocation();
+     const order = location.state?.order || {
+       items: [],
+       subtotal: 0,
+       shipping: 0,
+       discount: 0,
+       paid: 0,
+       status: "Pending",
+     };
 
-  const order = {
-    items: selectedItems,
-    subtotal: selectedItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    ),
-    shipping: 0, // Matches the image where shipping is included in subtotal
-    discount: 0,
-    paid: 0,
-    status: "Pending",
-  };
-
+    
   const [selectedPayment, setSelectedPayment] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
 
@@ -110,10 +104,10 @@ const CheckoutPayment = () => {
   );
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
-      <div className="max-w-6xl  mx-auto flex flex-col items-center">
+    <div className="bg-gray-100  min-h-screen p-6">
+      <div className="max-w-6xl mx-auto flex flex-col items-center">
         {/* Notification Banner */}
-        <div className="bg-yellow-100 border-l-4 w-[80%] border-yellow-500 p-4 mb-6 flex items-center gap-2">
+        <div className="bg-yellow-100  border-l-4 w-[80%] border-yellow-500 p-4 mb-6 flex items-center gap-2">
           <div className="text-yellow-800 bg-yellow-500 rounded-full w-6 h-6 flex items-center justify-center">
             !
           </div>
@@ -124,7 +118,7 @@ const CheckoutPayment = () => {
         </div>
 
         {/* Main Flex Row */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 w-full">
           {/* Left: Payment Section */}
           <div className="flex-1 bg-white p-6 rounded-lg shadow">
             <h2 className="text-xl font-semibold mb-4">

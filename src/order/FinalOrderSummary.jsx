@@ -2,7 +2,9 @@ const FinalOrderSummary = ({ order }) => {
   const items = order?.items || [];
   const subtotal = order?.subtotal || 0;
   const shipping = order?.shipping || 0;
-  const totalAmount = subtotal + shipping;
+  const discount = order?.discount ||0;
+  
+  const totalAmount = subtotal - discount + shipping;
   const itemCount = items.length;
 
   return (
@@ -14,6 +16,15 @@ const FinalOrderSummary = ({ order }) => {
         Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})
       </p>
       <p className="text-lg font-bold mt-1">Rs. {subtotal}</p>
+
+      {discount > 0 && (
+        <>
+          <p className="text-sm text-gray-600 mt-1">Discount</p>
+          <p className="text-lg font-bold mt-1 text-red-500">
+            - Rs. {discount}
+          </p>
+        </>
+      )}
 
       {/* Shipping */}
       {shipping > 0 && (

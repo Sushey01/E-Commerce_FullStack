@@ -23,7 +23,6 @@ import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
 import MonthlySalePageRedux from "./pages/MonthlySalePageRedux";
 import OrderPage from "./order/OrderPage";
 import OrderContactForm from "./order/OrderContactForm";
-import OrderCart from "./order/OrderCart";
 import OrderCartPaymentProcess from "./order/OrderCartPaymentProcess";
 import CheckoutPayment from "./order/CheckoutPayment";
 
@@ -59,7 +58,6 @@ const App = () => {
           <Route path="/loginPage" element={<LoginPage />} />
           <Route path="/messages" element={<CustomerCareChat />} />
           <Route path="order" element={<OrderPage />} />
-          <Route path="ordercart" element={<OrderCart />} />
           <Route path="payment" element={<CheckoutPayment />} />
 
           {/* Product Detail */}
