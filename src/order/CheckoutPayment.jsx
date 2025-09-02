@@ -3,7 +3,7 @@ import Credit from "../assets/images/credit.png";
 import Cod from "../assets/images/cod.png";
 import Khalti from "../assets/images/khalti.avif";
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import FinalOrderSummary from "./FinalOrderSummary";
 
 const CheckoutPayment = ({selectedItems = []}) => {
@@ -18,8 +18,12 @@ const CheckoutPayment = ({selectedItems = []}) => {
      };
 
     
+
+    
   const [selectedPayment, setSelectedPayment] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
+
+   const navigate = useNavigate();
 
   const paymentMethods = [
     {
@@ -86,6 +90,8 @@ const CheckoutPayment = ({selectedItems = []}) => {
       alert("Please select a payment method");
       return;
     }
+
+    navigate("/success", {state:{order, payment:selectedPayment}})
 
     const selectedMethod = paymentMethods.find(
       (method) => method.id === selectedPayment
