@@ -1,59 +1,85 @@
+
+
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaHeart, FaStore } from "react-icons/fa";
 import { BsTrash } from "react-icons/bs";
 import Sunglass from "../assets/images/sunglass.webp";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import supabase from "../supabase";
+
+// Temporary user id for testing
+const TEMP_USER_ID = "aa62b313-11dc-400d-aad3-a476c328a0d5";
 
 const CartPage = () => {
   const navigate = useNavigate();
-
-  // Load cart from localStorage safely
-  const data = localStorage.getItem("cartlist");
-  const initialCart = data ? JSON.parse(data) : [];
-
-  // Ensure each item has id and quantity
-  const [cartItems, setCartItems] = useState(
-    initialCart.map((item) => ({
-      id: item.id ?? Date.now() + Math.random(), // fallback unique id
-      quantity: item.quantity ?? 1,
-      ...item,
-    }))
-  );
-
-  // ✅ Selected items state
+  const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Load cart from DB
+  // Load cart from Supabase on mount
   useEffect(() => {
-    (async () => {
-      const items = await fetchCart();
-      setCartItems(
-        items.map((item) => ({
-          id: item.id ?? Date.now() + Math.random(),
-          quantity: item.quantity ?? 1,
-          ...item,
-        }))
-      );
-    })();
+    async function loadCart() {
+      try {
+        const { data, error } = await supabase
+          .from("carts")
+          .select("cart_items")
+          .eq("user_id", TEMP_USER_ID)
+          .maybeSingle(); // returns null if no row exists
+
+        if (error) {
+          console.error("Error fetching cart:", error.message);
+        } else {
+          setCartItems(data?.cart_items || []);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadCart();
   }, []);
 
-  // ✅ Sync to DB whenever cart changes
+  // Save cart to Supabase whenever cartItems change
   useEffect(() => {
-    if (cartItems.length) saveCart(cartItems);
-  }, [cartItems]);
+    if (!loading) {
+      async function saveCart() {
+        try {
+          const { error } = await supabase.from("carts").upsert(
+            [
+              {
+                user_id: TEMP_USER_ID,
+                cart_items: cartItems,
+              },
+            ],
+            { onConflict: "user_id" } // requires unique constraint on user_id
+          );
 
+          if (error) console.error("Error saving cart:", error.message);
+        } catch (err) {
+          console.error("Error saving cart:", err);
+        }
+      }
+
+      saveCart();
+    }
+  }, [cartItems, loading]);
+
+  // Delete a single item
   const handleDelete = (id) => {
     setCartItems((items) => items.filter((item) => item.id !== id));
     setSelectedItems((sel) => sel.filter((sid) => sid !== id));
   };
 
-  const handleDeleteAll = async () => {
+  // Delete all items
+  const handleDeleteAll = () => {
     setCartItems([]);
     setSelectedItems([]);
-    await clearCart();
   };
 
+  // Change quantity
   const handleQuantityChange = (id, change) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -64,6 +90,7 @@ const CartPage = () => {
     );
   };
 
+  // Add to Wishlist
   const handleAddToWishlist = (item) => {
     const data = localStorage.getItem("wishlist");
     const wishlist = data ? JSON.parse(data) : [];
@@ -77,19 +104,13 @@ const CartPage = () => {
     if (!exists) {
       wishlist.push(item);
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
-      toast.success(`${item.name || item.title} is added to wishlist!`);
+      toast.success(`${item.name || item.title} added to wishlist!`);
     } else {
-      toast.success(`${item.name || item.title} already in wishlist!`);
+      toast.info(`${item.name || item.title} is already in wishlist.`);
     }
   };
 
-  const groupedItems = cartItems.reduce((acc, item) => {
-    const seller = item.seller ?? "Unknown Seller";
-    if (!acc[seller]) acc[seller] = [];
-    acc[seller].push(item);
-    return acc;
-  }, {});
-
+  // Toggle Select All
   const toggleSelectAll = () => {
     if (selectedItems.length === cartItems.length) {
       setSelectedItems([]);
@@ -98,18 +119,26 @@ const CartPage = () => {
     }
   };
 
+  // Toggle single checkbox
   const toggleSelectItem = (id) => {
     setSelectedItems((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
     );
   };
 
+  // Group items by seller
+  const groupedItems = cartItems.reduce((acc, item) => {
+    const seller = item.seller ?? "Unknown Seller";
+    if (!acc[seller]) acc[seller] = [];
+    acc[seller].push(item);
+    return acc;
+  }, {});
+
   return (
     <div className="max-w-5xl mx-auto p-4 border rounded-xl shadow-sm">
       <h2 className="text-2xl font-bold mb-4">🛒 My Cart</h2>
 
       <div className="flex justify-between items-center mb-6">
-        {/* ✅ Select All */}
         <button
           className="bg-gray-100 text-black px-4 py-1 rounded-full flex items-center gap-2 text-sm"
           onClick={toggleSelectAll}
@@ -124,14 +153,12 @@ const CartPage = () => {
           Select All ({cartItems.length})
         </button>
 
-        <div className="flex gap-3">
-          <button
-            className="bg-black text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
-            onClick={handleDeleteAll}
-          >
-            Delete All <BsTrash />
-          </button>
-        </div>
+        <button
+          className="bg-black text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
+          onClick={handleDeleteAll}
+        >
+          Delete All <BsTrash />
+        </button>
       </div>
 
       {Object.entries(groupedItems).map(([seller, items]) => (
@@ -145,7 +172,6 @@ const CartPage = () => {
               key={item.id}
               className="bg-gray-100 rounded-lg p-4 flex flex-row gap-4 items-start md:items-center justify-between mb-4"
             >
-              {/* ✅ Checkbox */}
               <input
                 type="checkbox"
                 checked={selectedItems.includes(item.id)}
@@ -167,7 +193,6 @@ const CartPage = () => {
                 </p>
                 <p className="text-sm text-gray-500">{item.warranty ?? ""}</p>
 
-                {/* ✅ Variations */}
                 {item.variations && Object.keys(item.variations).length > 0 && (
                   <div className="text-sm text-gray-700 flex flex-wrap gap-2">
                     {Object.entries(item.variations).map(([key, value]) => (
@@ -207,6 +232,7 @@ const CartPage = () => {
                     +
                   </button>
                 </div>
+
                 <div className="flex gap-2">
                   <button
                     className="text-red-600 bg-red-100 p-2 rounded-full"
@@ -224,6 +250,7 @@ const CartPage = () => {
               </div>
             </div>
           ))}
+
           <button
             onClick={() =>
               navigate("/order", {

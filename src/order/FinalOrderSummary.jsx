@@ -15,13 +15,13 @@ const FinalOrderSummary = ({ order }) => {
       <p className="text-sm text-gray-600">
         Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})
       </p>
-      <p className="text-lg font-bold mt-1">Rs. {subtotal}</p>
+      <p className="text-lg font-bold mt-1">$. {subtotal}</p>
 
       {discount > 0 && (
         <>
           <p className="text-sm text-gray-600 mt-1">Discount</p>
           <p className="text-lg font-bold mt-1 text-red-500">
-            - Rs. {discount}
+            - $. {discount}
           </p>
         </>
       )}
@@ -36,7 +36,7 @@ const FinalOrderSummary = ({ order }) => {
 
       {/* Total */}
       <p className="text-base font-semibold">Total Amount</p>
-      <p className="text-xl font-bold mt-1">Rs. {totalAmount}</p>
+      <p className="text-xl font-bold mt-1">$. {totalAmount}</p>
     </div>
   );
 };

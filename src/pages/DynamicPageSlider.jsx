@@ -50,24 +50,59 @@ useEffect(() => {
     }
 
     if (data) {
-      const mappedData = data.map((product) => {
-        const image =
-          product.images && product.images.length > 0
-            ? product.images[0]
-            : "https://via.placeholder.com/150";
-        console.log(`Product ${product.id} image: ${image}`); // Debug image URL
-        return {
-          ...product,
-          image,
-          title1: product.title ? product.title.split(" ")[0] : "Product",
-          title2: product.title
-            ? product.title.split(" ").slice(1).join(" ")
-            : "",
-          subtitle: product.subtitle || "No subtitle",
-          label: "Shop Now",
-          link: `/product/${product.id}`,
-        };
-      });
+     const mappedData = data.map((product) => {
+       // Handle images jsonb safely
+       let images = [];
+       if (Array.isArray(product.images)) {
+         images = product.images;
+       } else if (typeof product.images === "string") {
+         try {
+           images = JSON.parse(product.images);
+         } catch {
+           images = [];
+         }
+       }
+
+       const image =
+         images && images.length > 0
+           ? images[0]
+           : "https://via.placeholder.com/150";
+
+       const price = Number(product.price) || 0;
+       const oldPrice = Number(product.old_price) || 0;
+
+       return {
+         id: product.id,
+         title: product.title || "Untitled Product",
+         title1: product.title ? product.title.split(" ")[0] : "Product",
+         title2: product.title
+           ? product.title.split(" ").slice(1).join(" ")
+           : "",
+         subtitle: product.subtitle || "No subtitle",
+         description: product.description || "",
+         price,
+         oldPrice,
+         discount:
+           oldPrice && price
+             ? Math.round(((oldPrice - price) / oldPrice) * 100)
+             : 0,
+         reviews: product.reviews || 0,
+         rating: Number(product.rating) || 0,
+         sold: product.sold || Math.floor(Math.random() * 800), // mock until you add to DB
+         inStock: product.inStock || 100, // mock until you add to DB
+         outOfStock: product.outofstock || false,
+         image,
+         images,
+         variant:
+           product.variant && typeof product.variant === "object"
+             ? product.variant
+             : {},
+         label: "Shop Now",
+         link: `/product/${product.id}`,
+         category_id: product.category_id, // use this instead of "category"
+       };
+     });
+
 
       const featureProducts = mappedData.filter(
         (p) => p.category === "feature"
@@ -77,39 +112,17 @@ useEffect(() => {
       );
       const laptopProducts = mappedData.filter((p) => p.category === "laptop");
 
-      setFeatureProductsState(featureProducts);
-      setMonthlySaleProductsState(monthlyProducts);
-      setLaptopProductsState(laptopProducts);
-
-      console.log(
-        "Feature products:",
-        featureProducts.length,
-        featureProducts.map((p) => ({ id: p.id, image: p.image }))
+      setFeatureProductsState(
+        featureProducts.length > 0 ? featureProducts : mappedData
       );
-      console.log(
-        "Monthly products:",
-        monthlyProducts.length,
-        monthlyProducts.map((p) => ({ id: p.id, image: p.image }))
+      setMonthlySaleProductsState(
+        monthlyProducts.length > 0 ? monthlyProducts : mappedData
       );
-      console.log(
-        "Laptop products:",
-        laptopProducts.length,
-        laptopProducts.map((p) => ({ id: p.id, image: p.image }))
+      setLaptopProductsState(
+        laptopProducts.length > 0 ? laptopProducts : mappedData
       );
-
-      if (featureProducts.length === 0) {
-        setFeatureProductsState(mappedData);
-        console.warn("No feature products found, using all products");
-      }
-      if (monthlyProducts.length === 0) {
-        setMonthlySaleProductsState(mappedData);
-        console.warn("No monthly products found, using all products");
-      }
-      if (laptopProducts.length === 0) {
-        setLaptopProductsState(mappedData);
-        console.warn("No laptop products found, using all products");
-      }
     }
+
 
     setIsLoading(false);
   };
