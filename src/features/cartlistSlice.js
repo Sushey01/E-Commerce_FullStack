@@ -17,14 +17,13 @@ const cartlistSlice = createSlice({
     addToCartlist: (state, action) => {
       const payload = action.payload;
 
-      const exists = state.items.find(
-        (item) =>
-          item.id === payload.id &&
-          item.variations &&
-          Object.keys(payload.variations).every(
-            (key) => item.variations[key] === payload.variations[key]
-          )
-      );
+     const exists = state.items.find(
+       (item) =>
+         item.id === payload.id &&
+         Object.keys(payload.variant || {}).every(
+           (key) => (item.variant || {})[key] === payload.variant[key]
+         )
+     );
       if (exists) {
         exists.quantity += action.payload.quantity ;
       } else {

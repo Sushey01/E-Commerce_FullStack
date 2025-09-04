@@ -58,30 +58,38 @@ export async function saveCartItem(item) {
       .eq("cart_id", cart.id)
       .eq("product_id", item.product_id);
 
-      const itemsArray = existingItems || [];
-
     if (existingItems.length > 0) {
-      // Update existing quantity
+      // Update existing item
       await supabase
         .from("cart_items")
         .update({
-          quantity: item.quantity,
-          price: item.price,
+          quantity: Number(item.quantity),
+          price: Number(item.price ?? 0),
+          title: item.title ?? item.name ?? "Product",
+          image: item.image ?? "",
+          seller: item.seller ?? "Unknown Seller",
           variant: item.variant ?? {},
           updated_at: new Date().toISOString(),
         })
         .eq("id", existingItems[0].id);
     } else {
       // Insert new item
-      await supabase.from("cart_items").insert([
-        {
-          cart_id: cart.id,
-          product_id: item.product_id,
-          quantity: item.quantity,
-          price: item.price,
-          variant: item.variant ?? {},
-        },
-      ]);
+      await supabase.from("cart_items").upsert(
+        [
+          {
+            cart_id: cart.id,
+            product_id: item.product_id,
+            quantity: Number(item.quantity),
+            price: Number(item.price ?? 0),
+            title: item.title ?? item.name ?? "Product",
+            image: item.image ?? "",
+            seller: item.seller ?? "Unknown Seller",
+            variant: item.variant ?? {},
+            updated_at: new Date().toISOString(),
+          },
+        ],
+        { onConflict: ["cart_id", "product_id"] }
+      );
     }
   } catch (err) {
     console.error("Error saving cart item:", err.message);

@@ -2,8 +2,8 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addToCartlist } from "../features/cartlistSlice";
-
 import { formatPrice } from "../utils/formatPrice";
+import { saveCartItem } from "../supabase/carts";
 
 
 
@@ -64,15 +64,19 @@ const ProductDetailInfo = ({ product }) => {
     }
 
     const cartItem = {
+      product_id: product.id,
       id: product.id,
       name: `${product.title1} ${product.subtitle || ""}`.trim(),
       price: product.price || 60000,
       oldPrice: product.oldPrice || null, // ✅ keep old price if exists
       quantity: data.quantity,
       image: product.image || "",
-      variations: data.variations,
+      variant: data.variations || {},
       // LocalProductID:product.id ,
     };
+
+
+
 
     console.log(cartItem, "ssssssssssss");
     //1. Dispatch to Redux
@@ -80,8 +84,12 @@ const ProductDetailInfo = ({ product }) => {
     setValue("variations", {});
 
     await saveCartItem(cartItem); // Supabase
-    reset(defaultValues); // reset form
+    // reset(defaultValues); // reset form
   };
+
+
+
+  
 
   // Handle quantity increment/decrement
   const handleQuantityChange = (delta) => {
