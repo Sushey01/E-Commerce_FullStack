@@ -18,13 +18,23 @@ const CartPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
 
   // ✅ Load cart items from DB
- useEffect(() => {
-   (async () => {
-     const items = await fetchCartItems();
-     setCartItems(items);
-   })();
- }, []);
-
+  useEffect(() => {
+    (async () => {
+      const items = await fetchCartItems();
+      setCartItems(
+        items.map((item) => ({
+          id: item.id,
+          product_id: item.product_id,
+          quantity: item.quantity,
+          price: item.price,
+          variant: item.variant ?? {},
+          title: item.title ?? item.name ?? "Product",
+          image: item.image ?? Sunglass,
+          seller: item.seller ?? "Unknown Seller",
+        }))
+      );
+    })();
+  }, []);
 
   // ✅ Delete single item
   const handleDelete = async (id) => {

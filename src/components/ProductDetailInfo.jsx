@@ -2,7 +2,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addToCartlist } from "../features/cartlistSlice";
+
 import { formatPrice } from "../utils/formatPrice";
+
+
 
 const ProductDetailInfo = ({ product }) => {
   const {
@@ -53,16 +56,11 @@ const ProductDetailInfo = ({ product }) => {
   };
 
   // Handle form submission
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("Submitted data:", data); // Log submitted data to debug
     if (!product.title1 || !product.subtitle) {
       alert("Product data is incomplete. Please try again.");
       return;
-    }
-
-    if (!product || !product.id){
-      alert("product is not loaded yet");
-      return
     }
 
     const cartItem = {
@@ -77,13 +75,12 @@ const ProductDetailInfo = ({ product }) => {
     };
 
     console.log(cartItem, "ssssssssssss");
-    // Dispatch to Redux
+    //1. Dispatch to Redux
     dispatch(addToCartlist(cartItem));
     setValue("variations", {});
-    reset(defaultValues);
 
-    alert(`${cartItem.name} is added to cart !`);
-    // console.log("Dispatched cart item:", cartItem); // Log dispatched item
+    await saveCartItem(cartItem); // Supabase
+    reset(defaultValues); // reset form
   };
 
   // Handle quantity increment/decrement
