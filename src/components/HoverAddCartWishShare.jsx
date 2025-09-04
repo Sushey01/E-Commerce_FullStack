@@ -1,5 +1,6 @@
 import { Heart, Share2, ShoppingCart } from 'lucide-react';
 import React from 'react';
+import { saveCartItem } from '../supabase/carts';
 import { useDispatch } from 'react-redux';
 import { addToWishlist } from '../features/wishlistSlice';
 import { addToCartlist } from '../features/cartlistSlice';
@@ -11,13 +12,29 @@ const HoverAddCartWishShare = ({ product = {} }) => {
     dispatch(addToWishlist(product));
   }
 
- const onAddToCart = () => {
-  // Always attach a unique id if not present
-  const productWithId = {
-    ...product,
-    id: product.id ?? Date.now() + Math.random() // fallback unique id
-  };
-  dispatch(addToCartlist(productWithId));
+//  const onAddToCart = () => {
+//   // Always attach a unique id if not present
+//   const productWithId = {
+//     ...product,
+//     id: product.id ?? Date.now() + Math.random() // fallback unique id
+//   };
+//   dispatch(addToCartlist(productWithId));
+// };
+
+
+const onAddToCart = async () => {
+  try {
+    const productWithId = {
+      ...product,
+      product_id: product.id ?? Date.now().toString(),
+      quantity: 1,
+    };
+    await saveCartItem(productWithId);
+    toast.success(`${product.title} added to cart`);
+  } catch (err) {
+    console.error("❌ Failed to save item in Supabase", err);
+    toast.error("Failed to add item to cart");
+  }
 };
 
   return (

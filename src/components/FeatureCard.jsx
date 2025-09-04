@@ -1,39 +1,44 @@
 import React from "react";
-import Iphone from "../assets/images/iphone.webp";
-import Cool from "../assets/images/cool.jpg";
+
 import { useNavigate } from "react-router-dom";
 
-
-const FeatureCard = () => {
+const FeatureCard = ({ label, title1, title2, subtitle, link, image }) => {
   const navigate = useNavigate();
 
   function handleClick() {
-    navigate("/products/details");
+    navigate(link);
   }
 
   return (
     <>
       {/* <div>
-      <img src={Cool}/> */}
+          <img src={Cool}/> */}
 
       <div
         onClick={handleClick}
-        className="flex font-Kanit flex-col gap-2 bg-[#f7f7f7] border rounded w-full p-4 py-2  h-full hover:shadow-lg transition-all duration-700 ease-in-out group">
-        <div className="flex justify-center gap-1 w-full">
-          <p className="text-xl md:text-2xl text-[#777]">iPad & </p>
-          <p className="text-xl md:text-2xl text-[#777]">Tablets</p>
+        className="flex font-Kanit flex-col gap-1 bg-[#f7f7f7] border rounded-md w-full p-4 py-2  h-full hover:shadow-lg transition-all duration-700 ease-in-out group"
+      >
+        <div className="flex justify-center gap-1 w-full ">
+          <p className="text-lg  text-[#777]">{title1}</p>
+          <p className="text-lg line-clamp-1 text-[#777]">{title2}</p>
         </div>
 
-        <p className="text-[#777]  text-sm md:text-base line-clamp-1">
-          Up to 20% off today!
+        <p className="text-red-400 text-xs md:text-base line-clamp-1">
+          {subtitle}
         </p>
 
-        <div className="py-2">
-          <img src={Iphone} className="md:w-[80%] hover:" />
+        <div className="flex justify-center py-2">
+          <div className="w-[100%] aspect-[4/3] overflow-hidden flex items-center justify-center">
+            <img
+              src={image}
+              className="w-full h-full object-contain"
+              alt={title1}
+            />
+          </div>{" "}
         </div>
         <button className="flex gap-2  items-center">
-          <p className="text-[#0296a0] md:text-lg underline decoration-[#0296a0] ">
-            Shop Now
+          <p className="text-[#0296a0] text-[11px] md:text-[16px] underline decoration-[#0296a0] ">
+            {label}
           </p>
           <svg
             width="12"

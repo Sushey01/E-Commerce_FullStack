@@ -2,76 +2,116 @@ import supabase from "../supabase";
 
 const TEMP_USER_ID = "aa62b313-11dc-400d-aad3-a476c328a0d5";
 
-// Create or update a cart
-export async function saveCart(cartItems) {
+// Get or create a cart for a user
+export async function getOrCreateCart() {
   try {
-    // Check if cart exists for user
-    const { data: existingCart, error: fetchError } = await supabase
+    let { data: cart, error } = await supabase
       .from("carts")
       .select("*")
       .eq("user_id", TEMP_USER_ID)
       .single();
 
-    if (fetchError && fetchError.code !== "PGRST116") {
-      // PGRST116: no rows found
-      throw fetchError;
-    }
+    if (error && error.code !== "PGRST116") throw error;
 
-    if (existingCart) {
-      // Update existing cart
-      const { error: updateError } = await supabase
-        .from("carts")
-        .update({ cart_items: cartItems, updated_at: new Date().toISOString() })
-        .eq("id", existingCart.id);
-
-      if (updateError) throw updateError;
-      return { ...existingCart, cart_items: cartItems };
-    } else {
-      // Create new cart
+    if (!cart) {
       const { data: newCart, error: insertError } = await supabase
         .from("carts")
-        .insert([{ user_id: TEMP_USER_ID, cart_items: cartItems }])
+        .insert([{ user_id: TEMP_USER_ID }])
         .select()
         .single();
-
       if (insertError) throw insertError;
       return newCart;
     }
-  } catch (error) {
-    console.error("❌ Error saving cart:", error.message);
+
+    return cart;
+  } catch (err) {
+    console.error("Error getting cart:", err.message);
     return null;
   }
 }
 
-// Fetch cart for user
-export async function fetchCart() {
+// Fetch all items in the cart
+export async function fetchCartItems() {
   try {
+    const cart = await getOrCreateCart();
     const { data, error } = await supabase
-      .from("carts")
+      .from("cart_items")
       .select("*")
-      .eq("user_id", TEMP_USER_ID)
-      .single();
-
+      .eq("cart_id", cart.id);
     if (error) throw error;
-    return data?.cart_items || [];
-  } catch (error) {
-    console.error("❌ Error fetching cart:", error.message);
+    return data || [];
+  } catch (err) {
+    console.error("Error fetching cart items:", err.message);
     return [];
   }
 }
-// Clear the entire cart
-export async function clearCart() {
-  try {
-    const { error } = await supabase
-      .from("carts")
-      .delete()
-      .eq("user_id", TEMP_USER_ID);
 
-    if (error) throw error;
-    return true;
-  } catch (error) {
-    console.error("❌ Error clearing cart:", error.message);
-    return false;
+// Add or update a cart item
+export async function saveCartItem(item) {
+  try {
+    const cart = await getOrCreateCart();
+    console.log("Cart returned:", cart);
+
+    const { data: existingItems } = await supabase
+      .from("cart_items")
+      .select("*")
+      .eq("cart_id", cart.id)
+      .eq("product_id", item.product_id);
+
+      const itemsArray = existingItems || [];
+
+    if (existingItems.length > 0) {
+      // Update existing quantity
+      await supabase
+        .from("cart_items")
+        .update({
+          quantity: item.quantity,
+          price: item.price,
+          variant: item.variant ?? {},
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existingItems[0].id);
+    } else {
+      // Insert new item
+      await supabase.from("cart_items").insert([
+        {
+          cart_id: cart.id,
+          product_id: item.product_id,
+          quantity: item.quantity,
+          price: item.price,
+          variant: item.variant ?? {},
+        },
+      ]);
+    }
+  } catch (err) {
+    console.error("Error saving cart item:", err.message);
   }
 }
 
+
+// Delete a single cart item
+export async function deleteCartItem(itemId) {
+  try {
+    const { error } = await supabase
+      .from("cart_items")
+      .delete()
+      .eq("id", itemId);
+    if (error) throw error;
+  } catch (err) {
+    console.error("Error deleting cart item:", err.message);
+  }
+}
+
+// Delete all cart items
+export async function clearCart() {
+  try {
+    const cart = await getOrCreateCart();
+    const { error } = await supabase
+      .from("cart_items")
+      .delete()
+      .eq("cart_id", cart.id);
+    if (error) throw error;
+  } catch (err) {
+    console.error("Error clearing cart:", err.message);
+  }
+}

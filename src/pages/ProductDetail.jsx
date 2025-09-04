@@ -58,6 +58,8 @@ const ProductDetail = () => {
         .select("*")
         .eq("id", id.toString()) // force string compare
         .maybeSingle(); // avoids crashing if not found
+        console.log("Fetching product for ID:", id, "=>", data);
+
 
       if (error) {
         console.error("Error fetching product detail:", error);

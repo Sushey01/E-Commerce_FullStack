@@ -16,8 +16,10 @@ const ProductDetailInfo = ({ product }) => {
     defaultValues: {
       variations: {},
       quantity: 1,
+      
       // LocalProductID: product.id,
     },
+    
   });
   const dispatch = useDispatch();
   const quantity = watch("quantity");
@@ -56,6 +58,11 @@ const ProductDetailInfo = ({ product }) => {
     if (!product.title1 || !product.subtitle) {
       alert("Product data is incomplete. Please try again.");
       return;
+    }
+
+    if (!product || !product.id){
+      alert("product is not loaded yet");
+      return
     }
 
     const cartItem = {

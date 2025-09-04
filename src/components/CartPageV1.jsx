@@ -11,7 +11,7 @@ import supabase from "../supabase";
 // Temporary user id for testing
 const TEMP_USER_ID = "aa62b313-11dc-400d-aad3-a476c328a0d5";
 
-const CartPage = () => {
+const CartPageV1 = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -276,4 +276,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default CartPageV1;

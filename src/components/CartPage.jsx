@@ -4,85 +4,77 @@ import { BsTrash } from "react-icons/bs";
 import Sunglass from "../assets/images/sunglass.webp";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import {
+  fetchCartItems,
+  saveCartItem,
+  deleteCartItem,
+  clearCart,
+} from "../supabase/carts";
 
 const CartPage = () => {
   const navigate = useNavigate();
 
-  // Load cart from localStorage safely
-  const data = localStorage.getItem("cartlist");
-  const initialCart = data ? JSON.parse(data) : [];
-
-  // Ensure each item has id and quantity
-  const [cartItems, setCartItems] = useState(
-    initialCart.map((item) => ({
-      id: item.id ?? Date.now() + Math.random(), // fallback unique id
-      quantity: item.quantity ?? 1,
-      ...item,
-    }))
-  );
-
-  // ✅ Selected items state
+  const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
 
-  // ✅ Load cart from DB
-  useEffect(() => {
-    (async () => {
-      const items = await fetchCart();
-      setCartItems(
-        items.map((item) => ({
-          id: item.id ?? Date.now() + Math.random(),
-          quantity: item.quantity ?? 1,
-          ...item,
-        }))
-      );
-    })();
-  }, []);
+  // ✅ Load cart items from DB
+ useEffect(() => {
+   (async () => {
+     const items = await fetchCartItems();
+     setCartItems(items);
+   })();
+ }, []);
 
-  // ✅ Sync to DB whenever cart changes
-  useEffect(() => {
-    if (cartItems.length) saveCart(cartItems);
-  }, [cartItems]);
 
-  const handleDelete = (id) => {
+  // ✅ Delete single item
+  const handleDelete = async (id) => {
+    await deleteCartItem(id);
     setCartItems((items) => items.filter((item) => item.id !== id));
     setSelectedItems((sel) => sel.filter((sid) => sid !== id));
   };
 
+  // ✅ Delete all items
   const handleDeleteAll = async () => {
+    await clearCart();
     setCartItems([]);
     setSelectedItems([]);
-    await clearCart();
   };
 
-  const handleQuantityChange = (id, change) => {
+  // ✅ Change quantity
+  const handleQuantityChange = async (id, change) => {
     setCartItems((items) =>
-      items.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, (item.quantity ?? 1) + change) }
-          : item
-      )
+      items.map((item) => {
+        if (item.id === id) {
+          const newQty = Math.max(1, item.quantity + change);
+          saveCartItem({ ...item, quantity: newQty }); // Update in DB
+          return { ...item, quantity: newQty };
+        }
+        return item;
+      })
     );
   };
 
+  // ✅ Add to Wishlist (localStorage still)
   const handleAddToWishlist = (item) => {
     const data = localStorage.getItem("wishlist");
     const wishlist = data ? JSON.parse(data) : [];
 
     const exists = wishlist.some(
       (w) =>
-        w.id === item.id &&
-        JSON.stringify(w.variations) === JSON.stringify(item.variations)
+        w.id === item.product_id &&
+        JSON.stringify(w.variant) === JSON.stringify(item.variant)
     );
 
     if (!exists) {
       wishlist.push(item);
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
-      toast.success(`${item.name || item.title} is added to wishlist!`);
+      toast.success(`${item.title} is added to wishlist!`);
     } else {
-      toast.success(`${item.name || item.title} already in wishlist!`);
+      toast.success(`${item.title} already added in wishlist!`);
     }
   };
 
+  // ✅ Group items by seller
   const groupedItems = cartItems.reduce((acc, item) => {
     const seller = item.seller ?? "Unknown Seller";
     if (!acc[seller]) acc[seller] = [];
@@ -90,6 +82,7 @@ const CartPage = () => {
     return acc;
   }, {});
 
+  // ✅ Toggle select all
   const toggleSelectAll = () => {
     if (selectedItems.length === cartItems.length) {
       setSelectedItems([]);
@@ -98,6 +91,7 @@ const CartPage = () => {
     }
   };
 
+  // ✅ Toggle single checkbox
   const toggleSelectItem = (id) => {
     setSelectedItems((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
@@ -109,7 +103,7 @@ const CartPage = () => {
       <h2 className="text-2xl font-bold mb-4">🛒 My Cart</h2>
 
       <div className="flex justify-between items-center mb-6">
-        {/* ✅ Select All */}
+        {/* Select All */}
         <button
           className="bg-gray-100 text-black px-4 py-1 rounded-full flex items-center gap-2 text-sm"
           onClick={toggleSelectAll}
@@ -145,7 +139,7 @@ const CartPage = () => {
               key={item.id}
               className="bg-gray-100 rounded-lg p-4 flex flex-row gap-4 items-start md:items-center justify-between mb-4"
             >
-              {/* ✅ Checkbox */}
+              {/* Checkbox */}
               <input
                 type="checkbox"
                 checked={selectedItems.includes(item.id)}
@@ -153,24 +147,23 @@ const CartPage = () => {
               />
 
               <img
-                src={item.image ?? Sunglass}
+                src={item.image}
                 alt={item.title}
                 className="w-24 h-24 object-cover rounded-lg"
               />
 
               <div className="flex-1 space-y-1">
                 <p className="text-base font-semibold leading-snug line-clamp-2">
-                  {item.title || item.name}
+                  {item.title}
                 </p>
                 <p className="text-sm text-gray-600 line-clamp-2">
                   {item.details ?? ""}
                 </p>
                 <p className="text-sm text-gray-500">{item.warranty ?? ""}</p>
 
-                {/* ✅ Variations */}
-                {item.variations && Object.keys(item.variations).length > 0 && (
+                {item.variant && Object.keys(item.variant).length > 0 && (
                   <div className="text-sm text-gray-700 flex flex-wrap gap-2">
-                    {Object.entries(item.variations).map(([key, value]) => (
+                    {Object.entries(item.variant).map(([key, value]) => (
                       <span
                         key={key}
                         className="px-2 py-0.5 bg-gray-200 rounded-md text-xs"
@@ -207,6 +200,7 @@ const CartPage = () => {
                     +
                   </button>
                 </div>
+
                 <div className="flex gap-2">
                   <button
                     className="text-red-600 bg-red-100 p-2 rounded-full"
@@ -224,6 +218,7 @@ const CartPage = () => {
               </div>
             </div>
           ))}
+
           <button
             onClick={() =>
               navigate("/order", {

@@ -98,7 +98,7 @@ useEffect(() => {
              ? product.variant
              : {},
          label: "Shop Now",
-         link: `/product/${product.id}`,
+         link: `/products/${product.id}`,
          category_id: product.category_id, // use this instead of "category"
        };
      });
