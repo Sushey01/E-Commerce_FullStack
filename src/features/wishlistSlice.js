@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addToCartlist } from "./cartlistSlice";
-import { toast, ToastContainer } from "react-toastify";
 
 const savedItems = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -20,7 +19,6 @@ const wishlistSlice = createSlice({
         state.items.push(newItem);
       }
       localStorage.setItem("wishlist", JSON.stringify(state.items));
-      toast.success(`${action.payload.name} added to wishlist 🛒`);
     },
 
     addToCartlist: (state, action)=>{

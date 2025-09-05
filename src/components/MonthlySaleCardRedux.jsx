@@ -100,7 +100,7 @@ const navigate=useNavigate()
     <HoverAddCartWishShare
   product={{ title, image, discountedPrice }}
   onAddToCart={() => onAddToCart({ title, discountedPrice, image })}
-  onAddToWishList={() => onAddToWishList({ title, discountedPrice, image })}
+  onAddToWishList={() => onAddToWishList({  discountedPrice, image })}
   onShare={() => console.log('Share clicked')}
 />
       </div>
