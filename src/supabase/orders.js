@@ -1,5 +1,8 @@
 import supabase from "../supabase";
 
+
+const TEMP_USER_ID = "aa62b313-11dc-400d-aad3-a476c328a0d5";
+
 export async function createOrder(orderData, items) {
   try {
     if (!orderData.total || !items?.length) {
@@ -7,7 +10,7 @@ export async function createOrder(orderData, items) {
     }
 
     const { user } = await supabase.auth.getUser();
-    const userId = user?.id || orderData.user_id || null;
+    const userId = user?.id || orderData.user_id || TEMP_USER_ID; // ✅ fallback
 
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -30,6 +33,9 @@ export async function createOrder(orderData, items) {
       .single();
 
     if (orderError) throw new Error(orderError.message);
+
+    // … rest of your logic
+
     const orderId = order.id;
 
     const itemsToInsert = items.map((item) => ({
@@ -38,7 +44,7 @@ export async function createOrder(orderData, items) {
       price: item.price,
       quantity: item.quantity,
       variant: item.variant ?? {},
-      name: item.name ?? item.title ?? "Unnamed Product",
+      // name: item.name ?? item.title ?? "Unnamed Product",
     }));
 
     const { error: itemsError } = await supabase

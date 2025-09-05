@@ -150,7 +150,7 @@ const CheckoutPayment = () => {
         if (orderError) throw new Error(orderError.message);
 
         toast.success(`Payment successful via ${selectedPayment}!`);
-        navigate("/order-confirmation", { state: { order } });
+        navigate("/success", { state: { order } });
       }
     } catch (error) {
       toast.error(`Payment failed: ${error.message}`);

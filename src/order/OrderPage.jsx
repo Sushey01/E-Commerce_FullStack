@@ -4,6 +4,13 @@ import OrderItem from "../components/OrderItem";
 import OrderSummary from "../components/OrderSummary";
 import OrderContactForm from "./OrderContactForm";
 
+
+
+
+
+const TEMP_USER_ID = "aa62b313-11dc-400d-aad3-a476c328a0d5";
+
+
 const OrderPage = () => {
 
 
@@ -34,9 +41,11 @@ const OrderPage = () => {
   const shipping = 0; // or calculate based on delivery method if needed
 
   const order = {
+    user_id: TEMP_USER_ID,
     items: selectedItems,
     subtotal,
     shipping,
+    total: subtotal + shipping,
     discount: 0,
     paid: 0,
     status: "Pending",
@@ -46,28 +55,7 @@ const OrderPage = () => {
     <div className="p-4 space-y-6">
       <div className="flex gap-3 w-full">
         <div className="flex flex-col w-[65%] gap-4">
-          {/* Contact Form */}
-          {/* {!submittedAddress ? (
-            <OrderContactForm onSubmit={(data) => addAddress(data)} defaultValues={submittedAddress} />
-          ) : (
-            <div className="p-2 flex flex-col w-full bg-gray-100 border rounded-md">
-              <h3 className="font-semibold">Shipping Address</h3>
-              <p>
-                {submittedAddress.firstname} {submittedAddress.lastname}
-              </p>
-              <p>{submittedAddress.phonenumber}</p>
-              <p>
-                {submittedAddress.address}, {submittedAddress.city},{" "}
-                {submittedAddress.country}, {submittedAddress.postalno}
-              </p>
-              <button
-                className="text-blue-500 mt-2"
-                onClick={() => setSubmittedAddress(null)}
-              >
-                Edit
-              </button>
-            </div>
-          )} */}
+
           <OrderContactForm/>
 
           {/* Order Item(s) */}

@@ -1,9 +1,38 @@
 import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createOrder } from "../supabase/orders";
+import { toast } from "react-toastify";
 
 const OrderSummary = ({ order, disableCheckout }) => {
   const navigate = useNavigate();
+
+
+
+  const handleCheckout = async () => {
+    if (!orderState.items?.length) {
+      toast.error("No items in order");
+      return;
+    }
+
+    try {
+      // Call createOrder to insert the order and order_items
+      const newOrder = await createOrder(orderState, orderState.items);
+      if (!newOrder) throw new Error("Order creation failed");
+
+      toast.success("Order created successfully!");
+
+      // Navigate to payment page with the real order
+      navigate("/payment", { state: { order: newOrder } });
+    } catch (err) {
+      console.error("Checkout error:", err);
+      toast.error("Failed to create order: " + err.message);
+    }
+  };
+
+  
+
+
 
   // Example: dynamic state for voucher
   const [orderState, setOrderState] = useState(order);
@@ -151,7 +180,7 @@ const OrderSummary = ({ order, disableCheckout }) => {
           <button
           disabled={disableCheckout}
             className="px-6 py-2 rounded-md bg-purple-700 text-white text-sm "
-            onClick={() => navigate("/payment", {state:{order:orderState}})}
+            onClick= {handleCheckout}
           >
             Proceed to payment
           </button>
