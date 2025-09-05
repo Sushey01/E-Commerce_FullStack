@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import supabase from "../supabase";
 import { toast } from "react-toastify";
@@ -9,6 +9,8 @@ import Cod from "../assets/images/cod.png";
 import Khalti from "../assets/images/khalti.avif";
 
 const CheckoutPayment = () => {
+
+
   const location = useLocation();
   const navigate = useNavigate();
   const order = location.state?.order || {
@@ -18,6 +20,32 @@ const CheckoutPayment = () => {
     discount: 0,
     id: null,
   };
+
+  useEffect(() => {
+    if (!order.id) return;
+
+    const checkOrderStatus = async () => {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("id", order.id)
+        .single();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (data.status === "Cancelled") {
+        alert(
+          "Your order was cancelled due to exceeding the payment time limit. Please reorder your items."
+        );
+        navigate("/cart"); // Send user back to cart to reorder
+      }
+    };
+
+    checkOrderStatus();
+  }, [order.id]);
 
   const [selectedPayment, setSelectedPayment] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
@@ -251,6 +279,7 @@ const CheckoutPayment = () => {
             >
               {selectedPayment ? "Pay Now" : "Select Payment Method"}
             </button>
+
           </div>
           {/* Right: Order Summary */}
           <div className="w-full lg:w-1/3">

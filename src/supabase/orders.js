@@ -27,10 +27,21 @@ export async function createOrder(orderData, items) {
           observations: orderData.observations ?? null,
           shipping_info: orderData.shipping_info ?? {},
           voucher_code: orderData.voucher_code ?? null,
+          expires_at: new Date(Date.now() + 30 * 60 * 1000), // 30 mins
         },
       ])
       .select()
       .single();
+
+
+
+    // Example: cancel expired orders
+    await supabase
+      .from("orders")
+      .update({ status: "Cancelled", cancelled_at: new Date() })
+      .lt("expires_at", new Date())
+      .eq("status", "Payment Pending");
+      
 
     if (orderError) throw new Error(orderError.message);
 
