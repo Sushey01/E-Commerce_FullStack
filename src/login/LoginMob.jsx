@@ -13,6 +13,38 @@ const LoginMob = () => {
         Use your email or another services to continue with sowis.
       </p>
 
+      <div className="flex flex-col gap-1">
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email address"
+          className="border rounded px-2 py-1"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1 mt-4">
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="*******"
+          className="border rounded px-2 py-1"
+        />
+      </div>
+
+      <button
+        className="bg-gray-400 flex border justify-center rounded-full px-8 py-1 hover:bg-gray-500"
+        onClick={onsubmit}
+      >
+        <p className="text-gray-100 ">Sign in</p>
+      </button>
+
+      <button className="flex gap-1 justify-center">
+        <p>No account?</p>
+        <p className="text-blue-600 text-base">Sign up</p>
+      </button>
+
       <button className="border rounded-md bg-white p-1">
         <div className="flex gap-5 justify-center">
           <MdEmail className="w-5 h-5" />
@@ -43,35 +75,6 @@ const LoginMob = () => {
           </span>
           agreement.
         </p>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="Enter your email address"
-          className="border rounded px-2 py-1"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1 mt-4">
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          placeholder="*******"
-          className="border rounded px-2 py-1"
-        />
-      </div>
-
-      <button className="bg-gray-500 flex border justify-center rounded-full px-8 py-1" onClick={onsubmit}>
-        <p className="text-gray-100 ">Sign in</p>
-      </button>
-
-      <div className="flex gap-1 justify-center">
-        <p>No account?</p>
-        <p className="text-blue-600 text-base">Sign up</p>
       </div>
     </div>
   );
