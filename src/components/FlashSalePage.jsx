@@ -1,15 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import FlashSaleSlider from "./FlashSaleSlider";
-import monthlyProducts from "../data/monthlyProducts"; // ✅ Make sure this exists
+import supabase from "../supabase";
 
 const FlashSalePage = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      console.log("Fetched products in FlashSalePage:", data, error);
+
+      if (error) {
+        console.error("Error fetching products:", error.message);
+      } else {
+        setProducts(data || []); // Store fetched data in state
+      }
+    };
+
+    fetchProducts();
+  }, []); // Empty dependency array for one-time fetch
+
   return (
-    <div >
+    <div>
       {/* Header with Title and Button */}
       <div className="w-full px-3 py-2 flex justify-between items-center">
         <p className="text-[#777777] text-xl md:text-2xl">Flash Sales</p>
         <button className="flex gap-2 items-center">
-          <p className="text-[#0296a0] text-sm  underline decoration-[#0296a0]">
+          <p className="text-[#0296a0] text-sm underline decoration-[#0296a0]">
             Shop Now
           </p>
           <svg
@@ -30,10 +51,9 @@ const FlashSalePage = () => {
       </div>
 
       {/* Product Slider */}
-     <div className="w-full box-border overflow-hidden relative">
-  <FlashSaleSlider products={monthlyProducts} />
-</div>
-
+      <div className="w-full box-border overflow-hidden relative">
+        <FlashSaleSlider products={products} />
+      </div>
     </div>
   );
 };

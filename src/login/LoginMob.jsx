@@ -51,7 +51,7 @@ const LoginMob = () => {
 
       // Navigate based on role - FIXED: moved before any return statements
       if (profile.role === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/");
       } else if (profile.role === "seller") {
         navigate("/seller/dashboard");
       } else {
@@ -142,6 +142,16 @@ const LoginMob = () => {
           disabled={loading}
         />
       </div>
+      <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-3">
+        <input type="checkbox" />
+        <p>
+          By confirming the order, I accept the{" "}
+          <span className="text-blue-600 underline cursor-pointer">
+            terms of the user{" "}
+          </span>
+          agreement.
+        </p>
+      </div>
 
       <button
         className={`flex border justify-center rounded-full px-8 py-1 ${
@@ -188,17 +198,6 @@ const LoginMob = () => {
           <p>Continue with Facebook</p>
         </div>
       </button>
-
-      <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-3">
-        <input type="checkbox" />
-        <p>
-          By confirming the order, I accept the{" "}
-          <span className="text-blue-600 underline cursor-pointer">
-            terms of the user{" "}
-          </span>
-          agreement.
-        </p>
-      </div>
     </div>
   );
 };
