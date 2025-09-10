@@ -4,8 +4,13 @@ import CategorySectionCard from "./CategorySectionCard";
 import categoryData from "../data/categoryProductData";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
 
 const CategorySlider = () => {
+
+
+  const navigate = useNavigate();
+
   const settings = {
     dots: false,
     infinite: true,
@@ -42,7 +47,7 @@ const CategorySlider = () => {
       <h2 className="text-2xl flex   text-[#777] px-2  mb-4">Shop by Category</h2>
       <Slider {...settings}>
         {categoryData.map((category, index) => (
-          <div key={index} className="px-1.5">
+          <div key={index} className="px-1.5" onClick={()=>navigate(`/category/${category.title.toLowerCase()}`)}>
             <CategorySectionCard
               title={category.title}
               items={category.items}
