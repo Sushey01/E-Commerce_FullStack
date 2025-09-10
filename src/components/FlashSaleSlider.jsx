@@ -1,43 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Slider from "react-slick";
-import supabase from "../supabase";
 import MonthlySaleCard from "./MonthlySaleCard";
-import Spinner from "./Spinner";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function FlashSaleSlider() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from("products")
-          .select("*")
-          .order("id", { ascending: true });
-
-        if (error) {
-          console.error("Error fetching products:", error.message);
-          setProducts([]); // Set empty array on error
-        } else {
-          console.log("Fetched products:", data); // Debug log
-          setProducts(data || []);
-        }
-      } catch (err) {
-        console.error("Unexpected error during fetch:", err.message);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
+export default function FlashSaleSlider({ products = [] }) {
   const PrevArrow = ({ onClick }) => (
     <div
       className="absolute z-10 left-2 top-1/2 -translate-y-1/2 bg-white border rounded-full shadow-md p-1 cursor-pointer hover:bg-gray-100"
@@ -82,14 +50,6 @@ export default function FlashSaleSlider() {
       },
     ],
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-6">
-        <Spinner />
-      </div>
-    );
-  }
 
   if (!products || products.length === 0) {
     return <p className="text-gray-500 px-4">No products available</p>;

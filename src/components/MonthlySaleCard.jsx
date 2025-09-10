@@ -75,7 +75,7 @@ const MonthlySaleCard = ({
       {/* Stock Info */}
       <div className="items-center justify-center gap-3 mb-2 hidden md:flex">
         <p className="text-xs md:text-sm text-gray-600">Sold: {sold}</p>
-        <p className="text-xs md:text-sm text-gray-800">In Stock: {inStock}</p>
+        <p className="text-xs md:text-sm text-gray-800">In Stock: {inStock || 0}</p>
       </div>
 
       {/* Add to Cart */}
