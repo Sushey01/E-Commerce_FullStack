@@ -5,10 +5,7 @@ import LaptopCard from '../components/LaptopCard'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import ProductCard from '../components/ProductCardSkeleton';
-import featureProducts from '../data/featureProducts'
-import monthlySaleProducts from '../data/monthlyProducts'
-import laptopProducts from '../data/laptopProducts'
-import products from '../data/products'
+
 import supabase from '../supabase'
 
 const DynamicPageSlider = () => {

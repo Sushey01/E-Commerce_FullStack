@@ -43,11 +43,19 @@ const CategorySlider = () => {
   };
 
   return (
-    <div className="p-1 md:p-0 pt-3" >
-      <h2 className="text-2xl flex   text-[#777] px-2  mb-4">Shop by Category</h2>
+    <div className="p-1 md:p-0 pt-3">
+      <h2 className="text-2xl flex   text-[#777] px-2  mb-4">
+        Shop by Category
+      </h2>
       <Slider {...settings}>
         {categoryData.map((category, index) => (
-          <div key={index} className="px-1.5" onClick={()=>navigate(`/category/${category.title.toLowerCase()}`)}>
+          <div
+            key={index}
+            className="px-1.5"
+            onClick={() =>
+              navigate(`/category?id=${encodeURIComponent(category.slug)}`)
+            }
+          >
             <CategorySectionCard
               title={category.title}
               items={category.items}

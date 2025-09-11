@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 
 const CategorySectionCard = ({ title, items, image }) => {
+
   return (
-    <div className="group bg-[#f7f7f7] border rounded-md transition duration-300 ease-in-out md:hover:shadow-md hover:shadow-sm  cursor-pointer overflow-hidden">
+    <div  className="group bg-[#f7f7f7] border rounded-md transition duration-300 ease-in-out md:hover:shadow-md hover:shadow-sm  cursor-pointer overflow-hidden">
       {/* Text Section */}
       <div className="p-4 py-3 gap-2 flex flex-col">
         <div className="border-b-2 w-1/3 border-gray-400">
