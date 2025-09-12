@@ -52,9 +52,7 @@ const CategorySlider = () => {
           <div
             key={index}
             className="px-1.5"
-            onClick={() =>
-              navigate(`/category?id=${encodeURIComponent(category.slug)}`)
-            }
+            onClick={() => navigate(`/category?id=${category.id}`)}
           >
             <CategorySectionCard
               title={category.title}

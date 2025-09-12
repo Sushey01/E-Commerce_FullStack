@@ -11,54 +11,59 @@ const CategoryPage = () => {
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
-  const categorySlug = queryParams.get("id"); // ?id=laptops
+  const categoryId = queryParams.get("id"); // UUID
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       setLoading(true);
 
-      let query = supabase
+      if (!categoryId) {
+        setLoading(false);
+        return;
+      }
+
+      // 1️⃣ Fetch products for this category
+      const { data: productsData, error: productsError } = await supabase
         .from("products")
         .select("*")
+        .eq("category_id", categoryId)
         .order("created_at", { ascending: false });
 
-      if (categorySlug) {
-        query = query.eq("category_slug", categorySlug); // ✅ filter by slug
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error("Error fetching products:", error.message);
+      if (productsError) {
+        console.error(productsError);
         setProducts([]);
       } else {
-        const transformedProducts = data.map((product) => ({
-          id: product.id,
-          title: product.title,
-          discount: product.old_price
-            ? Math.round(
-                ((product.old_price - product.price) / product.old_price) * 100
-              )
+        const transformedProducts = productsData.map((p) => ({
+          id: p.id,
+          title: p.title,
+          discount: p.old_price
+            ? Math.round(((p.old_price - p.price) / p.old_price) * 100)
             : 0,
-          image: product.images?.[0] || "/placeholder.png",
-          reviews: product.reviews || 0,
-          rating: product.rating || 0,
-          oldPrice: product.old_price || 0,
-          price: product.price,
-          sold: product.sold || 0,
-          inStock: product.stock || (!product.outofstock ? 1 : 0),
+          image: p.images?.[0] || "/placeholder.png",
+          reviews: p.reviews || 0,
+          rating: p.rating || 0,
+          oldPrice: p.old_price || 0,
+          price: p.price,
+          sold: p.sold || 0,
+          inStock: p.stock || (!p.outofstock ? 1 : 0),
         }));
         setProducts(transformedProducts);
-
-        // Optional: prettify category name for heading
-        setCategoryName(categorySlug.replace(/-/g, " "));
       }
+
+      // 2️⃣ Fetch category name
+      const { data: categoryData, error: categoryError } = await supabase
+        .from("categories")
+        .select("name")
+        .eq("id", categoryId)
+        .single();
+
+      if (!categoryError && categoryData) setCategoryName(categoryData.name);
 
       setLoading(false);
     };
 
-    fetchProducts();
-  }, [categorySlug]);
+    fetchData();
+  }, [categoryId]);
 
   return (
     <div className="p-4">
