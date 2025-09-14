@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MonthlySaleCard from './MonthlySaleCard'
-import monthlySaleProducts from '../data/monthlyProducts'
+import supabase from '../supabase'
+import Spinner from './Spinner'
 
 const HomeProductFilterSort = ({onFilterClick}) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  
+
   return (
     <>
       {/* Filter & Sort Bar */}
