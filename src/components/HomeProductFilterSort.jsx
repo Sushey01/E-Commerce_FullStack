@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MonthlySaleCard from './MonthlySaleCard'
 import supabase from '../supabase'
 import Spinner from './Spinner'
@@ -8,7 +8,24 @@ const HomeProductFilterSort = ({onFilterClick}) => {
   const [loading, setLoading] = useState(true);
 
 
-  
+  useEffect(()=>{
+    const fetchProducts = async () => {
+      setLoading(true)
+      const {data, error} = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', {ascending:false})
+
+      if(error){
+        console,error('Error fetching products:', error)
+        setProducts([])
+
+      } else {
+        setProducts(data)
+      }
+      setLoading(false)
+    }
+  })
 
   return (
     <>
