@@ -1,15 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const BlackFridaySalesCard = ({
   image,
   offer,
   title,
   discount,
+  link,
   notice,
   label,
 }) => {
+
+  const navigate = useNavigate();
+
+  function handleClick(){
+    navigate(link)
+  }
   return (
-    <div className="  bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all p-3 md:p-4 h-full flex flex-col  justify-between">
+    <div onClick={handleClick} className="  bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all p-3 md:p-4 h-full flex flex-col  justify-between">
       <div className="flex justify-center items-center mb-3">
         <img src={image} alt={title} className="h-40 object-contain " />
       </div>
