@@ -57,7 +57,7 @@ const MonthlySaleCard = ({
             <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.898 1.468 8.296L12 18.896 4.596 23.5l1.468-8.296L0 9.306l8.332-1.151z" />
           </svg>
         ))}
-        <span className="text-[10px] md:text-sm text-gray-600">{reviews}</span>
+        <span className="text-[10px] md:text-sm text-gray-600">{reviews} Reviews</span>
       </div>
 
       {/* Price */}

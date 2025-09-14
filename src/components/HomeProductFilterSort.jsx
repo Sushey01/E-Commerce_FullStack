@@ -109,11 +109,34 @@ const HomeProductFilterSort = ({onFilterClick}) => {
 
       {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-2 gap-3">
-        {loading
-          ? "<Spinner />"
-          : products.map((product) => (
-              <MonthlySaleCard key={product.id} {...product} />
-            ))}
+        {loading ? (
+          <Spinner />
+        ) : (
+          products.map((product) => (
+            <MonthlySaleCard
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              oldPrice={product.old_price}
+              image={product.images?.[0] || "https://via.placeholder.com/150"}
+              sold={0} // not tracked yet
+              inStock={product.outofstock ? 0 : 1}
+              discount={
+                product.old_price > 0
+                  ? Math.round(
+                      ((product.old_price - product.price) /
+                        product.old_price) *
+                        100
+                    )
+                  : 0
+              }
+              rating={product.rating || 0}
+              reviews={product.reviews || 0}
+              label="Add to Cart"
+            />
+          ))
+        )}
       </div>
     </>
   );
