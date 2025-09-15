@@ -1,15 +1,13 @@
-// SubcategoryPage.js
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import supabase from "../supabase";
-import Spinner from "./Spinner";
-
+import Spinner from "../components/Spinner";
+import FlashSaleSlider from "../components/FlashSaleSlider";
 const SubcategoryPage = () => {
-  const [subsubcategories, setSubsubcategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [subcategoryName, setSubcategoryName] = useState("");
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const queryParams = new URLSearchParams(location.search);
   const subcategoryId = queryParams.get("id");
@@ -24,15 +22,17 @@ const SubcategoryPage = () => {
         .select("name")
         .eq("id", subcategoryId)
         .single();
+
       if (subData) setSubcategoryName(subData.name);
 
-      // Fetch subsubcategories
-      const { data: subsubData, error } = await supabase
-        .from("subsubcategories")
-        .select("id, name")
-        .eq("subcategory_id", subcategoryId);
+      // Fetch all products under this subcategory (ignore subsubcategory for now)
+      const { data: productsData, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("subcategory_id", subcategoryId)
+        .order("created_at", { ascending: false });
 
-      if (!error && subsubData) setSubsubcategories(subsubData);
+      if (!error && productsData) setProducts(productsData);
 
       setLoading(false);
     };
@@ -45,23 +45,13 @@ const SubcategoryPage = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-semibold mb-4">
-        {subcategoryName ? `${subcategoryName} Subcategories` : "Subcategories"}
+        {subcategoryName ? `Products in ${subcategoryName}` : "Products"}
       </h2>
 
-      {subsubcategories.length === 0 ? (
-        <p>No subsubcategories found.</p>
+      {products.length === 0 ? (
+        <p>No products found in this subcategory.</p>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {subsubcategories.map((s) => (
-            <div
-              key={s.id}
-              onClick={() => navigate(`/subsubcategory?id=${s.id}`)}
-              className="border rounded p-4 cursor-pointer hover:shadow"
-            >
-              {s.name}
-            </div>
-          ))}
-        </div>
+        <FlashSaleSlider products={products} />
       )}
     </div>
   );

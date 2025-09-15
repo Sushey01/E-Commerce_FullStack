@@ -53,6 +53,7 @@ const CategorySlider = () => {
             key={index}
             className="px-1.5"
             onClick={() => navigate(`/category?id=${category.id}`)}
+            // onClick={() => navigate(`/browse?category=${category.id}`)}
           >
             <CategorySectionCard
               title={category.title}

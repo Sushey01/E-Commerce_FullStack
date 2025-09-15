@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import supabase from "../supabase";
-import Spinner from "./Spinner";
-import FlashSaleSlider from "./FlashSaleSlider";
-
+import Spinner from "../components/Spinner";
+import FlashSaleSlider from "../components/FlashSaleSlider";
 const SubsubcategoryPage = () => {
   const [products, setProducts] = useState([]);
   const [subsubcategoryName, setSubsubcategoryName] = useState("");
@@ -13,33 +12,59 @@ const SubsubcategoryPage = () => {
 
   const queryParams = new URLSearchParams(location.search);
   const subsubcategoryId = queryParams.get("id");
+  const subcategoryId = queryParams.get("subcategoryId");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
 
-      // Fetch products for this subsubcategory
-      const { data: productsData } = await supabase
+    let productsData;
+    let title = "";
+
+    if (subsubcategoryId) {
+      const { data } = await supabase
         .from("products")
         .select("*")
         .eq("subsubcategory_id", subsubcategoryId)
         .order("created_at", { ascending: false });
+      productsData = (data || []).map((p) => ({
+        ...p,
+        images: JSON.parse(p.images || "[]"),
+      }));
 
-      if (productsData) setProducts(productsData);
-
-      // Fetch subsubcategory name
-      const { data: subsubData } = await supabase
+      const { data: subsub } = await supabase
         .from("subsubcategories")
         .select("name")
         .eq("id", subsubcategoryId)
         .single();
-      if (subsubData) setSubsubcategoryName(subsubData.name);
+      title = subsub?.name || "Products";
+    } else if (subcategoryId) {
+      const { data } = await supabase
+        .from("products")
+        .select("*")
+        .eq("subcategory_id", subcategoryId)
+        .order("created_at", { ascending: false });
+      productsData = (data || []).map((p) => ({
+        ...p,
+        images: JSON.parse(p.images || "[]"),
+      }));
 
-      setLoading(false);
-    };
+      const { data: sub } = await supabase
+        .from("subcategories")
+        .select("name")
+        .eq("id", subcategoryId)
+        .single();
+      title = sub?.name || "Products";
+    }
 
-    fetchData();
-  }, [subsubcategoryId]);
+    setProducts(productsData || []);
+    setSubsubcategoryName(title);
+    setLoading(false);
+  };
+
+  fetchData();
+}, [subcategoryId, subsubcategoryId]);
+
 
   if (loading) return <Spinner />;
 

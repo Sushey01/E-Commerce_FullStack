@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import supabase from "../supabase";
-import Spinner from "./Spinner";
+import Spinner from "../components/Spinner";
 
 const Categories = () => {
   const [subcategories, setSubcategories] = useState([]);

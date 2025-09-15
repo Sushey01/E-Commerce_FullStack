@@ -62,6 +62,7 @@ export default function FlashSaleSlider({ products = [] }) {
           <div key={product.id} className="px-1.5">
             <MonthlySaleCard
               {...product}
+              image={product.images?.[0] || "/placeholder.png"}
               label="Add to Cart"
               onAddToCart={() => console.log("Added to cart:", product.title)}
             />
