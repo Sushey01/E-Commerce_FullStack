@@ -3,7 +3,7 @@ import FlashSaleSlider from "./FlashSaleSlider";
 import supabase from "../supabase";
 import Spinner from "./Spinner";
 
-const FlashSalePage = ({ products: initialProducts }) => {
+const FlashSalePage = ({ products: initialProducts, title }) => {
   const [products, setProducts] = useState(initialProducts || []);
   const [loading, setLoading] = useState(!initialProducts);
 
@@ -47,7 +47,7 @@ useEffect(() => {
     <div>
       {/* Header */}
       <div className="w-full px-3 py-2 flex justify-between items-center">
-        <p className="text-[#777777] text-xl md:text-2xl">Flash Sales</p>
+        <p className="text-[#777777] text-xl md:text-2xl">{title}</p>
         <button className="flex gap-2 items-center">
           <p className="text-[#0296a0] text-sm underline decoration-[#0296a0]">
             Shop Now
