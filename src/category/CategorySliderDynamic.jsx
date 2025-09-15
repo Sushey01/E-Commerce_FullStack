@@ -47,9 +47,9 @@ const CategorySliderDynamic = () => {
     slidesToShow: 4,
     slidesToScroll: 1,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
+      { breakpoint: 1024, settings: { slidesToShow: 4 } },
+      { breakpoint: 768, settings: { slidesToShow: 3 } },
+      { breakpoint: 480, settings: { slidesToShow: 2 } },
     ],
   };
 
@@ -63,7 +63,7 @@ const CategorySliderDynamic = () => {
           <div
             key={category.id}
             className="px-1.5"
-            onClick={() => navigate(`/category?id=${category.id}`)}
+            onClick={() => navigate(`/subcategory?id=${category.id}`)}
           >
             <CategorySectionCard
               title={category.name}

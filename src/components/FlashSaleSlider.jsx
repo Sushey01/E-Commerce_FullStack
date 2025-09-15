@@ -51,6 +51,8 @@ export default function FlashSaleSlider({ products = [] }) {
     ],
   };
 
+  console.log("Products in FlashSaleSlider:", products); // Debug log
+
   if (!products || products.length === 0) {
     return <p className="text-gray-500 px-4">No products available</p>;
   }
@@ -58,16 +60,27 @@ export default function FlashSaleSlider({ products = [] }) {
   return (
     <div className="relative w-full px-0 pb-6">
       <Slider {...settings}>
-        {products.map((product) => (
-          <div key={product.id} className="px-1.5">
-            <MonthlySaleCard
-              {...product}
-              image={product.images?.[0] || "/placeholder.png"}
-              label="Add to Cart"
-              onAddToCart={() => console.log("Added to cart:", product.title)}
-            />
-          </div>
-        ))}
+        {products.map((product) => {
+          console.log(`Image source for product ${product.id}:`, product.image); // Debug log
+          return (
+            <div key={product.id} className="px-1.5">
+              <MonthlySaleCard
+                id={product.id}
+                discount={product.discount || 0}
+                image={product.image} // Ensure image is passed
+                title={product.title}
+                reviews={product.reviews || 0}
+                rating={product.rating || 0}
+                oldPrice={product.oldPrice || 0}
+                price={product.price}
+                sold={product.sold || 0}
+                inStock={product.inStock || 0}
+                label="Add to Cart"
+                onAddToCart={() => console.log("Added to cart:", product.title)}
+              />
+            </div>
+          );
+        })}
       </Slider>
     </div>
   );

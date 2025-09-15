@@ -7,41 +7,55 @@ const FlashSalePage = ({ products: initialProducts, title }) => {
   const [products, setProducts] = useState(initialProducts || []);
   const [loading, setLoading] = useState(!initialProducts);
 
-useEffect(() => {
-  if (!initialProducts) {
-    const fetchProducts = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .order("created_at", { ascending: false });
+  useEffect(() => {
+    if (!initialProducts) {
+      const fetchProducts = async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Error fetching products:", error.message);
-      } else {
-        const transformedProducts = data.map((product) => ({
-          id: product.id,
-          title: product.title,
-          discount: product.old_price
-            ? Math.round(
-                ((product.old_price - product.price) / product.old_price) * 100
-              )
-            : 0,
-          image: product.images[0],
-          reviews: product.reviews || 0,
-          rating: product.rating || 0,
-          oldPrice: product.old_price || 0,
-          price: product.price,
-          sold: product.sold || Math.floor(Math.random() * 100), // Random 0-99
-          inStock: product.outofstock || (!product.outofStock ? 1 : 0),
-        }));
-        setProducts(transformedProducts);
-      }
-      setLoading(false);
-    };
-    fetchProducts();
-  }
-}, [initialProducts]);
+        if (error) {
+          console.error("Error fetching products:", error.message);
+        } else {
+          const transformedProducts = data.map((product) => {
+            let imageSrc = "/placeholder.jpg"; // Default fallback
+            if (product.image_url) {
+              imageSrc = product.image_url; // Prefer image_url
+            } else if (product.images) {
+              try {
+                const parsedImages = JSON.parse(product.images);
+                imageSrc = Array.isArray(parsedImages) ? parsedImages[0] : product.images;
+              } catch (e) {
+                console.error("Failed to parse images for product", product.id, e);
+                imageSrc = product.images || "/placeholder.jpg"; // Fallback to string or placeholder
+              }
+            }
+
+            return {
+              id: product.id,
+              title: product.title || product.name, // Use title or name
+              discount: product.old_price
+                ? Math.round(((product.old_price - product.price) / product.old_price) * 100)
+                : 0,
+              image: imageSrc,
+              reviews: product.reviews || 0,
+              rating: product.rating || 0,
+              oldPrice: product.old_price || 0,
+              price: product.price,
+              sold: product.sold || Math.floor(Math.random() * 100), // Random 0-99
+              inStock: product.outofstock ? 0 : (product.in_stock || 1), // Handle outofstock and in_stock
+            };
+          });
+          console.log("Transformed products in FlashSalePage:", transformedProducts); // Debug log
+          setProducts(transformedProducts);
+        }
+        setLoading(false);
+      };
+      fetchProducts();
+    }
+  }, [initialProducts]);
 
   return (
     <div>

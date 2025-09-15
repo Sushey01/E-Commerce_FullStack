@@ -28,10 +28,10 @@ import CheckoutPayment from "./order/CheckoutPayment";
 import Invoice from "./components/Invoice";
 import OrderSuccessDetail from "./order/OrderSuccessDetail";
 import CategorySlider from "./category/CategorySlider";
-import Categories from "./category/Categories";
-import SubsubcategoryPage from "./category/SubsubcategoryPage";
+import SubCategories from "./category/SubCategories";
 import CategorySliderDynamic from "./category/CategorySliderDynamic";
-import SubcategoryPage from "./category/SubCategoryPage";
+// import SubcategoryPage from "./category/SubCategoryPage";
+import SubsubcategoryPage from "./category/SubsubCategories";
 
 
 const App = () => {
@@ -74,9 +74,9 @@ const App = () => {
           <Route path="/products/:id" element={<ProductDetail />} />
 
           {/* Category  */}
-          <Route path="/category" element={<Categories />} />
-          <Route path="/subcategory" element={<SubcategoryPage />} />
+          <Route path="/subcategory" element={<SubCategories />} />
           <Route path="/subsubcategory" element={<SubsubcategoryPage />} />
+          {/* <Route path="/subsubcategory" element={<SubsubcategoryPage />} /> */}
 
           {/* Checkout */}
           <Route path="/checkout" element={<CheckoutPage />} />
