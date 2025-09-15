@@ -64,7 +64,6 @@ const App = () => {
           <Route path="payment" element={<CheckoutPayment />} />
           <Route path="invoice" element={<Invoice />} />
           <Route path="success" element={<OrderSuccessDetail />} />
-          <Route path="/category/:slug" element={<CategoryPage />} />
 
           {/* Product Detail */}
           <Route path="/products/:id" element={<ProductDetail />} />
