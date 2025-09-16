@@ -11,7 +11,6 @@ const SubCategories = () => {
   const [categoryName, setCategoryName] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-
   const queryParams = new URLSearchParams(location.search);
   const categoryId = queryParams.get("id");
 

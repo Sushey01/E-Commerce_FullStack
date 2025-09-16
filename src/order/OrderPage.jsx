@@ -53,25 +53,21 @@ const OrderPage = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <div className="flex gap-3 w-full">
-        <div className="flex flex-col w-[65%] gap-4">
-
-          <OrderContactForm/>
+      <div className="flex flex-col lg:flex-row gap-6 w-full">
+        {/* Left Column */}
+        <div className="flex flex-col w-full lg:w-2/3 gap-4">
+          <OrderContactForm />
 
           {/* Order Item(s) */}
           <OrderItem items={selectedItems} />
         </div>
 
-        <div className="w-[35%]">
-          {/* <OrderProfileSection /> */}
-
+        {/* Right Column */}
+        <div className="w-full lg:w-1/3">
           <OrderSummary
-            order={
-              order
-            }
+            order={order}
             disableCheckout={!submittedAddress} // pass flag to disable checkout
           />
-         
         </div>
       </div>
     </div>

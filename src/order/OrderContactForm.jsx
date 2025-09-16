@@ -54,32 +54,36 @@ const OrderContactForm = () => {
             <div className="flex flex-col gap-1">
               <p>Contact Information</p>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                <label className="border rounded px-4 py-2">
+                <label className="border rounded px-2 sm:px-4 py-2">
                   <input
                     {...register("firstname", { required: true })}
                     type="text"
                     placeholder="First name"
+                    className="w-full"
                   />
                 </label>
-                <label className="border rounded px-4 py-2">
+                <label className="border rounded px-2 sm:px-4 py-2">
                   <input
                     {...register("lastname", { required: true })}
                     type="text"
                     placeholder="Last name"
+                    className="w-full"
                   />
                 </label>
-                <label className="border rounded px-4 py-2">
+                <label className="border rounded px-2 sm:px-4 py-2">
                   <input
                     {...register("email", { required: true })}
                     type="email"
                     placeholder="Email address"
+                    className="w-full"
                   />
                 </label>
-                <label className="border rounded px-4 py-2">
+                <label className="border rounded px-2 sm:px-4 py-2">
                   <input
                     {...register("phonenumber", { required: true })}
                     type="text"
                     placeholder="Phone number"
+                    className="w-full"
                   />
                 </label>
               </div>
@@ -108,14 +112,15 @@ const OrderContactForm = () => {
               </label>
             </div>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <p>Shipping Information</p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label className="border rounded px-4 py-2">
                   <input
                     {...register("country", { required: true })}
                     type="text"
                     placeholder="Country"
+                    className="w-full"
                   />
                 </label>
                 <label className="border rounded px-4 py-2">
@@ -123,6 +128,7 @@ const OrderContactForm = () => {
                     {...register("city", { required: true })}
                     type="text"
                     placeholder="City"
+                    className="w-full"
                   />
                 </label>
                 <label className="border rounded px-4 py-2">
@@ -130,6 +136,7 @@ const OrderContactForm = () => {
                     {...register("address", { required: true })}
                     type="text"
                     placeholder="Address"
+                    className="w-full"
                   />
                 </label>
                 <label className="border rounded px-4 py-2">
@@ -137,10 +144,11 @@ const OrderContactForm = () => {
                     {...register("postalno", { required: true })}
                     type="text"
                     placeholder="Postal code.."
+                    className="w-full"
                   />
                 </label>
                 <label className="border rounded px-4 py-2">
-                  <select {...register("province")}>
+                  <select {...register("province")} className="w-full">
                     <option>Koshi</option>
                     <option>Madhesh</option>
                     <option>Bagmati</option>
@@ -154,6 +162,7 @@ const OrderContactForm = () => {
                   <input
                     type="text"
                     placeholder="Street or Famous place near you."
+                    className="w-full"
                   />
                 </label>
               </div>
@@ -178,7 +187,7 @@ const OrderContactForm = () => {
       ) : (
         //Show Billing or Shipping Address.
 
-        <div className="p-2 flex flex-col w-1/2 bg-gray-100 border rounded-none">
+        <div className="p-2 flex flex-col w-full md:w-1/2 bg-gray-100 border rounded-none">
           <div className="flex justify-between">
             <p className="text-sm">Shipping Address</p>
             <button onClick={handleEdit} className="text-blue-500">
@@ -202,7 +211,7 @@ const OrderContactForm = () => {
           </div>
         </div>
       )}
-     {/* {submittedData && 
+      {/* {submittedData && 
      <div>
         <button onClick={()=>{onsubmit}}>ADD</button>
       </div>} */}
