@@ -45,22 +45,35 @@ const SubCategories = () => {
         )
         .order("created_at", { ascending: false });
 
-      if (productData) {
-        setProducts(
-          productData.map((p) => {
-            let images = [];
-            try {
-              const parsed = JSON.parse(p.images);
-              images = Array.isArray(parsed) ? parsed : [parsed];
-            } catch {
-              if (p.images) {
-                images = [p.images]; // plain string fallback
-              }
-            }
-            return { ...p, images };
-          })
-        );
-      }
+  if (productData) {
+    setProducts(
+      productData.map((p) => {
+        let images = [];
+        try {
+          const parsed = JSON.parse(p.images);
+          images = Array.isArray(parsed) ? parsed : [parsed];
+        } catch {
+          if (p.images) {
+            images = [p.images]; // plain string fallback
+          }
+        }
+
+        return {
+          id: p.id,
+          title: p.title,
+          price: p.price,
+          oldPrice: p.old_price, // map DB -> card prop
+          discount: p.discount || 0, // if you store discount %
+          sold: p.sold || 20, // map DB -> card prop
+          inStock: p.in_stock || 20, // map DB -> card prop
+          rating: p.rating || 0,
+          reviews: p.reviews || 0,
+          images,
+        };
+      })
+    );
+  }
+
 
       setLoading(false);
     };
