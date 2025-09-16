@@ -3,7 +3,7 @@ import MonthlySaleCard from "./MonthlySaleCard";
 import supabase from "../supabase";
 import Spinner from "./Spinner";
 
-const HomeProductFilterSort = ({ onFilterClick }) => {
+const HomeProductFilterSort = ({ onFilterClick, filters }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("Latest");
