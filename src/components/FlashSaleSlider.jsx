@@ -1,6 +1,7 @@
 import React from "react";
 import Slider from "react-slick";
 import MonthlySaleCard from "./MonthlySaleCard";
+import supabase from "../supabase";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -53,6 +54,37 @@ export default function FlashSaleSlider({ products = [] }) {
 
   console.log("Products in FlashSaleSlider:", products); // Debug log
 
+  const handleBuyNow = async (product) => {
+    try {
+      // Ensure price is in cents (adjust if your price is already in dollars)
+      const priceInCents = product.price;
+      const { data, error } = await supabase.functions.invoke(
+        "create-checkout-session",
+        {
+          body: {
+            product_id: product.id,
+            product_name: product.title,
+            price: priceInCents, // Price should be in cents for Stripe
+            quantity: 1,
+          },
+        }
+      );
+
+      if (error) {
+        console.error("Error creating checkout session:", error);
+        alert("Failed to initiate checkout. Please try again.");
+        return;
+      }
+
+      if (data?.url) {
+        window.location.href = data.url; // Redirect to Stripe checkout
+      }
+    } catch (e) {
+      console.error("Buy Now error:", e);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
   if (!products || products.length === 0) {
     return <p className="text-gray-500 px-4">No products available</p>;
   }
@@ -67,16 +99,16 @@ export default function FlashSaleSlider({ products = [] }) {
               <MonthlySaleCard
                 id={product.id}
                 discount={product.discount || 0}
-                image={product.image} // Ensure image is passed
-                title={product.title}
+                image={product.image || "/placeholder.jpg"} // Fallback image
+                title={product.title || "Unnamed Product"}
                 reviews={product.reviews || 0}
                 rating={product.rating || 0}
                 oldPrice={product.oldPrice || 0}
-                price={product.price}
+                price={product.price || 0}
                 sold={product.sold || 0}
                 inStock={product.inStock || 0}
-                label="Add to Cart"
-                onAddToCart={() => console.log("Added to cart:", product.title)}
+                label="Buy Now"
+                onBuyNow={() => handleBuyNow(product)}
               />
             </div>
           );

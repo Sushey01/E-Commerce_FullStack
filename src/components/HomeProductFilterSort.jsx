@@ -1,47 +1,71 @@
-import React, { useEffect, useState } from 'react'
-import MonthlySaleCard from './MonthlySaleCard'
-import supabase from '../supabase'
-import Spinner from './Spinner'
+import React, { useEffect, useState } from "react";
+import MonthlySaleCard from "./MonthlySaleCard";
+import supabase from "../supabase";
+import Spinner from "./Spinner";
 
-const HomeProductFilterSort = ({onFilterClick}) => {
+const HomeProductFilterSort = ({ onFilterClick }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState("Latest");
+  const [showCount, setShowCount] = useState(10);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true)
-      const {data, error} = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', {ascending:false})
+      setLoading(true);
 
-      if(error){
-        console,error('Error fetching products:', error)
-        setProducts([])
+      let query = supabase.from("products").select("*");
 
-      } else {
-        setProducts(data)
+      // Sorting
+      if (sortBy === "Latest") {
+        query = query.order("created_at", { ascending: false });
+      } else if (sortBy === "Popular") {
+        query = query.order("sold", { ascending: false });
+      } else if (sortBy === "Price: Low to High") {
+        query = query.order("price", { ascending: true });
+      } else if (sortBy === "Price: High to Low") {
+        query = query.order("price", { ascending: false });
       }
-      setLoading(false)
-    }
-    fetchProducts()
-  }, [])
+
+      // Fetch data
+      const { data, error } = await query;
+
+      if (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      } else {
+        setProducts(data);
+      }
+
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, [sortBy]);
+
+  // Example BuyNow handler
+  const handleBuyNow = (product) => {
+    alert(`Buying ${product.title} for $${product.price}`);
+  };
 
   return (
     <>
       {/* Filter & Sort Bar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3 px-1 gap-3">
-        <p className="text-sm hidden md:block lg:block">Showing all 12 items</p>
+        <p className="text-sm hidden md:block lg:block">
+          Showing all {showCount} items
+        </p>
 
-        {/* Controls wrapper: stacked on mobile, row on tablet and up */}
-        <div className="flex flex-col  sm:flex-row sm:items-center sm:justify-between gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full md:w-auto">
           {/* Sort & Show Controls */}
           <div className="flex flex-wrap justify-between md:gap-2 lg:gap-4">
             {/* Sort By */}
             <div className="flex gap-2 items-center">
               <p className="text-sm text-[#4b5563]">Sort By:</p>
-              <select className="border rounded bg-gray-200 text-sm px-2 py-1">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="border rounded bg-gray-200 text-sm px-2 py-1 focus:outline-none focus:bg-gray-200"
+              >
                 <option>Latest</option>
                 <option>Popular</option>
                 <option>Price: Low to High</option>
@@ -52,18 +76,24 @@ const HomeProductFilterSort = ({onFilterClick}) => {
             {/* Show Count */}
             <div className="flex gap-2 items-center">
               <p className="text-sm text-[#4b5563]">Show:</p>
-              <select className="border rounded bg-gray-200 text-sm px-2 py-1">
-                <option>12 Items</option>
-                <option>24 Items</option>
-                <option>36 Items</option>
-                <option>48 Items</option>
+              <select
+                value={showCount}
+                onChange={(e) => setShowCount(Number(e.target.value))}
+                className="border rounded bg-gray-200 text-sm px-2 py-1 focus:outline-none focus:bg-gray-200"
+              >
+                <option value={12}>12 Items</option>
+                <option value={24}>24 Items</option>
+                <option value={36}>36 Items</option>
+                <option value={48}>48 Items</option>
               </select>
             </div>
           </div>
 
           {/* View Toggle Buttons */}
           <div className="flex gap-2 items-center justify-between">
-            <p className="block lg:hidden md:hidden ">Showing all 12 items</p>
+            <p className="block lg:hidden md:hidden">
+              Showing all {showCount} items
+            </p>
             <div className="flex flex-wrap items-center gap-1">
               <button className="border-none rounded p-1 hover:bg-gray-200">
                 <svg
@@ -90,9 +120,9 @@ const HomeProductFilterSort = ({onFilterClick}) => {
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 24 24"
-                  class="text-2xl"
+                  className="text-2xl"
                   height="1em"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -112,34 +142,41 @@ const HomeProductFilterSort = ({onFilterClick}) => {
         {loading ? (
           <Spinner />
         ) : (
-          products.map((product) => (
-            <MonthlySaleCard
-              key={product.id}
-              id={product.id}
-              title={product.title}
-              price={product.price}
-              oldPrice={product.old_price}
-              image={product.images?.[0] || "https://via.placeholder.com/150"}
-              sold={0} // not tracked yet
-              inStock={product.outofstock ? 0 : 1}
-              discount={
-                product.old_price > 0
-                  ? Math.round(
-                      ((product.old_price - product.price) /
-                        product.old_price) *
-                        100
-                    )
-                  : 0
-              }
-              rating={product.rating || 0}
-              reviews={product.reviews || 0}
-              label="Add to Cart"
-            />
-          ))
+          products
+            .slice(0, showCount)
+            .map((product) => (
+              <MonthlySaleCard
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                price={product.price}
+                oldPrice={product.old_price}
+                image={
+                  Array.isArray(product.images)
+                    ? product.images[0]
+                    : product.images || "https://via.placeholder.com/150"
+                }
+                sold={product.sold || 0}
+                inStock={product.outofstock ? 0 : 1}
+                discount={
+                  product.old_price > 0
+                    ? Math.round(
+                        ((product.old_price - product.price) /
+                          product.old_price) *
+                          100
+                      )
+                    : 0
+                }
+                rating={product.rating || 0}
+                reviews={product.reviews || 0}
+                label="Buy Now"
+                onBuyNow={() => handleBuyNow(product)}
+              />
+            ))
         )}
       </div>
     </>
   );
-}
+};
 
-export default HomeProductFilterSort
+export default HomeProductFilterSort;
