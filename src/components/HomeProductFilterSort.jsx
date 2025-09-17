@@ -25,22 +25,22 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
     let query = supabase.from("products").select("*");
 
     // Apply filters with validation
-    if (filters) {
-      if (Array.isArray(filters.selectedCategories) && filters.selectedCategories.length > 0) {
-        query = query.in("category_name", filters.selectedCategories);
-      }
-      if (Array.isArray(filters.selectedColors) && filters.selectedColors.length > 0) {
-        query = query.in("color", filters.selectedColors);
-      }
-      if (Array.isArray(filters.selectedBrands) && filters.selectedBrands.length > 0) {
-        query = query.in("brand", filters.selectedBrands);
-      }
-      if (Array.isArray(filters.priceRange) && filters.priceRange.length === 2) {
-        query = query
-          .gte("price", filters.priceRange[0])
-          .lte("price", filters.priceRange[1]);
-      }
-    }
+    // if (filters) {
+    //   if (Array.isArray(filters.selectedCategories) && filters.selectedCategories.length > 0) {
+    //     query = query.in("category_name", filters.selectedCategories);
+    //   }
+    //   if (Array.isArray(filters.selectedColors) && filters.selectedColors.length > 0) {
+    //     query = query.in("color", filters.selectedColors);
+    //   }
+    //   if (Array.isArray(filters.selectedBrands) && filters.selectedBrands.length > 0) {
+    //     query = query.in("brand", filters.selectedBrands);
+    //   }
+    //   if (Array.isArray(filters.priceRange) && filters.priceRange.length === 2) {
+    //     query = query
+    //       .gte("price", filters.priceRange[0])
+    //       .lte("price", filters.priceRange[1]);
+    //   }
+    // }
 
     // Apply sorting
     if (sortBy === "Latest")

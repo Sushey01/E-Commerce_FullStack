@@ -5,6 +5,9 @@ import FilterProduct from "./FilterProduct";
 const HomeProduct = () => {
   const [showDrawer, setShowDrawer] = useState(false);
 
+
+ 
+
   return (
     <>
       {/* Overlay for mobile filter drawer */}
