@@ -44,6 +44,8 @@ const SubCategories = () => {
         )
         .order("created_at", { ascending: false });
 
+        
+
   if (productData) {
     setProducts(
       productData.map((p) => {

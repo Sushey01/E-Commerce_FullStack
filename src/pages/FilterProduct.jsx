@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FilterByCategories from '../components/FilterByCategories'
 import FilterByColor from '../components/FilterByColor'
 import FilterByPrice from '../components/FilterByPrice'
@@ -9,7 +9,9 @@ const FilterProduct = () => {
   return (
     <>
       <div className="flex p-2 flex-col gap-2 border rounded w-full">
-        <FilterByCategories/>
+        <FilterByCategories
+      
+        />
         <FilterByColor/>
         <FilterByPrice/>
         <FilterByBrands/>

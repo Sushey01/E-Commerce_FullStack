@@ -94,7 +94,7 @@ useEffect(() => {
            product.variant && typeof product.variant === "object"
              ? product.variant
              : {},
-         label: "Shop Now",
+         label: "Buy Now",
          link: `/products/${product.id}`,
          category_id: product.category_id, // use this instead of "category"
        };

@@ -1,64 +1,88 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MonthlySaleCard from "./MonthlySaleCard";
 import supabase from "../supabase";
 import Spinner from "./Spinner";
+
+// Custom debounce function
+const debounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
 
 const HomeProductFilterSort = ({ onFilterClick, filters }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("Latest");
-  const [showCount, setShowCount] = useState(10);
+  const [showCount, setShowCount] = useState(12); // Changed from 10 to 12
+  const [error, setError] = useState(null);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
+    let query = supabase.from("products").select("*");
+
+    // Apply filters with validation
+    if (filters) {
+      if (Array.isArray(filters.selectedCategories) && filters.selectedCategories.length > 0) {
+        query = query.in("category_name", filters.selectedCategories);
+      }
+      if (Array.isArray(filters.selectedColors) && filters.selectedColors.length > 0) {
+        query = query.in("color", filters.selectedColors);
+      }
+      if (Array.isArray(filters.selectedBrands) && filters.selectedBrands.length > 0) {
+        query = query.in("brand", filters.selectedBrands);
+      }
+      if (Array.isArray(filters.priceRange) && filters.priceRange.length === 2) {
+        query = query
+          .gte("price", filters.priceRange[0])
+          .lte("price", filters.priceRange[1]);
+      }
+    }
+
+    // Apply sorting
+    if (sortBy === "Latest")
+      query = query.order("created_at", { ascending: false });
+    else if (sortBy === "Popular")
+      query = query.order("sold", { ascending: false });
+    else if (sortBy === "Price: Low to High")
+      query = query.order("price", { ascending: true });
+    else if (sortBy === "Price: High to Low")
+      query = query.order("price", { ascending: false });
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Error fetching products:", error.message);
+      setProducts([]);
+      setError("Failed to load products. Please try again later.");
+    } else {
+      setProducts(data);
+      setError(null);
+    }
+    setLoading(false);
+  };
+
+  const debouncedFetchProducts = debounce(fetchProducts, 300);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
+    debouncedFetchProducts();
+  }, [filters, sortBy]);
 
-      let query = supabase.from("products").select("*");
-
-      // Sorting
-      if (sortBy === "Latest") {
-        query = query.order("created_at", { ascending: false });
-      } else if (sortBy === "Popular") {
-        query = query.order("sold", { ascending: false });
-      } else if (sortBy === "Price: Low to High") {
-        query = query.order("price", { ascending: true });
-      } else if (sortBy === "Price: High to Low") {
-        query = query.order("price", { ascending: false });
-      }
-
-      // Fetch data
-      const { data, error } = await query;
-
-      if (error) {
-        console.error("Error fetching products:", error);
-        setProducts([]);
-      } else {
-        setProducts(data);
-      }
-
-      setLoading(false);
-    };
-
-    fetchProducts();
-  }, [sortBy]);
-
-  // Example BuyNow handler
   const handleBuyNow = (product) => {
     alert(`Buying ${product.title} for $${product.price}`);
   };
 
   return (
     <>
-      {/* Filter & Sort Bar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3 px-1 gap-3">
         <p className="text-sm hidden md:block lg:block">
           Showing all {showCount} items
         </p>
-
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full md:w-auto">
-          {/* Sort & Show Controls */}
           <div className="flex flex-wrap justify-between md:gap-2 lg:gap-4">
-            {/* Sort By */}
             <div className="flex gap-2 items-center">
               <p className="text-sm text-[#4b5563]">Sort By:</p>
               <select
@@ -72,8 +96,6 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
                 <option>Price: High to Low</option>
               </select>
             </div>
-
-            {/* Show Count */}
             <div className="flex gap-2 items-center">
               <p className="text-sm text-[#4b5563]">Show:</p>
               <select
@@ -88,35 +110,22 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
               </select>
             </div>
           </div>
-
-          {/* View Toggle Buttons */}
           <div className="flex gap-2 items-center justify-between">
             <p className="block lg:hidden md:hidden">
               Showing all {showCount} items
             </p>
             <div className="flex flex-wrap items-center gap-1">
               <button className="border-none rounded p-1 hover:bg-gray-200">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
                 </svg>
               </button>
               <button className="border bg-gray-200 rounded p-1">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h16v2H4v-2z" />
                 </svg>
               </button>
-              <button
-                className="flex md:hidden lg:hidden"
-                onClick={onFilterClick}
-              >
+              <button className="flex md:hidden lg:hidden" onClick={onFilterClick}>
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
@@ -136,8 +145,7 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
           </div>
         </div>
       </div>
-
-      {/* Product Grid */}
+      {error && <div className="text-red-500 text-center py-4">{error}</div>}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-2 gap-3">
         {loading ? (
           <Spinner />
@@ -161,9 +169,7 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
                 discount={
                   product.old_price > 0
                     ? Math.round(
-                        ((product.old_price - product.price) /
-                          product.old_price) *
-                          100
+                        ((product.old_price - product.price) / product.old_price) * 100
                       )
                     : 0
                 }
