@@ -1,57 +1,49 @@
-import React, { useState } from "react";
 import FilterByCategories from "../components/FilterByCategories";
 import FilterByColor from "../components/FilterByColor";
 import FilterByPrice from "../components/FilterByPrice";
 import FilterByBrands from "../components/FilterByBrands";
 import FilterByProduct from "../components/FilterByProduct";
+import React from "react";
 
-const FilterProduct = () => {
-  const [filters, setFilters] = useState({
-    selectedCategories: [],
-    selectedColors: [], // Corrected from selectedColor to selectedColors
-    priceRange: [0, 10000],
-    selectedPrice: [], // Consider removing if redundant with priceRange
-    selectedBrands: [],
-  });
 
+const FilterProduct = ({ filters, onFiltersChange }) => {
   const handleFilterChange = (filterType, value) => {
-    setFilters((prevFilters) => {
-      const newFilters = { ...prevFilters, [filterType]: value };
-      console.log("Filters updated in FilterProduct:", newFilters);
-      return newFilters;
-    });
+    const updatedFilters = { ...filters, [filterType]: value };
+    onFiltersChange(updatedFilters);
   };
 
   return (
-    <>
-      <div className="flex p-2 flex-col gap-2 border rounded w-full">
-        <FilterByCategories
-          onFilterChange={(categories) =>
-            handleFilterChange("selectedCategories", categories)
-          }
-        />
-        <FilterByColor
-          onFilterChange={(colors) =>
-            handleFilterChange("selectedColors", colors)
-          }
-        />
-        <FilterByPrice
-          onFilterChange={(priceRange) =>
-            handleFilterChange("priceRange", priceRange)
-          }
-        />
-        <FilterByBrands
-          onFilterChange={(brands) =>
-            handleFilterChange("selectedBrands", brands)
-          }
-        />
-        <FilterByProduct
-          onFilterChange={(products) =>
-            handleFilterChange("selectedProducts", products)
-          }
-        />
-      </div>
-    </>
+    <div className="flex p-2 flex-col gap-2 border rounded w-full">
+      <FilterByCategories
+        selectedCategories={filters.selectedCategories}
+        onFilterChange={(categories) =>
+          handleFilterChange("selectedCategories", categories)
+        }
+      />
+      <FilterByColor
+        selectedColors={filters.selectedColors}
+        onFilterChange={(colors) =>
+          handleFilterChange("selectedColors", colors)
+        }
+      />
+      <FilterByPrice
+        priceRange={filters.priceRange}
+        onFilterChange={(priceRange) =>
+          handleFilterChange("priceRange", priceRange)
+        }
+      />
+      <FilterByBrands
+        selectedBrands={filters.selectedBrands}
+        onFilterChange={(brands) =>
+          handleFilterChange("selectedBrands", brands)
+        }
+      />
+      <FilterByProduct
+        onFilterChange={(products) =>
+          handleFilterChange("selectedProducts", products)
+        }
+      />
+    </div>
   );
 };
 

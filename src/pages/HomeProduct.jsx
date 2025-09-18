@@ -4,9 +4,12 @@ import FilterProduct from "./FilterProduct";
 
 const HomeProduct = () => {
   const [showDrawer, setShowDrawer] = useState(false);
-
-
- 
+  const [filters, setFilters] = useState({
+    selectedCategories: [],
+    selectedColors: [],
+    selectedBrands: [],
+    priceRange: [10000, 2000000],
+  });
 
   return (
     <>
@@ -18,7 +21,7 @@ const HomeProduct = () => {
         />
       )}
 
-      {/* Filter drawer - mobile only */}
+      {/* Mobile filter drawer */}
       <div
         className={`fixed top-0 left-0 h-screen w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           showDrawer ? "translate-x-0" : "-translate-x-full"
@@ -36,20 +39,29 @@ const HomeProduct = () => {
 
         {/* Filter content */}
         <div className="p-4">
-          <FilterProduct />
+          <FilterProduct
+            filters={filters}
+            onFiltersChange={(newFilters) => setFilters(newFilters)}
+          />
         </div>
       </div>
 
       {/* Main layout */}
       <div className="flex gap-2 p-3 pt-0 w-full">
-        {/* Left sidebar filter for desktop */}
+        {/* Desktop sidebar filter */}
         <div className="hidden md:block w-1/5">
-          <FilterProduct />
+          <FilterProduct
+            filters={filters}
+            onFiltersChange={(newFilters) => setFilters(newFilters)}
+          />
         </div>
 
-        {/* Product sort and list */}
+        {/* Product list with sorting */}
         <div className="flex-1">
-          <HomeProductFilterSort onFilterClick={() => setShowDrawer(true)} />
+          <HomeProductFilterSort
+            filters={filters}
+            onFilterClick={() => setShowDrawer(true)}
+          />
         </div>
       </div>
     </>
