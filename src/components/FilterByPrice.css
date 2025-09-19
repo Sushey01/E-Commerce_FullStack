@@ -1,41 +1,49 @@
-.slider {
+/* Container */
+.multi-slide-input-container {
   position: relative;
+  width: 100%;
+  max-width: 400px; /* adjust as needed */
+  height: 30px; /* enough space for thumb */
+  margin: 0 auto;
 }
 
-.track-slider,
-.range-slider {
+/* Track (full slider background) */
+.track-slider {
   position: absolute;
-  border-radius: 4px;
-  height: 6px;
   top: 50%;
   transform: translateY(-50%);
-}
-
-.track-slider {
   width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background-color: #e5e7eb; /* gray-300 */
   z-index: 1;
 }
 
+/* Selected range (between thumbs) */
 .range-slider {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  border-radius: 4px;
+  background-color: #14b8a6; /* teal-500 */
   z-index: 2;
 }
 
-.thumb,
-.thumb::-webkit-slider-thumb {
+/* Range inputs (thumbs) */
+input[type="range"].thumb {
   -webkit-appearance: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.thumb {
-  pointer-events: none;
+  -moz-appearance: none;
   position: absolute;
-  height: 0;
-  outline: none;
+  top: 50%;
+  transform: translateY(-50%);
   width: 100%;
-  top: 0;
+  height: 0;
   background: transparent;
+  pointer-events: none; /* allows track clicks through input */
 }
 
+/* Left and right thumbs */
 .thumb-left {
   z-index: 3;
 }
@@ -44,29 +52,37 @@
   z-index: 4;
 }
 
-.thumb::-webkit-slider-thumb {
-  background-color: #0a0a0a;
-  border-radius: 50%;
-  border: 4px solid #14b8a6; /* teal-500 */
-  cursor: pointer;
+/* Webkit Thumb */
+input[type="range"].thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
   height: 22px;
   width: 22px;
+  border-radius: 50%;
+  border: 4px solid #14b8a6; /* teal */
+  background-color: #0a0a0a;
+  cursor: pointer;
   pointer-events: all;
   position: relative;
   transition: transform 0.2s ease-in-out;
 }
 
-.thumb::-webkit-slider-thumb:hover {
+input[type="range"].thumb::-webkit-slider-thumb:hover {
   transform: scale(1.2);
 }
 
-.thumb::-moz-range-thumb {
-  background-color: #0a0a0a;
-  border-radius: 50%;
-  border: 4px solid #14b8a6;
-  cursor: pointer;
+/* Firefox Thumb */
+input[type="range"].thumb::-moz-range-thumb {
   height: 22px;
   width: 22px;
+  border-radius: 50%;
+  border: 4px solid #14b8a6; /* teal */
+  background-color: #0a0a0a;
+  cursor: pointer;
   pointer-events: all;
   position: relative;
+}
+
+/* Hide default track in Firefox */
+input[type="range"].thumb::-moz-range-track {
+  background: transparent;
 }

@@ -1,0 +1,33 @@
+User selects brand(s) in UI
+        |
+        v
+filters.selectedBrands = ["Apple", "Samsung"]
+        |
+        v
+Fetch matching brands from database:
+supabase.from("brands")
+       .select("brand_id, brand_name")
+       .in("brand_name", filters.selectedBrands)
+        |
+        v
+Database returns:
+[
+  { brand_id: 2, brand_name: "Apple" },
+  { brand_id: 3, brand_name: "Samsung" }
+]
+        |
+        v
+Extract brand IDs:
+brandIds = [2, 3]
+        |
+        v
+Use brandIds to filter products:
+supabase.from("products")
+       .select("*")
+       .in("brand_id", brandIds)
+        |
+        v
+Database returns products where brand_id = 2 or 3
+        |
+        v
+Products are displayed in UI
