@@ -19,76 +19,96 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
   const [showCount, setShowCount] = useState(12);
   const [error, setError] = useState(null);
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError(null);
+const fetchProducts = async () => {
+  setLoading(true);
+  setError(null);
 
-    try {
-      let subcategoryIds = [];
+  try {
+    let subcategoryIds = [];
+    let brandIds = [];
 
-      // Step 1: map category names → subcategory IDs
-      if (filters.selectedCategories?.length > 0) {
-        const { data: subcategories, error: subcatError } = await supabase
-          .from("subcategories")
-          .select("id,name")
-          .in("name", filters.selectedCategories);
+    // Step 1: map category names → subcategory IDs
+    if (filters.selectedCategories?.length > 0) {
+      const { data: subcategories, error: subcatError } = await supabase
+        .from("subcategories")
+        .select("id")
+        .in("name", filters.selectedCategories);
 
-        if (subcatError) {
-          console.error("Error fetching subcategories:", subcatError.message);
-        } else {
-          subcategoryIds = subcategories.map((sc) => sc.id);
-        }
-      }
-
-      // Step 2: build product query
-      let query = supabase.from("products").select("*");
-
-      if (subcategoryIds.length > 0) {
-        query = query.in("subcategory_id", subcategoryIds);
-      }
-
-      if (filters.selectedColors?.length > 0) {
-        query = query.in("color", filters.selectedColors);
-      }
-
-      if (filters.selectedBrands?.length > 0) {
-        query = query.in("brand", filters.selectedBrands);
-      }
-
-      if (filters.priceRange?.min !== undefined && filters.priceRange?.max !==undefined) {
-        query = query
-          .gte("price", filters.priceRange.min)
-          .lte("price", filters.priceRange.max);
-      }
-
-      // Step 3: sorting
-      if (sortBy === "Latest")
-        query = query.order("created_at", { ascending: false });
-      else if (sortBy === "Popular")
-        query = query.order("sold", { ascending: false });
-      else if (sortBy === "Price: Low to High")
-        query = query.order("price", { ascending: true });
-      else if (sortBy === "Price: High to Low")
-        query = query.order("price", { ascending: false });
-
-      const { data, error: productError } = await query;
-
-      if (productError) {
-        console.error("Error fetching products:", productError.message);
-        setProducts([]);
-        setError("Failed to load products. Please try again later.");
+      if (subcatError) {
+        console.error("Error fetching subcategories:", subcatError.message);
       } else {
-        setProducts(data);
-        setError(null);
+        subcategoryIds = subcategories.map((sc) => sc.id);
       }
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      setProducts([]);
-      setError("Something went wrong.");
     }
 
-    setLoading(false);
-  };
+    // Step 2: map brand names → brand IDs
+    if (filters.selectedBrands?.length > 0) {
+      const { data: brands, error: brandError } = await supabase
+        .from("brands")
+        .select("brand_id, brand_name")
+        .in("brand_name", filters.selectedBrands);
+
+      if (brandError) {
+        console.error("Error fetching brands:", brandError.message);
+      } else if (brands?.length > 0) {
+        brandIds = brands.map((b) => b.brand_id);
+      }
+    }
+
+    // Step 3: build product query
+    let query = supabase.from("products").select("*");
+
+    if (subcategoryIds.length > 0) {
+      query = query.in("subcategory_id", subcategoryIds);
+    }
+
+    if (brandIds.length > 0) {
+      query = query.in("brand_id", brandIds);
+    }
+
+    if (filters.selectedColors?.length > 0) {
+      const color = filters.selectedColors[0]; // TODO: support multiple
+      query = query.filter("variant->color", "cs", `["${color}"]`);
+    }
+
+    if (
+      filters.priceRange?.min !== undefined &&
+      filters.priceRange?.max !== undefined
+    ) {
+      query = query
+        .gte("price", filters.priceRange.min)
+        .lte("price", filters.priceRange.max);
+    }
+
+    // Sorting
+    if (sortBy === "Latest")
+      query = query.order("created_at", { ascending: false });
+    else if (sortBy === "Popular")
+      query = query.order("sold", { ascending: false });
+    else if (sortBy === "Price: Low to High")
+      query = query.order("price", { ascending: true });
+    else if (sortBy === "Price: High to Low")
+      query = query.order("price", { ascending: false });
+
+    const { data, error: productError } = await query;
+
+    if (productError) {
+      console.error("Error fetching products:", productError.message);
+      setProducts([]);
+      setError("Failed to load products. Please try again later.");
+    } else {
+      setProducts(data || []);
+      setError(null);
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    setProducts([]);
+    setError("Something went wrong.");
+  }
+
+  setLoading(false);
+};
+
 
   const debouncedFetchProducts = debounce(fetchProducts, 300);
 
@@ -151,6 +171,7 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
                 className="flex md:hidden lg:hidden"
                 onClick={onFilterClick}
               >
+                {/* Use className instead of class */}
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
@@ -177,37 +198,35 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
         {loading ? (
           <Spinner />
         ) : (
-          products
-            .slice(0, showCount)
-            .map((product) => (
-              <MonthlySaleCard
-                key={product.id}
-                id={product.id}
-                title={product.title}
-                price={product.price}
-                oldPrice={product.old_price}
-                image={
-                  Array.isArray(product.images)
-                    ? product.images[0]
-                    : product.images || "https://via.placeholder.com/150"
-                }
-                sold={product.sold || 10}
-                inStock={product.outofstock ? 0 : 1}
-                discount={
-                  product.old_price > 0
-                    ? Math.round(
-                        ((product.old_price - product.price) /
-                          product.old_price) *
-                          100
-                      )
-                    : 0
-                }
-                rating={product.rating || 0}
-                reviews={product.reviews || 0}
-                label="Buy Now"
-                onBuyNow={() => handleBuyNow(product)}
-              />
-            ))
+          products.map((product) => (
+            <MonthlySaleCard
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              oldPrice={product.old_price}
+              image={
+                Array.isArray(product.images)
+                  ? product.images[0]
+                  : product.images || "https://via.placeholder.com/150"
+              }
+              sold={product.sold || 10}
+              inStock={product.outofstock ? 0 : 1}
+              discount={
+                product.old_price > 0
+                  ? Math.round(
+                      ((product.old_price - product.price) /
+                        product.old_price) *
+                        100
+                    )
+                  : 0
+              }
+              rating={product.rating || 0}
+              reviews={product.reviews || 0}
+              label="Buy Now"
+              onBuyNow={() => handleBuyNow(product)}
+            />
+          ))
         )}
       </div>
     </>

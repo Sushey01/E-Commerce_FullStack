@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const colors = [
   { name: "purple-700", class: "bg-purple-700" },
-  { name: "teal-500", class: "bg-teal-500" },
-  { name: "green-600", class: "bg-green-600" },
+  { name: "White-500", class: "bg-white" },
+  { name: "black-600", class: "bg-[#000]" },
   { name: "red-600", class: "bg-red-600" },
   { name: "red-800", class: "bg-red-800" },
   { name: "yellow-700", class: "bg-yellow-700" },
@@ -11,9 +11,13 @@ const colors = [
   { name: "purple-500", class: "bg-purple-500" },
 ];
 
-const FilterByColor = ({ onFilterChange }) => {
+const FilterByColor = ({ selectedColors: selectedColorsProp =[], onFilterChange }) => {
   const [selectedColors, setSelectedColors] = useState([]);
 
+
+  useEffect(()=>{
+    setSelectedColors(selectedColorsProp);
+  }, [selectedColorsProp])
   const handleColorToggle = (colorName) => {
     const updatedColors = selectedColors.includes(colorName)
       ? selectedColors.filter((item) => item !== colorName)

@@ -11,6 +11,9 @@ const FilterByPrice = ({ value, onFilter }) => {
   const [maxPrice, setMaxPrice] = useState(value?.max || MAX);
   const [activeSlider, setActiveSlider] = useState(null);
 
+
+
+ 
   // Sync sliders if value prop changes
   useEffect(() => {
     if (value) {
