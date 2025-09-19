@@ -55,10 +55,10 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
         query = query.in("brand", filters.selectedBrands);
       }
 
-      if (filters.priceRange?.length === 2) {
+      if (filters.priceRange?.min !== undefined && filters.priceRange?.max !==undefined) {
         query = query
-          .gte("price", filters.priceRange[0])
-          .lte("price", filters.priceRange[1]);
+          .gte("price", filters.priceRange.min)
+          .lte("price", filters.priceRange.max);
       }
 
       // Step 3: sorting

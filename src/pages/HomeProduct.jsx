@@ -8,8 +8,11 @@ const HomeProduct = () => {
     selectedCategories: [],
     selectedColors: [],
     selectedBrands: [],
-    priceRange: [10000, 2000000],
+    priceRange: { min: 10000, max: 250000 },
   });
+
+
+
 
   return (
     <>

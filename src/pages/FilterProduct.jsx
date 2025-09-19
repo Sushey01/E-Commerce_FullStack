@@ -27,10 +27,8 @@ const FilterProduct = ({ filters, onFiltersChange }) => {
         }
       />
       <FilterByPrice
-        priceRange={filters.priceRange}
-        onFilterChange={(priceRange) =>
-          handleFilterChange("priceRange", priceRange)
-        }
+        onFilter={(priceRange) => handleFilterChange("priceRange", priceRange)}
+        value={filters.priceRange}
       />
       <FilterByBrands
         selectedBrands={filters.selectedBrands}

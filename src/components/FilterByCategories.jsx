@@ -13,7 +13,7 @@ const categoryMap = {
 };
 
 const FilterByCategories = ({ onFilterChange }) => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const handleCheckboxChange = (category) => {
     const newSelection = selectedCategory === category ? "" : category;
