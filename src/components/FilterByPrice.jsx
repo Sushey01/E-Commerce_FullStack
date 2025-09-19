@@ -1,33 +1,47 @@
 import React, { useState } from "react";
 
 const FilterByPrice = ({ onFilter }) => {
-  const MIN = 0;
+  const MIN = 10000;
+  const MAX = 250000;
+  const STEP = 1000;
+  const MIN_GAP = 1000; // Minimum gap between min & max
 
   const [minPrice, setMinPrice] = useState(MIN);
-  const [maxPrice, setMaxPrice] = useState(250000); // editable max
+  const [maxPrice, setMaxPrice] = useState(MAX);
+  const [activeSlider, setActiveSlider] = useState(null); // Track which slider is active
 
   const handleApply = () => {
-    if (minPrice <= maxPrice) {
-      onFilter?.({ min: minPrice, max: maxPrice });
-    } else {
-      alert("Min price should be less than or equal to Max price");
-    }
+    onFilter?.({ min: minPrice, max: maxPrice });
   };
+
+  const handleMinChange = (e) => {
+    let value = Math.min(Number(e.target.value), maxPrice - MIN_GAP);
+    setMinPrice(value);
+  };
+
+  const handleMaxChange = (e) => {
+    let value = Math.max(Number(e.target.value), minPrice + MIN_GAP);
+    setMaxPrice(value);
+  };
+
+  const leftPercent = ((minPrice - MIN) / (MAX - MIN)) * 100;
+  const rightPercent = 100 - ((maxPrice - MIN) / (MAX - MIN)) * 100;
 
   return (
     <div className="flex flex-col gap-3 py-3">
       <h2 className="py-2 text-lg text-black">Filter By Price</h2>
 
       {/* Number Inputs */}
-      <div className="flex flex-col w-full sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-700">Min Price</p>
           <input
             type="number"
             min={MIN}
-            max={maxPrice}
+            max={maxPrice - MIN_GAP}
+            step={STEP}
             value={minPrice}
-            onChange={(e) => setMinPrice(Math.min(Number(e.target.value), maxPrice))}
+            onChange={handleMinChange}
             className="w-full px-3 border border-gray-300 rounded"
           />
         </div>
@@ -36,47 +50,57 @@ const FilterByPrice = ({ onFilter }) => {
           <p className="text-sm font-medium text-gray-700">Max Price</p>
           <input
             type="number"
-            min={minPrice}
+            min={minPrice + MIN_GAP}
+            max={MAX}
+            step={STEP}
             value={maxPrice}
-            onChange={(e) => setMaxPrice(Math.max(Number(e.target.value), minPrice))}
+            onChange={handleMaxChange}
             className="w-full px-3 border border-gray-300 rounded"
           />
         </div>
       </div>
 
       {/* Dual Range Slider */}
-      <div className="relative mt-6 w-full h-6">
-        <div className="absolute top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-300 rounded"></div>
+      <div className="relative mt-6 w-full max-w-md h-8 mx-auto">
+        {/* Track */}
+        <div className="absolute top-1/2 -translate-y-1/2 w-full h-1 bg-gray-300 rounded"></div>
 
+        {/* Highlighted Range */}
         <div
-          className="absolute top-1/2 transform -translate-y-1/2 h-1 bg-teal-500 rounded"
-          style={{
-            left: `${(minPrice / maxPrice) * 100}%`,
-            right: `${100 - 100}%`, // highlights full range to maxPrice
-          }}
+          className="absolute top-1/2 -translate-y-1/2 h-1 bg-teal-500 rounded"
+          style={{ left: `${leftPercent}%`, right: `${rightPercent}%` }}
         ></div>
 
+        {/* Min Slider */}
         <input
           type="range"
           min={MIN}
-          max={maxPrice}
+          max={MAX}
+          step={STEP}
           value={minPrice}
-          onChange={(e) => setMinPrice(Math.min(Number(e.target.value), maxPrice))}
-          className="absolute top-1/2 transform -translate-y-1/2 w-full h-6 bg-transparent appearance-none"
-          style={{ zIndex: 2 }}
+          onChange={handleMinChange}
+          onMouseDown={() => setActiveSlider("min")}
+          onMouseUp={() => setActiveSlider(null)}
+          style={{ zIndex: activeSlider === "min" ? 20 : 10 }}
+          className="absolute top-1/2 -translate-y-1/2 w-full h-8 bg-transparent appearance-none cursor-pointer"
         />
 
+        {/* Max Slider */}
         <input
           type="range"
           min={MIN}
-          max={maxPrice}
+          max={MAX}
+          step={STEP}
           value={maxPrice}
-          onChange={(e) => setMaxPrice(Math.max(Number(e.target.value), minPrice))}
-          className="absolute top-1/2 transform -translate-y-1/2 w-full h-6 bg-transparent appearance-none"
-          style={{ zIndex: 1 }}
+          onChange={handleMaxChange}
+          onMouseDown={() => setActiveSlider("max")}
+          onMouseUp={() => setActiveSlider(null)}
+          style={{ zIndex: activeSlider === "max" ? 20 : 10 }}
+          className="absolute top-1/2 -translate-y-1/2 w-full h-8 bg-transparent appearance-none cursor-pointer"
         />
       </div>
 
+      {/* Values Below */}
       <div className="flex justify-between mt-2 text-sm text-gray-700">
         <span>{minPrice}</span>
         <span>{maxPrice}</span>
@@ -84,7 +108,7 @@ const FilterByPrice = ({ onFilter }) => {
 
       <button
         onClick={handleApply}
-        className="mt-3 px-4 py-2 bg-teal-500 text-white rounded"
+        className="mt-3 px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
       >
         Apply
       </button>

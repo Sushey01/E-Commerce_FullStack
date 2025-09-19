@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 const categoryMap = {
+  "All":"All",
   "Smartphone & Tablets": "Mobiles",
   "Laptop & Desktop": "Laptops",
   Headphones: "Headphones",

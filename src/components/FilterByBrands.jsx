@@ -42,11 +42,6 @@ const FilterByBrands = () => {
 
         <label className="gap-2 flex text-[#4b5563]">
           <input type="checkbox" />
-          Samsung
-        </label>
-
-        <label className="gap-2 flex text-[#4b5563]">
-          <input type="checkbox" />
           Canon
         </label>
 
