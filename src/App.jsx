@@ -32,10 +32,11 @@ import SubCategories from "./category/SubCategories";
 import CategorySliderDynamic from "./category/CategorySliderDynamic";
 // import SubcategoryPage from "./category/SubCategoryPage";
 import SubsubcategoryPage from "./category/SubsubCategories";
-import  AdminDashboard  from "./admin/AdminDashboard";
-import  AnalyticsCharts  from "./admin/Analytic-Charts";
-import DashboardLayout from "./admin/Dashboard-Layout";
-
+import AdminDashboard from "./AdminSeller/admin/AdminDashboard";
+import AnalyticsCharts from "./AdminSeller/admin/Analytic-Charts";
+import DashboardLayout from "./AdminSeller/admin/Dashboard-Layout";
+import SellerDashboard from "./AdminSeller/seller/SellerDashboard";
+import SellerRequestForm from "./AdminSeller/seller/Seller-Request-Form";
 
 const App = () => {
   return (
@@ -94,11 +95,12 @@ const App = () => {
     //     <Footer />
     //   </main>
     // </Router>
-      <Router>
-        <AdminDashboard/>
-        <AnalyticsCharts/>
-        {/* <DashboardLayout/> */}
-      </Router>
+    <Router>
+      {/* <AdminDashboard/>
+        <AnalyticsCharts/> */}
+      <SellerDashboard />
+      <SellerRequestForm />
+    </Router>
   );
 };
 

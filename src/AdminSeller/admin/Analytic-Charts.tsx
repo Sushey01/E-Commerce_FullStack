@@ -57,7 +57,9 @@ interface AnalyticsChartsProps {
   userRole?: "admin" | "seller";
 }
 
-export default function AnalyticsCharts({ userRole = "admin" }: AnalyticsChartsProps) {
+export default function AnalyticsCharts({
+  userRole = "admin",
+}: AnalyticsChartsProps) {
   return (
     <div className="space-y-6">
       {/* Revenue Overview */}
