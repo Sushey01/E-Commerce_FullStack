@@ -37,6 +37,7 @@ import AnalyticsCharts from "./AdminSeller/admin/Analytic-Charts";
 import DashboardLayout from "./AdminSeller/admin/Dashboard-Layout";
 import SellerDashboard from "./AdminSeller/seller/SellerDashboard";
 import SellerRequestForm from "./AdminSeller/seller/Seller-Request-Form";
+import HomePage from "./AdminSeller/app/Page";
 
 const App = () => {
   return (
@@ -98,8 +99,8 @@ const App = () => {
     <Router>
       {/* <AdminDashboard/>
         <AnalyticsCharts/> */}
-      <SellerDashboard />
-      <SellerRequestForm />
+      {/* <SellerDashboard /> */}
+      <HomePage/>
     </Router>
   );
 };
