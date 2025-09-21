@@ -32,69 +32,73 @@ import SubCategories from "./category/SubCategories";
 import CategorySliderDynamic from "./category/CategorySliderDynamic";
 // import SubcategoryPage from "./category/SubCategoryPage";
 import SubsubcategoryPage from "./category/SubsubCategories";
+import  AdminDashboard  from "./admin/AdminDashboard";
+import  AnalyticsCharts  from "./admin/Analytic-Charts";
+import DashboardLayout from "./admin/Dashboard-Layout";
 
 
 const App = () => {
   return (
-    <Router>
-      <main className="max-w-[1400px] mx-auto w-full">
-        <Navbar />
+    // <Router>
+    //   <main className="max-w-[1400px] mx-auto w-full">
+    //     <Navbar />
 
-        <Routes>
-          {/* Homepage */}
-          <Route
-            path="/"
-            element={
-              <>
-                <div className="px-0 lg:px-6">
-                  <HeroSection />
-                  {/* <CategoryPage /> */}
-                  <CategorySliderDynamic />
-                  <DynamicPageSlider />
-                  <BlackFridaySales />
-                  <NewProduct />
-                  <FlashSaleContainer />
-                </div>
-              </>
-            }
-          />
+    //     <Routes>
+    //       {/* Homepage */}
+    //       <Route
+    //         path="/"
+    //         element={
+    //           <>
+    //             <div className="px-0 lg:px-6">
+    //               <HeroSection />
+    //               {/* <CategoryPage /> */}
+    //               <CategorySliderDynamic />
+    //               <DynamicPageSlider />
+    //               <BlackFridaySales />
+    //               <NewProduct />
+    //               <FlashSaleContainer />
+    //             </div>
+    //           </>
+    //         }
+    //       />
 
-          {/* Cart, Profile, Wishlist */}
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/profile" element={<ProfileSection />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/loginPage" element={<LoginPage />} />
-          <Route path="/messages" element={<CustomerCareChat />} />
-          <Route path="order" element={<OrderPage />} />
-          <Route path="payment" element={<CheckoutPayment />} />
-          <Route path="invoice" element={<Invoice />} />
-          <Route path="success" element={<OrderSuccessDetail />} />
+    //       {/* Cart, Profile, Wishlist */}
+    //       <Route path="/cart" element={<CartPage />} />
+    //       <Route path="/profile" element={<ProfileSection />} />
+    //       <Route path="/wishlist" element={<Wishlist />} />
+    //       <Route path="/loginPage" element={<LoginPage />} />
+    //       <Route path="/messages" element={<CustomerCareChat />} />
+    //       <Route path="order" element={<OrderPage />} />
+    //       <Route path="payment" element={<CheckoutPayment />} />
+    //       <Route path="invoice" element={<Invoice />} />
+    //       <Route path="success" element={<OrderSuccessDetail />} />
 
-          {/* Product Detail */}
-          <Route path="/products/:id" element={<ProductDetail />} />
+    //       {/* Product Detail */}
+    //       <Route path="/products/:id" element={<ProductDetail />} />
 
-          {/* Category  */}
-          <Route path="/subcategory" element={<SubCategories />} />
-          <Route path="/subsubcategory" element={<SubsubcategoryPage />} />
-          {/* <Route path="/subsubcategory" element={<SubsubcategoryPage />} /> */}
+    //       {/* Category  */}
+    //       <Route path="/subcategory" element={<SubCategories />} />
+    //       <Route path="/subsubcategory" element={<SubsubcategoryPage />} />
+    //       {/* <Route path="/subsubcategory" element={<SubsubcategoryPage />} /> */}
 
-          {/* Checkout */}
-          <Route path="/checkout" element={<CheckoutPage />} />
+    //       {/* Checkout */}
+    //       <Route path="/checkout" element={<CheckoutPage />} />
 
-          {/* Product Listing Pages (nested) */}
-          <Route path="/products" element={<ProductLayout />}>
-            <Route index element={<HomeProduct />} />
-            <Route path=":id" element={<ProductDetail />} />
-          </Route>
-        </Routes>
+    //       {/* Product Listing Pages (nested) */}
+    //       <Route path="/products" element={<ProductLayout />}>
+    //         <Route index element={<HomeProduct />} />
+    //         <Route path=":id" element={<ProductDetail />} />
+    //       </Route>
+    //     </Routes>
 
-        <Footer />
-      </main>
-    </Router>
-    //   <Router>
-    //    <Routes>
-    // </Routes>
-    //   </Router>
+    //     <Footer />
+    //   </main>
+    // </Router>
+      <Router>
+        <AdminDashboard/>
+        <AnalyticsCharts/>
+        {/* <DashboardLayout/> */}
+      </Router>
   );
 };
 
