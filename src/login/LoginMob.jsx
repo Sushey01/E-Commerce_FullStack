@@ -51,7 +51,7 @@ const LoginMob = () => {
 
       // Navigate based on role - FIXED: moved before any return statements
       if (profile.role === "admin") {
-        navigate("/");
+        navigate("/AdminSeller/admin/dashboard");
       } else if (profile.role === "seller") {
         navigate("/seller/dashboard");
       } else {
