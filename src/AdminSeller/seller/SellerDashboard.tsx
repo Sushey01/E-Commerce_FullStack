@@ -113,7 +113,6 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
     .reduce((sum, sale) => sum + sale.amount, 0);
 
   const handleAddProduct = () => {
-    // In a real app, this would make an API call
     console.log("Adding product:", editingProduct);
     setShowProductForm(false);
     setEditingProduct(undefined);
@@ -201,7 +200,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                     </p>
                     <Badge
                       variant={
-                        sale.status === "completed" ? "default" : "secondary"
+                        sale.status === "completed" ? "completed" : "pending"
                       }
                     >
                       {sale.status}
@@ -236,9 +235,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                       </p>
                     </div>
                     <Badge
-                      variant={
-                        product.stock === 0 ? "destructive" : "secondary"
-                      }
+                      variant={product.stock === 0 ? "outOfStock" : "default"}
                     >
                       {product.stock === 0
                         ? "Out of stock"
@@ -295,7 +292,6 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
       </h3>
       <AnalyticsCharts userRole="seller" />
 
-      {/* Sales Table */}
       <Card>
         <CardHeader>
           <CardTitle>Recent Sales</CardTitle>
@@ -335,7 +331,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                     <td className="p-4">
                       <Badge
                         variant={
-                          sale.status === "completed" ? "default" : "secondary"
+                          sale.status === "completed" ? "completed" : "pending"
                         }
                       >
                         {sale.status}

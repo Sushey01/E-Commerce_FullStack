@@ -16,48 +16,28 @@ import {
   Eye,
   Edit,
   Trash2,
-  Plus,
-  CheckCircle,
-  XCircle,
-  Clock,
 } from "lucide-react";
-// import { AnalyticsCharts } from "./components/analytics-charts";
-// import { ProductList } from "./components/product-list";
-// import { ProductForm } from "./components/product-form";
 
-// Import your contexts/hooks (implement if missing)
-// import { useProducts, type Product } from "./contexts/product-context";
-// import { useAuth } from "./contexts/auth-context";
-// import { useToast } from "./hooks/use-toast";
-
-// Temporary type definitions
+// Product type
 type Product = {
   id: number;
   name: string;
   price: number;
   category: string;
   stock: number;
+  seller?: string;
 };
 
-// Simple hooks placeholders
-const useProducts = () => ({
-  products: [] as Product[],
-  addProduct: (product: Product) => {},
-  updateProduct: (id: number, product: Partial<Product>) => {},
-  deleteProduct: (id: number) => {},
-});
-
+// Stub hooks
+const useProducts = () => ({ products: [] as Product[] });
 const useAuth = () => ({
-  user: { name: "Admin", role: "admin" },
-  isAuthenticated: true,
-  getSellerRequests: () => [],
+  getSellerRequests: () => [] as any[],
   approveSellerRequest: (id: string | number) => {},
   rejectSellerRequest: (id: string | number) => {},
 });
-
 const useToast = () => ({
-  toast: (message: { title: string; description?: string; variant?: string }) =>
-    console.log(message),
+  toast: (msg: { title: string; description?: string; variant?: string }) =>
+    console.log(msg),
 });
 
 // Mock data
@@ -171,124 +151,164 @@ export default function AdminDashboard({ activeTab }: AdminDashboardProps) {
   const { getSellerRequests, approveSellerRequest, rejectSellerRequest } =
     useAuth();
   const { toast } = useToast();
-  const [showProductForm, setShowProductForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
-  // ---- same render functions from your code ----
-  // renderDashboard, renderSellers, renderProducts, renderAnalytics, renderSettings, renderSellerRequests
-  // and handlers (handleApproveRequest, handleRejectRequest)
-  // (copy from your original code, only imports/paths changed)
-
-  const handleApproveRequest = (requestId: string) => {
-    approveSellerRequest(requestId);
-    toast({
-      title: "Request Approved",
-      description: "Seller request has been approved successfully.",
-    });
-  };
-
-  const handleRejectRequest = (requestId: string) => {
-    rejectSellerRequest(requestId);
-    toast({
-      title: "Request Rejected",
-      description: "Seller request has been rejected.",
-      variant: "destructive",
-    });
-  };
-
-  // Render functions
   const renderDashboard = () => (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statsCards.map((stat: any, index: number) => (
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {statsCards.map((stat, index) => (
           <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                {stat.change} from last month
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderSellers = () => (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Sellers Management</h2>
-      <div className="grid gap-4">
-        {mockSellers.map((seller) => (
-          <Card key={seller.id}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold">{seller.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {seller.email}
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {stat.title}
                   </p>
-                  <p className="text-sm">
-                    Products: {seller.products} | Sales: ${seller.sales}
+                  <p className="text-2xl font-bold text-card-foreground">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-green-600">
+                    {stat.change} from last month
                   </p>
                 </div>
-                <Badge
-                  variant={seller.status === "active" ? "default" : "secondary"}
-                >
-                  {seller.status}
-                </Badge>
+                <stat.icon className={`h-8 w-8 ${stat.color}`} />
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
-    </div>
-  );
 
-  const renderSellerRequests = () => (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Seller Requests</h2>
-      <p className="text-muted-foreground">
-        No pending seller requests at the moment.
-      </p>
-    </div>
-  );
+      {/* Recent Sellers */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Sellers</CardTitle>
+            <CardDescription>Latest seller registrations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {mockSellers.slice(0, 3).map((seller) => (
+                <div
+                  key={seller.id}
+                  className="flex items-center justify-between"
+                >
+                  <div>
+                    <p className="font-medium text-card-foreground">
+                      {seller.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {seller.email}
+                    </p>
+                  </div>
+                  <Badge
+                    variant={
+                      seller.status === "active" ? "default" : "inactive"
+                    }
+                  >
+                    {seller.status}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-  const renderProducts = () => (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Products Management</h2>
-        <Button onClick={() => setShowProductForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Product
-        </Button>
+        {/* Top Products */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Products</CardTitle>
+            <CardDescription>Best performing products</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {mockProducts.slice(0, 3).map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center justify-between"
+                >
+                  <div>
+                    <p className="font-medium text-card-foreground">
+                      {product.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      ${product.price}
+                    </p>
+                  </div>
+                  <Badge variant={product.stock > 0 ? "default" : "outOfStock"}>
+                    {product.stock > 0
+                      ? `${product.stock} in stock`
+                      : "Out of stock"}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
-      <p className="text-muted-foreground">
-        Product management interface would go here.
-      </p>
     </div>
   );
 
-  const renderAnalytics = () => (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Analytics</h2>
-      <p className="text-muted-foreground">
-        Analytics charts and data would go here.
-      </p>
-    </div>
-  );
+  const renderSellers = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-card-foreground">
+          All Sellers
+        </h3>
+        <Button>Add New Seller</Button>
+      </div>
 
-  const renderSettings = () => (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Settings</h2>
-      <p className="text-muted-foreground">
-        System settings and configuration options would go here.
-      </p>
+      <Card>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="border-b border-border">
+                <tr>
+                  <th className="text-left p-4">Name</th>
+                  <th className="text-left p-4">Email</th>
+                  <th className="text-left p-4">Products</th>
+                  <th className="text-left p-4">Sales</th>
+                  <th className="text-left p-4">Status</th>
+                  <th className="text-left p-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mockSellers.map((seller) => (
+                  <tr key={seller.id} className="border-b border-border">
+                    <td className="p-4">{seller.name}</td>
+                    <td className="p-4 text-muted-foreground">
+                      {seller.email}
+                    </td>
+                    <td className="p-4">{seller.products}</td>
+                    <td className="p-4">${seller.sales}</td>
+                    <td className="p-4">
+                      <Badge
+                        variant={
+                          seller.status === "active" ? "default" : "inactive"
+                        }
+                      >
+                        {seller.status}
+                      </Badge>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex space-x-2">
+                        <Button variant="ghost" size="sm">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 
@@ -297,14 +317,14 @@ export default function AdminDashboard({ activeTab }: AdminDashboardProps) {
       return renderDashboard();
     case "sellers":
       return renderSellers();
-    case "seller-requests":
-      return renderSellerRequests();
     case "products":
-      return renderProducts();
+      return <p>Products tab (same design can be added)</p>;
     case "analytics":
-      return renderAnalytics();
+      return <p>Analytics tab (same design can be added)</p>;
     case "settings":
-      return renderSettings();
+      return <p>Settings tab (same design can be added)</p>;
+    case "seller-requests":
+      return <p>Seller requests tab (same design can be added)</p>;
     default:
       return renderDashboard();
   }

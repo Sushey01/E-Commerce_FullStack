@@ -8,7 +8,7 @@ const useAuth = () => ({
 
 interface RoleBadgeProps {
   showIcon?: boolean;
-  variant?: "default" | "secondary" | "destructive" | "outline";
+  variant?: "default" | "inactive" | "outOfStock" | "completed" | "pending";
 }
 
 export default function RoleBadge({
@@ -19,16 +19,17 @@ export default function RoleBadge({
 
   if (!user) return null;
 
+  // Map roles to allowed Badge variants
   const roleConfig = {
     admin: {
       label: "Administrator",
       icon: Shield,
-      variant: "default" as const,
+      variant: "default" as const, // dark grey
     },
     seller: {
       label: "Seller",
       icon: User,
-      variant: "secondary" as const,
+      variant: "inactive" as const, // blue
     },
   };
 
