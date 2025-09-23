@@ -97,9 +97,10 @@ const App = () => {
     //   </main>
     // </Router>
    <Router>
-      <AdminDashboard/>
-        <AnalyticsCharts/>
-      <SellerDashboard />
+      {/* <AdminDashboard/>
+        <AnalyticsCharts/> */}
+      {/* <SellerDashboard /> */}
+      <DashboardLayout/>
     </Router> 
   );
 };

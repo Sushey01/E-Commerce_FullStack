@@ -195,7 +195,7 @@ export default function DashboardLayout() {
               {item.label}
               {item.badge && item.badge > 0 && (
                 <Badge
-                  variant="destructive"
+                  variant="pending"
                   className="ml-auto h-5 w-5 flex items-center justify-center p-0 text-xs"
                 >
                   {item.badge}
@@ -253,7 +253,7 @@ export default function DashboardLayout() {
             {user?.role === "admin" &&
               pendingRequestsCount > 0 &&
               activeTab !== "seller-requests" && (
-                <Badge variant="destructive" className="text-xs">
+                <Badge variant="pending" className="text-xs">
                   {pendingRequestsCount} pending request
                   {pendingRequestsCount !== 1 ? "s" : ""}
                 </Badge>
