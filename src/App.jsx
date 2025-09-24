@@ -80,7 +80,7 @@ const App = () => {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/profile" element={<ProfileSection />} />
                 <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/loginPage" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<SignupPage />} />
                 <Route path="/become-seller" element={<SellerRequestForm />} />
                 <Route path="/messages" element={<CustomerCareChat />} />
