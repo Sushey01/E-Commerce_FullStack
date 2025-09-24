@@ -44,7 +44,7 @@ export default function PendingSellerDashboard() {
               </p>
             </div>
             <Badge
-              variant="outline"
+              variant="pending"
               className="border-orange-300 text-orange-700"
             >
               Pending Approval

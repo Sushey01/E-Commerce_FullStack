@@ -30,7 +30,16 @@ const LoginMob = () => {
         });
 
       if (authError) {
-        setError(authError.message);
+        // Provide more user-friendly error messages
+        if (authError.message.includes("Email not confirmed")) {
+          setError(
+            "Please check your email and click the confirmation link before logging in."
+          );
+        } else if (authError.message.includes("Invalid login credentials")) {
+          setError("Invalid email or password. Please check your credentials.");
+        } else {
+          setError(authError.message);
+        }
         return;
       }
 
@@ -165,7 +174,10 @@ const LoginMob = () => {
         <p className="text-gray-100">{loading ? "Signing in..." : "Sign in"}</p>
       </button>
 
-      <button className="flex gap-1 justify-center">
+      <button
+        onClick={() => navigate("/register")}
+        className="flex gap-1 justify-center hover:underline"
+      >
         <p>No account?</p>
         <p className="text-blue-600 text-base">Sign up</p>
       </button>
