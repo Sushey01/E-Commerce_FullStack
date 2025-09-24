@@ -21,6 +21,7 @@ import {
   XCircle,
   Clock,
 } from "lucide-react";
+import supabase from "../../supabase";
 
 // Types
 type Product = {
@@ -39,6 +40,8 @@ const useProducts = () => ({
 });
 
 const useAuth = () => ({
+
+
   getSellerRequests: () =>
     [
       {

@@ -1,5 +1,4 @@
 import type React from "react";
-import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import {
@@ -15,12 +14,65 @@ import {
 } from "lucide-react";
 import AdminDashboard from "./AdminDashboard";
 
-// Placeholder hooks and components
-const useAuth = () => ({
-  user: { name: "Admin User", role: "admin" as "admin" | "seller" },
-  logout: () => console.log("Logout"),
-  getSellerRequests: () => [] as any[],
-});
+// Real Supabase authentication hook
+import { useEffect, useState } from "react";
+import supabase from "../../supabase";
+
+const useAuth = () => {
+  const [user, setUser] = useState<{
+    name: string;
+    role: "admin" | "seller" | "customer";
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const {
+          data: { user: authUser },
+          error,
+        } = await supabase.auth.getUser();
+
+        if (error || !authUser) {
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        // Get user profile with role
+        const { data: profile } = await supabase
+          .from("users")
+          .select("role, full_name")
+          .eq("id", authUser.id)
+          .single();
+
+        if (profile) {
+          setUser({
+            name: profile.full_name || authUser.email || "User",
+            role: profile.role || "customer",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUser();
+  }, []);
+
+  return {
+    user,
+    loading,
+    logout: async () => {
+      await supabase.auth.signOut();
+      setUser(null);
+    },
+    getSellerRequests: () => [] as any[],
+  };
+};
 
 const useCanAccess = () => ({
   canViewAllSellers: true,
@@ -53,10 +105,28 @@ interface NavItem {
 }
 
 export default function DashboardLayout() {
-  const { user, logout, getSellerRequests } = useAuth();
+  const { user, loading, logout, getSellerRequests } = useAuth();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const canAccess = useCanAccess();
+
+  // Show loading screen while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    window.location.href = "/loginPage";
+    return null;
+  }
 
   const pendingRequestsCount =
     user?.role === "admin" ? getSellerRequests().length : 0;

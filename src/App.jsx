@@ -35,6 +35,8 @@ import SubsubcategoryPage from "./category/SubsubCategories";
 import AdminDashboard from "./AdminSeller/admin/AdminDashboard";
 import AnalyticsCharts from "./AdminSeller/admin/Analytic-Charts";
 import DashboardLayout from "./AdminSeller/admin/Dashboard-Layout";
+import AdminRoutes from "./AdminSeller/admin/AdminRoutes";
+import RoleBasedRedirect from "./AdminSeller/admin/RoleBasedRedirect";
 import SellerDashboard from "./AdminSeller/seller/SellerDashboard";
 import SellerRequestForm from "./AdminSeller/seller/Seller-Request-Form";
 import HomePage from "./AdminSeller/app/Page";
@@ -43,61 +45,75 @@ import SignupPage from "./components/SignupPage";
 const App = () => {
   return (
     <Router>
-      <main className="max-w-[1400px] mx-auto w-full">
-        <Navbar />
+      <Routes>
+        {/* Admin Dashboard Routes - Completely separate UI */}
+        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="/role-layout" element={<RoleBasedRedirect />} />
 
-        <Routes>
-          {/* Homepage */}
-          <Route
-            path="/"
-            element={
-              <>
-                <div className="px-0 lg:px-6">
-                  <HeroSection />
-                  {/* <CategoryPage /> */}
-                  <CategorySliderDynamic />
-                  <DynamicPageSlider />
-                  <BlackFridaySales />
-                  <NewProduct />
-                  <FlashSaleContainer />
-                </div>
-              </>
-            }
-          />
+        {/* Customer UI Routes - With Navbar and Footer */}
+        <Route
+          path="/*"
+          element={
+            <main className="max-w-[1400px] mx-auto w-full">
+              <Navbar />
 
-          {/* Cart, Profile, Wishlist */}
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/profile" element={<ProfileSection />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/loginPage" element={<LoginPage />} />
-          <Route path="/register" element={<SignupPage />} />
-          <Route path="/become-seller" element={<SellerRequestForm />} />
-          <Route path="/messages" element={<CustomerCareChat />} />
-          <Route path="order" element={<OrderPage />} />
-          <Route path="payment" element={<CheckoutPayment />} />
-          <Route path="invoice" element={<Invoice />} />
-          <Route path="success" element={<OrderSuccessDetail />} />
+              <Routes>
+                {/* Homepage */}
+                <Route
+                  path="/"
+                  element={
+                    <>
+                      <div className="px-0 lg:px-6">
+                        <HeroSection />
+                        {/* <CategoryPage /> */}
+                        <CategorySliderDynamic />
+                        <DynamicPageSlider />
+                        <BlackFridaySales />
+                        <NewProduct />
+                        <FlashSaleContainer />
+                      </div>
+                    </>
+                  }
+                />
 
-          {/* Product Detail */}
-          <Route path="/products/:id" element={<ProductDetail />} />
+                {/* Cart, Profile, Wishlist */}
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/profile" element={<ProfileSection />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/loginPage" element={<LoginPage />} />
+                <Route path="/register" element={<SignupPage />} />
+                <Route path="/become-seller" element={<SellerRequestForm />} />
+                <Route path="/messages" element={<CustomerCareChat />} />
+                <Route path="order" element={<OrderPage />} />
+                <Route path="payment" element={<CheckoutPayment />} />
+                <Route path="invoice" element={<Invoice />} />
+                <Route path="success" element={<OrderSuccessDetail />} />
 
-          {/* Category  */}
-          <Route path="/subcategory" element={<SubCategories />} />
-          <Route path="/subsubcategory" element={<SubsubcategoryPage />} />
-          {/* <Route path="/subsubcategory" element={<SubsubcategoryPage />} /> */}
+                {/* Product Detail */}
+                <Route path="/products/:id" element={<ProductDetail />} />
 
-          {/* Checkout */}
-          <Route path="/checkout" element={<CheckoutPage />} />
+                {/* Category  */}
+                <Route path="/subcategory" element={<SubCategories />} />
+                <Route
+                  path="/subsubcategory"
+                  element={<SubsubcategoryPage />}
+                />
 
-          {/* Product Listing Pages (nested) */}
-          <Route path="/products" element={<ProductLayout />}>
-            <Route index element={<HomeProduct />} />
-            <Route path=":id" element={<ProductDetail />} />
-          </Route>
-        </Routes>
+                {/* Checkout */}
+                <Route path="/checkout" element={<CheckoutPage />} />
 
-        <Footer />
-      </main>
+                {/* Product Listing Pages (nested) */}
+                <Route path="/products" element={<ProductLayout />}>
+                  <Route index element={<HomeProduct />} />
+                  <Route path=":id" element={<ProductDetail />} />
+                </Route>
+              </Routes>
+
+              <Footer />
+            </main>
+          }
+        />
+      </Routes>
     </Router>
     //  <Router>
     //     {/* <AdminDashboard/> */}

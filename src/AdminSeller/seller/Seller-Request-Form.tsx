@@ -32,7 +32,8 @@ const useAuth = () => ({
       if (userError || !user)
         throw new Error("Please login first to submit a seller request");
 
-      const { error } = await supabase.from("seller_requests").insert({
+      // Step 1: Insert seller request with auto-approved status
+      const { error: requestError } = await supabase.from("seller_requests").insert({
         user_id: user.id,
         email: formData.email,
         name: formData.name,
@@ -40,11 +41,29 @@ const useAuth = () => ({
         business_type: formData.businessType,
         description: formData.description,
         phone: formData.phone,
-        status: "pending",
+        status: "approved", // Auto-approve for testing
         request_date: new Date().toISOString(),
+        approved_date: new Date().toISOString(), // Set approval date
       });
 
-      if (error) throw error;
+      if (requestError) throw requestError;
+
+      // Step 2: Update user role to "seller" in users table
+      const { error: roleError } = await supabase
+        .from("users")
+        .update({ 
+          role: "seller",
+          business_name: formData.businessName,
+          business_type: formData.businessType,
+          phone: formData.phone
+        })
+        .eq("id", user.id);
+
+      if (roleError) {
+        console.error("Error updating user role:", roleError);
+        // Don't throw error here, just log it
+      }
+
       return true;
     } catch (error) {
       console.error("Request submission error:", error);
@@ -236,9 +255,9 @@ export default function SellerRequestForm() {
       await requestSellerAccess(formData);
 
       toast({
-        title: "Request Submitted Successfully!",
+        title: "Seller Account Approved!",
         description:
-          "Your seller request has been submitted and is awaiting admin approval. You will be notified via email once reviewed.",
+          "Congratulations! Your seller account has been automatically approved. You can now access the seller dashboard to manage your products.",
       });
 
       // Reset only non-prefilled fields after successful submission
