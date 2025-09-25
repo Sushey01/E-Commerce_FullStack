@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -13,7 +13,9 @@ import { Label } from "../admin/ui/label";
 import { Textarea } from "../admin/ui/textarea";
 import { Package, DollarSign, TrendingUp, Plus } from "lucide-react";
 
-// Placeholder types and hooks
+import supabase from "../../supabase";
+
+// Product type
 type Product = {
   id: string;
   name: string;
@@ -24,14 +26,77 @@ type Product = {
   stock: number;
 };
 
-const useAuth = () => ({
-  user: { id: "seller123", name: "John Seller", email: "seller@example.com" },
-});
+// Real auth hook using Supabase
+const useAuth = () => {
+  const [user, setUser] = useState<any>(null);
 
-const useProducts = () => ({
-  products: [] as Product[],
-  getProductsBySeller: (sellerId: string) => [] as Product[],
-});
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+      if (authUser) {
+        const { data: profile } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", authUser.id)
+          .single();
+
+        setUser({
+          id: authUser.id,
+          name: profile?.full_name || authUser.email,
+          email: authUser.email,
+          ...profile,
+        });
+      }
+    };
+    getUser();
+  }, []);
+
+  return { user };
+};
+
+// Sample products for testing
+const sampleProducts: Product[] = [
+  {
+    id: "1",
+    name: "Wireless Bluetooth Headphones",
+    price: 99.99,
+    category: "Electronics",
+    description: "High-quality wireless headphones",
+    sellerId: "seller123",
+    stock: 15,
+  },
+  {
+    id: "2",
+    name: "Smartphone Case",
+    price: 24.99,
+    category: "Accessories",
+    description: "Protective smartphone case",
+    sellerId: "seller123",
+    stock: 5,
+  },
+  {
+    id: "3",
+    name: "USB-C Cable",
+    price: 12.99,
+    category: "Electronics",
+    description: "Fast charging USB-C cable",
+    sellerId: "seller123",
+    stock: 0,
+  },
+];
+
+// Products hook (with sample data for now)
+const useProducts = () => {
+  const [products, setProducts] = useState<Product[]>(sampleProducts);
+
+  const getProductsBySeller = (sellerId: string) => {
+    return products.filter((product) => product.sellerId === sellerId);
+  };
+
+  return { products, getProductsBySeller };
+};
 
 const ProductList = ({
   products,
@@ -43,7 +108,90 @@ const ProductList = ({
   showSellerColumn?: boolean;
   onEdit?: (product: Product) => void;
   onView?: (product: Product) => void;
-}) => <div>Product List Component</div>;
+}) => (
+  <Card>
+    <CardContent className="p-0">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="border-b border-border">
+            <tr>
+              <th className="text-left p-4 font-medium text-card-foreground">
+                Name
+              </th>
+              <th className="text-left p-4 font-medium text-card-foreground">
+                Price
+              </th>
+              <th className="text-left p-4 font-medium text-card-foreground">
+                Category
+              </th>
+              <th className="text-left p-4 font-medium text-card-foreground">
+                Stock
+              </th>
+              <th className="text-left p-4 font-medium text-card-foreground">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="p-8 text-center text-muted-foreground"
+                >
+                  No products found. Add your first product to get started.
+                </td>
+              </tr>
+            ) : (
+              products.map((product) => (
+                <tr key={product.id} className="border-b border-border">
+                  <td className="p-4 text-card-foreground">{product.name}</td>
+                  <td className="p-4 text-card-foreground">${product.price}</td>
+                  <td className="p-4 text-card-foreground">
+                    {product.category}
+                  </td>
+                  <td className="p-4">
+                    <Badge
+                      variant={
+                        product.stock === 0
+                          ? "outOfStock"
+                          : product.stock <= 10
+                          ? "pending"
+                          : "default"
+                      }
+                    >
+                      {product.stock === 0
+                        ? "Out of stock"
+                        : `${product.stock} in stock`}
+                    </Badge>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onView?.(product)}
+                      >
+                        View
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEdit?.(product)}
+                      >
+                        Edit
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 const ProductForm = ({
   product,
@@ -53,10 +201,113 @@ const ProductForm = ({
   product?: Product;
   onClose: () => void;
   onSuccess: () => void;
-}) => <div>Product Form Component</div>;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{product ? "Edit Product" : "Add New Product"}</CardTitle>
+      <CardDescription>
+        {product
+          ? "Update product information"
+          : "Fill in the details for your new product"}
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="productName">Product Name</Label>
+          <Input
+            id="productName"
+            placeholder="Enter product name"
+            defaultValue={product?.name}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="productPrice">Price</Label>
+          <Input
+            id="productPrice"
+            type="number"
+            placeholder="0.00"
+            defaultValue={product?.price}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="productCategory">Category</Label>
+          <Input
+            id="productCategory"
+            placeholder="Enter category"
+            defaultValue={product?.category}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="productStock">Stock Quantity</Label>
+          <Input
+            id="productStock"
+            type="number"
+            placeholder="0"
+            defaultValue={product?.stock}
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="productDescription">Description</Label>
+        <Textarea
+          id="productDescription"
+          placeholder="Enter product description"
+          rows={3}
+          defaultValue={product?.description}
+        />
+      </div>
+      <div className="flex gap-2 justify-end">
+        <Button variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button onClick={onSuccess}>
+          {product ? "Update Product" : "Add Product"}
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 const AnalyticsCharts = ({ userRole }: { userRole?: string }) => (
-  <div>Analytics Charts Component</div>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <Card>
+      <CardHeader>
+        <CardTitle>Sales Trend</CardTitle>
+        <CardDescription>Your sales performance over time</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="h-64 flex items-center justify-center bg-muted rounded-lg">
+          <p className="text-muted-foreground">Sales Chart Placeholder</p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>Top Products</CardTitle>
+        <CardDescription>Your best selling products</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium">Wireless Headphones</span>
+            <span className="text-sm text-muted-foreground">24 sold</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium">Smartphone Case</span>
+            <span className="text-sm text-muted-foreground">18 sold</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium">USB-C Cable</span>
+            <span className="text-sm text-muted-foreground">15 sold</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
 );
 
 // Mock data for seller dashboard

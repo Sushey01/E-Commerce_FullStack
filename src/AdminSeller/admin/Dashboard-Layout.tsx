@@ -13,6 +13,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import AdminDashboard from "./AdminDashboard";
+import SellerDashboard from "../seller/SellerDashboard";
 
 // Real Supabase authentication hook
 import { useEffect, useState } from "react";
@@ -83,10 +84,6 @@ const useCanAccess = () => ({
   canViewOwnSales: true,
   canEditProfile: true,
 });
-
-const SellerDashboard = ({ activeTab }: { activeTab: string }) => (
-  <div>Seller Dashboard - {activeTab}</div>
-);
 
 const ProtectedRoute = ({
   children,
