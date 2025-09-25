@@ -37,8 +37,7 @@ import AnalyticsCharts from "./AdminSeller/admin/Analytic-Charts";
 import DashboardLayout from "./AdminSeller/admin/Dashboard-Layout";
 import AdminRoutes from "./AdminSeller/admin/AdminRoutes";
 import RoleBasedRedirect from "./AdminSeller/admin/RoleBasedRedirect";
-import SellerDashboard from "./AdminSeller/seller/SellerDashboard";
-import SellerRequestForm from "./AdminSeller/seller/Seller-Request-Form";
+import SellerForm from "./AdminSeller/seller/SellerForm";
 import HomePage from "./AdminSeller/app/Page";
 import SignupPage from "./components/SignupPage";
 
@@ -49,6 +48,9 @@ const App = () => {
         {/* Admin Dashboard Routes - Completely separate UI */}
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/role-layout" element={<RoleBasedRedirect />} />
+
+        {/* Seller Dashboard Route - Uses unified DashboardLayout */}
+        <Route path="/seller/dashboard" element={<DashboardLayout />} />
 
         {/* Customer UI Routes - With Navbar and Footer */}
         <Route
@@ -80,9 +82,9 @@ const App = () => {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/profile" element={<ProfileSection />} />
                 <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/loginPage" element={<LoginPage />} />
                 <Route path="/register" element={<SignupPage />} />
-                <Route path="/become-seller" element={<SellerRequestForm />} />
+                <Route path="/become-seller" element={<SellerForm />} />
                 <Route path="/messages" element={<CustomerCareChat />} />
                 <Route path="order" element={<OrderPage />} />
                 <Route path="payment" element={<CheckoutPayment />} />

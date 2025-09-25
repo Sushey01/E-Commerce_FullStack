@@ -270,6 +270,13 @@ const SignupPage = () => {
                 "Create Account"
               )}
             </button>
+            <div className="w-full text-center mt-3">
+              <button onClick={()=>{
+                navigate("/become-seller");
+              }} className="text-indigo-600 justify-end hover:text-indigo-500">
+                Become a seller
+              </button>
+            </div>
           </div>
 
           <div className="text-center space-y-2">

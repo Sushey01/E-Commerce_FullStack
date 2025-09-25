@@ -3,12 +3,14 @@ import Google from "../assets/images/google.png";
 import supabase from "../supabase";
 import Facebook from "../assets/images/facebook.png";
 import { MdEmail } from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import LoginBg from "../assets/images/loginbg.jpg";
 import { useNavigate } from "react-router-dom";
 
 const LoginMob = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -141,15 +143,29 @@ const LoginMob = () => {
 
       <div className="flex flex-col gap-1 mt-4">
         <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-          placeholder="*******"
-          className="border rounded px-2 py-1"
-          disabled={loading}
-        />
+        <div className="relative">
+          <input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            placeholder="*******"
+            className="border rounded px-2 py-1 pr-10 w-full"
+            disabled={loading}
+          />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            onClick={() => setShowPassword(!showPassword)}
+            disabled={loading}
+          >
+            {showPassword ? (
+              <AiOutlineEyeInvisible className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            ) : (
+              <AiOutlineEye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            )}
+          </button>
+        </div>
       </div>
       <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-3">
         <input type="checkbox" />
