@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -11,29 +11,97 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Eye, Edit, Trash2, Search } from "lucide-react";
+import supabase from "../../supabase";
 
-// Placeholder types and hooks
+// Product type matching your database schema
 type Product = {
   id: string;
-  name: string;
-  price: number;
-  stock: number;
-  category: string;
+  category_id: string;
+  subcategory_id: string;
+  subsubcategory_id: string;
+  title: string;
+  subtitle: string | null;
   description: string;
-  sellerId: string;
-  sellerName: string;
+  price: string;
+  old_price: string;
+  rating: string;
+  reviews: number;
+  images: string;
+  variant: string;
+  outofstock: boolean;
+  created_at: string;
+  updated_at: string;
+  brand_id: number;
 };
 
-const useProducts = () => ({
-  products: [] as Product[],
-  deleteProduct: (id: string) => {
-    console.log("Deleting product:", id);
-  },
-});
+const useProducts = () => {
+  const [products, setProducts] = useState<Product[]>([]);
 
-const useAuth = () => ({
-  user: { id: "user123", role: "admin" as "admin" | "seller" },
-});
+  const loadProducts = async () => {
+    try {
+      console.log("Loading products from database...");
+      const { data, error } = await supabase.from("products").select("*");
+
+      if (error) {
+        console.error("Error loading products:", error);
+        return;
+      }
+
+      console.log("Products loaded:", data);
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error loading products:", error);
+    }
+  };
+
+  const deleteProduct = async (id: string) => {
+    try {
+      const { error } = await supabase.from("products").delete().eq("id", id);
+
+      if (error) {
+        console.error("Error deleting product:", error);
+        alert(`Error deleting product: ${error.message}`);
+        return;
+      }
+
+      // Refresh products list
+      loadProducts();
+      alert("Product deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Failed to delete product");
+    }
+  };
+
+  return { products, deleteProduct, loadProducts };
+};
+
+const useAuth = () => {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+      if (authUser) {
+        const { data: profile } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", authUser.id)
+          .single();
+
+        setUser({
+          ...authUser,
+          role: profile?.role || "admin",
+        });
+      }
+    };
+    getUser();
+  }, []);
+
+  return { user };
+};
 
 interface ProductListProps {
   products?: Product[];
@@ -49,56 +117,58 @@ export default function ProductList({
   showSellerColumn = false,
 }: ProductListProps) {
   const { user } = useAuth();
-  const { deleteProduct } = useProducts();
-  const products = propProducts || [];
+  const { products: hookProducts, deleteProduct, loadProducts } = useProducts();
+  const products = propProducts || hookProducts;
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [stockFilter, setStockFilter] = useState("all");
 
-  // Filter products based on user role
-  const filteredProducts = products
-    .filter((product) => {
-      // If seller, only show their products
-      if (user?.role === "seller" && product.sellerId !== user.id) {
-        return false;
-      }
-      return true;
-    })
-    .filter((product) => {
-      // Search filter
-      if (
-        searchTerm &&
-        !product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ) {
-        return false;
-      }
+  // Load products on component mount if no products provided via props
+  useEffect(() => {
+    if (!propProducts) {
+      loadProducts();
+    }
+  }, [propProducts]);
 
-      // Category filter
-      if (categoryFilter !== "all" && product.category !== categoryFilter) {
-        return false;
-      }
+  // Filter products based on search and filters
+  const filteredProducts = products.filter((product) => {
+    // Search filter - search in title and description
+    if (
+      searchTerm &&
+      !product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !product.description.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return false;
+    }
 
-      // Stock filter
-      if (stockFilter === "in-stock" && product.stock === 0) {
-        return false;
-      }
-      if (stockFilter === "out-of-stock" && product.stock > 0) {
-        return false;
-      }
-      if (stockFilter === "low-stock" && product.stock > 10) {
-        return false;
-      }
+    // Category filter - using category_id for now
+    if (
+      categoryFilter !== "all" &&
+      !product.category_id.includes(categoryFilter)
+    ) {
+      return false;
+    }
 
-      return true;
-    });
+    // Stock filter
+    if (stockFilter === "in-stock" && product.outofstock) {
+      return false;
+    }
+    if (stockFilter === "out-of-stock" && !product.outofstock) {
+      return false;
+    }
+
+    return true;
+  });
 
   const handleDelete = (product: Product) => {
-    if (window.confirm(`Are you sure you want to delete "${product.name}"?`)) {
+    if (window.confirm(`Are you sure you want to delete "${product.title}"?`)) {
       deleteProduct(product.id);
     }
   };
 
-  const categories = Array.from(new Set(products.map((p) => p.category)));
+  const categories = Array.from(
+    new Set(products.map((p) => p.category_id.substring(0, 8)))
+  );
 
   return (
     <div className="space-y-6">
@@ -137,7 +207,6 @@ export default function ProductList({
               <SelectContent>
                 <SelectItem value="all">All Stock Levels</SelectItem>
                 <SelectItem value="in-stock">In Stock</SelectItem>
-                <SelectItem value="low-stock">Low Stock (≤10)</SelectItem>
                 <SelectItem value="out-of-stock">Out of Stock</SelectItem>
               </SelectContent>
             </Select>
@@ -185,40 +254,41 @@ export default function ProductList({
                     <td className="p-4">
                       <div>
                         <p className="font-medium text-card-foreground">
-                          {product.name}
+                          {product.title}
                         </p>
+                        {product.subtitle && (
+                          <p className="text-xs text-muted-foreground">
+                            {product.subtitle}
+                          </p>
+                        )}
                         <p className="text-sm text-muted-foreground line-clamp-1">
                           {product.description}
                         </p>
                       </div>
                     </td>
                     {showSellerColumn && (
-                      <td className="p-4 text-muted-foreground">
-                        {product.sellerName}
-                      </td>
+                      <td className="p-4 text-muted-foreground">N/A</td>
                     )}
                     <td className="p-4 text-card-foreground">
-                      ${product.price.toFixed(2)}
+                      ${parseFloat(product.price).toFixed(2)}
+                      {product.old_price &&
+                        parseFloat(product.old_price) > 0 && (
+                          <span className="text-xs text-muted-foreground ml-2 line-through">
+                            ${parseFloat(product.old_price).toFixed(2)}
+                          </span>
+                        )}
                     </td>
                     <td className="p-4">
                       <Badge
                         variant={
-                          product.stock === 0
-                            ? "destructive"
-                            : product.stock <= 10
-                            ? "secondary"
-                            : "default"
+                          product.outofstock ? "outOfStock" : "completed"
                         }
                       >
-                        {product.stock === 0
-                          ? "Out of stock"
-                          : product.stock <= 10
-                          ? `${product.stock} left`
-                          : product.stock}
+                        {product.outofstock ? "Out of stock" : "In stock"}
                       </Badge>
                     </td>
                     <td className="p-4 text-card-foreground">
-                      {product.category}
+                      {product.category_id.substring(0, 8)}...
                     </td>
                     <td className="p-4">
                       <div className="flex space-x-2">
@@ -231,28 +301,23 @@ export default function ProductList({
                             <Eye className="h-4 w-4" />
                           </Button>
                         )}
-                        {onEdit &&
-                          (user?.role === "admin" ||
-                            product.sellerId === user?.id) && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => onEdit(product)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          )}
-                        {(user?.role === "admin" ||
-                          product.sellerId === user?.id) && (
+                        {onEdit && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDelete(product)}
-                            className="text-destructive hover:text-destructive"
+                            onClick={() => onEdit(product)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Edit className="h-4 w-4" />
                           </Button>
                         )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(product)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
                     </td>
                   </tr>

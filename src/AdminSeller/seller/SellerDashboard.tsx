@@ -11,19 +11,31 @@ import { Badge } from "../admin/ui/badge";
 import { Input } from "../admin/ui/input";
 import { Label } from "../admin/ui/label";
 import { Textarea } from "../admin/ui/textarea";
-import { Package, DollarSign, TrendingUp, Plus } from "lucide-react";
 
+import { Package, DollarSign, TrendingUp, Plus } from "lucide-react";
+import ProductForm from "./components/Product-Form";
+import ProductList from "./components/ProductList";
 import supabase from "../../supabase";
 
-// Product type
+// Product type matching your database schema
 type Product = {
   id: string;
-  name: string;
-  price: number;
-  category: string;
+  category_id: string;
+  subcategory_id: string;
+  subsubcategory_id: string;
+  title: string;
+  subtitle: string | null;
   description: string;
-  sellerId: string;
-  stock: number;
+  price: string;
+  old_price: string;
+  rating: string;
+  reviews: number;
+  images: string;
+  variant: string;
+  outofstock: boolean;
+  created_at: string;
+  updated_at: string;
+  brand_id: number;
 };
 
 // Real auth hook using Supabase
@@ -56,220 +68,36 @@ const useAuth = () => {
   return { user };
 };
 
-// Sample products for testing
-const sampleProducts: Product[] = [
-  {
-    id: "1",
-    name: "Wireless Bluetooth Headphones",
-    price: 99.99,
-    category: "Electronics",
-    description: "High-quality wireless headphones",
-    sellerId: "seller123",
-    stock: 15,
-  },
-  {
-    id: "2",
-    name: "Smartphone Case",
-    price: 24.99,
-    category: "Accessories",
-    description: "Protective smartphone case",
-    sellerId: "seller123",
-    stock: 5,
-  },
-  {
-    id: "3",
-    name: "USB-C Cable",
-    price: 12.99,
-    category: "Electronics",
-    description: "Fast charging USB-C cable",
-    sellerId: "seller123",
-    stock: 0,
-  },
-];
+// Sample products - start with empty array, will load from database
+const sampleProducts: Product[] = [];
 
-// Products hook (with sample data for now)
+// Products hook with database loading
 const useProducts = () => {
   const [products, setProducts] = useState<Product[]>(sampleProducts);
 
-  const getProductsBySeller = (sellerId: string) => {
-    return products.filter((product) => product.sellerId === sellerId);
+  const loadProducts = async () => {
+    try {
+      const { data, error } = await supabase.from("products").select("*");
+
+      if (error) {
+        console.error("Error loading products:", error);
+        return;
+      }
+
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error loading products:", error);
+    }
   };
 
-  return { products, getProductsBySeller };
+  const getProductsBySeller = (sellerId: string) => {
+    return products; // Return all products for now since we don't have seller relationship
+  };
+
+  return { products, getProductsBySeller, loadProducts };
 };
 
-const ProductList = ({
-  products,
-  showSellerColumn,
-  onEdit,
-  onView,
-}: {
-  products: Product[];
-  showSellerColumn?: boolean;
-  onEdit?: (product: Product) => void;
-  onView?: (product: Product) => void;
-}) => (
-  <Card>
-    <CardContent className="p-0">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="border-b border-border">
-            <tr>
-              <th className="text-left p-4 font-medium text-card-foreground">
-                Name
-              </th>
-              <th className="text-left p-4 font-medium text-card-foreground">
-                Price
-              </th>
-              <th className="text-left p-4 font-medium text-card-foreground">
-                Category
-              </th>
-              <th className="text-left p-4 font-medium text-card-foreground">
-                Stock
-              </th>
-              <th className="text-left p-4 font-medium text-card-foreground">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={5}
-                  className="p-8 text-center text-muted-foreground"
-                >
-                  No products found. Add your first product to get started.
-                </td>
-              </tr>
-            ) : (
-              products.map((product) => (
-                <tr key={product.id} className="border-b border-border">
-                  <td className="p-4 text-card-foreground">{product.name}</td>
-                  <td className="p-4 text-card-foreground">${product.price}</td>
-                  <td className="p-4 text-card-foreground">
-                    {product.category}
-                  </td>
-                  <td className="p-4">
-                    <Badge
-                      variant={
-                        product.stock === 0
-                          ? "outOfStock"
-                          : product.stock <= 10
-                          ? "pending"
-                          : "default"
-                      }
-                    >
-                      {product.stock === 0
-                        ? "Out of stock"
-                        : `${product.stock} in stock`}
-                    </Badge>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onView?.(product)}
-                      >
-                        View
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onEdit?.(product)}
-                      >
-                        Edit
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const ProductForm = ({
-  product,
-  onClose,
-  onSuccess,
-}: {
-  product?: Product;
-  onClose: () => void;
-  onSuccess: () => void;
-}) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>{product ? "Edit Product" : "Add New Product"}</CardTitle>
-      <CardDescription>
-        {product
-          ? "Update product information"
-          : "Fill in the details for your new product"}
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="productName">Product Name</Label>
-          <Input
-            id="productName"
-            placeholder="Enter product name"
-            defaultValue={product?.name}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="productPrice">Price</Label>
-          <Input
-            id="productPrice"
-            type="number"
-            placeholder="0.00"
-            defaultValue={product?.price}
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="productCategory">Category</Label>
-          <Input
-            id="productCategory"
-            placeholder="Enter category"
-            defaultValue={product?.category}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="productStock">Stock Quantity</Label>
-          <Input
-            id="productStock"
-            type="number"
-            placeholder="0"
-            defaultValue={product?.stock}
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="productDescription">Description</Label>
-        <Textarea
-          id="productDescription"
-          placeholder="Enter product description"
-          rows={3}
-          defaultValue={product?.description}
-        />
-      </div>
-      <div className="flex gap-2 justify-end">
-        <Button variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button onClick={onSuccess}>
-          {product ? "Update Product" : "Add Product"}
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
-);
+// ProductList component moved to separate file
 
 const AnalyticsCharts = ({ userRole }: { userRole?: string }) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -352,9 +180,14 @@ interface SellerDashboardProps {
 
 export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const { user } = useAuth();
-  const { products, getProductsBySeller } = useProducts();
+  const { products, getProductsBySeller, loadProducts } = useProducts();
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+
+  // Load products on component mount
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   const sellerProducts = getProductsBySeller(user?.id || "");
   const totalProducts = sellerProducts.length;
@@ -367,6 +200,30 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
     console.log("Adding product:", editingProduct);
     setShowProductForm(false);
     setEditingProduct(undefined);
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        const { error } = await supabase
+          .from("products")
+          .delete()
+          .eq("id", productId);
+
+        if (error) {
+          console.error("Error deleting product:", error);
+          alert("Failed to delete product. Please try again.");
+          return;
+        }
+
+        // Reload products after successful deletion
+        loadProducts();
+        console.log("Product deleted successfully");
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert("Failed to delete product. Please try again.");
+      }
+    }
   };
 
   const renderDashboard = () => (
@@ -471,7 +328,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
           <CardContent>
             <div className="space-y-4">
               {sellerProducts
-                .filter((product) => product.stock <= 10)
+                .filter((product) => product.outofstock)
                 .map((product) => (
                   <div
                     key={product.id}
@@ -479,19 +336,13 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                   >
                     <div>
                       <p className="font-medium text-card-foreground">
-                        {product.name}
+                        {product.title}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         ${product.price}
                       </p>
                     </div>
-                    <Badge
-                      variant={product.stock === 0 ? "outOfStock" : "default"}
-                    >
-                      {product.stock === 0
-                        ? "Out of stock"
-                        : `${product.stock} left`}
-                    </Badge>
+                    <Badge variant="outOfStock">Out of stock</Badge>
                   </div>
                 ))}
             </div>
@@ -523,6 +374,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
           onSuccess={() => {
             setShowProductForm(false);
             setEditingProduct(undefined);
+            loadProducts(); // Refresh products list
           }}
         />
       )}
@@ -532,6 +384,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
         showSellerColumn={false}
         onEdit={(product) => setEditingProduct(product)}
         onView={(product) => console.log("View product:", product)}
+        onDelete={handleDeleteProduct}
       />
     </div>
   );
