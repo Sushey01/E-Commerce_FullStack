@@ -58,8 +58,7 @@ const ProductDetail = () => {
         .select("*")
         .eq("id", id.toString()) // force string compare
         .maybeSingle(); // avoids crashing if not found
-        console.log("Fetching product for ID:", id, "=>", data);
-
+      console.log("Fetching product for ID:", id, "=>", data);
 
       if (error) {
         console.error("Error fetching product detail:", error);
@@ -104,8 +103,17 @@ const ProductDetail = () => {
         image:
           images.length > 0 ? images[0] : "https://via.placeholder.com/300",
         images,
-        variant:
-          data.variant && typeof data.variant === "object" ? data.variant : {},
+        variant: (() => {
+          if (!data.variant) return {};
+          try {
+            return typeof data.variant === "string"
+              ? JSON.parse(data.variant)
+              : data.variant;
+          } catch (e) {
+            console.error("Error parsing variant JSON:", e);
+            return {};
+          }
+        })(),
       };
 
       setProduct(mapped);
@@ -132,5 +140,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-
-

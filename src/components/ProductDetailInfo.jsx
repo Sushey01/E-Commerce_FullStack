@@ -5,7 +5,40 @@ import { addToCartlist } from "../features/cartlistSlice";
 import { formatPrice } from "../utils/formatPrice";
 import { saveCartItem } from "../supabase/carts";
 
+// Helper function to map color names to actual colors
+const getColorValue = (colorName) => {
+  const colorMap = {
+    black: "#000000",
+    white: "#ffffff",
+    red: "#ef4444",
+    blue: "#3b82f6",
+    green: "#22c55e",
+    yellow: "#eab308",
+    purple: "#a855f7",
+    pink: "#ec4899",
+    orange: "#f97316",
+    gray: "#6b7280",
+    grey: "#6b7280",
+    brown: "#92400e",
+    navy: "#1e3a8a",
+    teal: "#14b8a6",
+    lime: "#84cc16",
+    cyan: "#06b6d4",
+    rose: "#f43f5e",
+    indigo: "#6366f1",
+    violet: "#8b5cf6",
+    amber: "#f59e0b",
+    emerald: "#10b981",
+    sky: "#0ea5e9",
+    slate: "#64748b",
+  };
 
+  // If it's already a hex color, return as is
+  if (colorName.startsWith("#")) return colorName;
+
+  // Return mapped color or the original value (in case it's a valid CSS color)
+  return colorMap[colorName.toLowerCase()] || colorName.toLowerCase();
+};
 
 const ProductDetailInfo = ({ product }) => {
   const {
@@ -19,10 +52,9 @@ const ProductDetailInfo = ({ product }) => {
     defaultValues: {
       variations: {},
       quantity: 1,
-      
+
       // LocalProductID: product.id,
     },
-    
   });
   const dispatch = useDispatch();
   const quantity = watch("quantity");
@@ -75,9 +107,6 @@ const ProductDetailInfo = ({ product }) => {
       // LocalProductID:product.id ,
     };
 
-
-
-
     console.log(cartItem, "ssssssssssss");
     //1. Dispatch to Redux
     dispatch(addToCartlist(cartItem));
@@ -86,10 +115,6 @@ const ProductDetailInfo = ({ product }) => {
     await saveCartItem(cartItem); // Supabase
     // reset(defaultValues); // reset form
   };
-
-
-
-  
 
   // Handle quantity increment/decrement
   const handleQuantityChange = (delta) => {
@@ -147,47 +172,62 @@ const ProductDetailInfo = ({ product }) => {
         {/* Variants */}
         {product?.variant && Object.keys(product.variant).length > 0 && (
           <>
-            {Object.entries(product.variant).map(([key, values]) => (
-              <div className="mt-6" key={key}>
-                <p className="font-medium text-sm text-gray-700 mb-1">{key}</p>
-                <div className="flex gap-4 flex-wrap">
-                  {values.map((value) => (
-                    <label key={value} className="cursor-pointer">
-                      <input
-                        type="radio"
-                        name={key}
-                        value={value}
-                        {...register(`variations.${key}`, {
-                          required: `Please select a ${key}`,
-                        })}
-                        onChange={() => handleVariations(key, value)}
-                        defaultChecked={getDefaultVariations()[key] === value}
-                        className="hidden peer" // ✅ hide radio, but still keeps it functional
-                      />
-
-                      {key.toLowerCase() === "color" ? (
-                        // 🎨 show actual color circle
-                        <span
-                          className="w-7 h-7 rounded-full border border-gray-300 block peer-checked:ring-2 peer-checked:ring-teal-600"
-                          style={{ backgroundColor: value }}
-                        ></span>
-                      ) : (
-                        // 📝 show text for other variants
-                        <span className="px-3 py-1 border rounded text-sm peer-checked:bg-teal-600 peer-checked:text-white">
-                          {value}
-                        </span>
-                      )}
-                    </label>
-                  ))}
-                </div>
-
-                {errors[key] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors[key].message}
+            {Object.entries(product.variant)
+              .filter(
+                ([key, values]) => Array.isArray(values) && values.length > 0
+              )
+              .map(([key, values]) => (
+                <div className="mt-6" key={key}>
+                  <p className="font-medium text-sm text-gray-700 mb-1 capitalize">
+                    {key}
                   </p>
-                )}
-              </div>
-            ))}
+                  <div className="flex gap-4 flex-wrap">
+                    {values.map((value) => (
+                      <label key={value} className="cursor-pointer">
+                        <input
+                          type="radio"
+                          name={key}
+                          value={value}
+                          {...register(`variations.${key}`, {
+                            required: `Please select a ${key}`,
+                          })}
+                          onChange={() => handleVariations(key, value)}
+                          defaultChecked={getDefaultVariations()[key] === value}
+                          className="hidden peer" // ✅ hide radio, but still keeps it functional
+                        />
+
+                        {key.toLowerCase() === "color" ||
+                        key.toLowerCase() === "colors" ? (
+                          // 🎨 show actual color circle
+                          <span
+                            className="w-8 h-8 rounded-full border-2 border-gray-300 block peer-checked:ring-2 peer-checked:ring-teal-600 peer-checked:ring-offset-1 hover:scale-110 transition-transform"
+                            style={{
+                              backgroundColor: getColorValue(value),
+                              boxShadow:
+                                getColorValue(value) === "#ffffff" ||
+                                value.toLowerCase() === "white"
+                                  ? "inset 0 0 0 1px #e5e7eb"
+                                  : "none",
+                            }}
+                            title={value}
+                          ></span>
+                        ) : (
+                          // 📝 show text for other variants
+                          <span className="px-3 py-1 border rounded text-sm peer-checked:bg-teal-600 peer-checked:text-white">
+                            {value}
+                          </span>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+
+                  {errors[key] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[key].message}
+                    </p>
+                  )}
+                </div>
+              ))}
           </>
         )}
 
