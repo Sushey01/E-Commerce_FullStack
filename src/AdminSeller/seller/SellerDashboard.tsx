@@ -206,13 +206,15 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
   const [orders, setOrders] = useState<Order[]>([]);
-  const [orderProducts, setOrderProducts] = useState<{[key: string]: Product}>({});
+  const [orderProducts, setOrderProducts] = useState<{
+    [key: string]: Product;
+  }>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadDeliveredOrders = async () => {
       setLoading(true);
-      
+
       // First, fetch orders
       const { data: ordersData, error: ordersError } = await supabase
         .from("orders")
@@ -235,7 +237,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
       }
 
       // Create a map of product_id to product for easy lookup
-      const productMap: {[key: string]: Product} = {};
+      const productMap: { [key: string]: Product } = {};
       if (productsData) {
         productsData.forEach((product: Product) => {
           productMap[product.id] = product;
@@ -292,6 +294,90 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
         console.error("Error deleting product:", error);
         alert("Failed to delete product. Please try again.");
       }
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      console.log("Starting profile update...");
+
+      // Get form values with fallbacks
+      const fullName =
+        (document.getElementById("fullName") as HTMLInputElement)?.value || "";
+      const email =
+        (document.getElementById("email") as HTMLInputElement)?.value || "";
+      const phone =
+        (document.getElementById("phone") as HTMLInputElement)?.value || "";
+      const businessName =
+        (document.getElementById("businessName") as HTMLInputElement)?.value ||
+        "";
+      const businessCategory =
+        (document.getElementById("businessCategory") as HTMLInputElement)
+          ?.value || "";
+      const businessAddress =
+        (document.getElementById("businessAddress") as HTMLTextAreaElement)
+          ?.value || "";
+      const taxId =
+        (document.getElementById("taxId") as HTMLInputElement)?.value || "";
+
+      console.log("Form data:", {
+        fullName,
+        email,
+        phone,
+        businessName,
+        businessCategory,
+        businessAddress,
+        taxId,
+      });
+
+      if (!user?.id) {
+        alert("User not found. Please try logging in again.");
+        return;
+      }
+
+      console.log("User ID:", user.id);
+
+      // First, try to check if the user exists
+      const { data: existingUser, error: checkError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (checkError) {
+        console.error("Error checking user:", checkError);
+        alert(`Database error: ${checkError.message}`);
+        return;
+      }
+
+      console.log("Existing user:", existingUser);
+
+      // Update user profile in Supabase - only fields that exist in the users table
+      const updateData = {
+        full_name: fullName,
+        phone: phone,
+        updated_at: new Date().toISOString(),
+      };
+
+      console.log("Update data:", updateData);
+
+      const { data, error } = await supabase
+        .from("users")
+        .update(updateData)
+        .eq("id", user.id)
+        .select();
+
+      if (error) {
+        console.error("Error updating profile:", error);
+        alert(`Failed to update profile: ${error.message}`);
+        return;
+      }
+
+      console.log("Update successful:", data);
+      alert("Profile updated successfully!");
+    } catch (error: any) {
+      console.error("Unexpected error:", error);
+      alert(`Failed to update profile: ${error.message || "Unknown error"}`);
     }
   };
 
@@ -369,9 +455,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                     <p className="font-medium text-card-foreground">
                       {sale.product}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {sale.date}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{sale.date}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-card-foreground">
@@ -545,21 +629,52 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" placeholder="Enter phone number" />
+              <Input
+                id="phone"
+                placeholder="Enter phone number"
+                defaultValue={user?.phone}
+              />
             </div>
-            <Button>Update Profile</Button>
+            <div>
+              <Button
+                type="submit"
+                className="border float-right rounded-md bg-blue-500 hover:bg-blue-600"
+                onClick={handleUpdateProfile}
+              >
+                Update Profile
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle>Business Information</CardTitle>
-            <CardDescription>Manage your business details</CardDescription>
+            <CardDescription>Business details (Coming Soon)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="businessName">Business Name</Label>
-              <Input id="businessName" placeholder="Enter business name" />
+              <Input
+                id="businessName"
+                placeholder="Enter business name"
+                defaultValue={user?.business_name}
+                disabled
+                className="bg-gray-100"
+              />
+              <p className="text-xs text-gray-500">
+                Business features will be available soon
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="businessCategory">Business Category</Label>
+              <Input
+                id="businessCategory"
+                placeholder="Enter business category"
+                defaultValue={user?.business_category}
+                disabled
+                className="bg-gray-100"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="businessAddress">Business Address</Label>
@@ -567,13 +682,29 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                 id="businessAddress"
                 placeholder="Enter business address"
                 rows={3}
+                defaultValue={user?.business_address}
+                disabled
+                className="bg-gray-100"
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="taxId">Tax ID</Label>
-              <Input id="taxId" placeholder="Enter tax ID" />
+              <Input
+                id="taxId"
+                placeholder="Enter tax ID"
+                defaultValue={user?.tax_id}
+                disabled
+                className="bg-gray-100"
+              />
             </div>
-            <Button>Update Business Info</Button>
+            <div>
+              <Button
+                className="border float-right rounded-md bg-gray-400 cursor-not-allowed"
+                disabled
+              >
+                Business Features Coming Soon
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
