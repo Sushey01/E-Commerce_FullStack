@@ -38,6 +38,19 @@ type Product = {
   brand_id: number;
 };
 
+// Order type for orders functionality
+type Order = {
+  id: string;
+  product_id?: string;
+  product?: string;
+  quantity?: number;
+  amount?: number;
+  total?: number;
+  date?: string;
+  created_at?: string;
+  status: string;
+};
+
 // Real auth hook using Supabase
 const useAuth = () => {
   const [user, setUser] = useState<any>(null);
@@ -138,38 +151,46 @@ const AnalyticsCharts = ({ userRole }: { userRole?: string }) => (
   </div>
 );
 
-// Mock data for seller dashboard
+// Mock data for seller dashboard - realistic recent sales
 const mockSalesData = [
   {
     id: 1,
-    product: "Wireless Headphones",
-    quantity: 2,
-    amount: 199.98,
-    date: "2024-01-15",
+    product: "Wireless Bluetooth Headphones",
+    quantity: 1,
+    amount: 89.99,
+    date: "2025-10-12",
     status: "completed",
   },
   {
     id: 2,
-    product: "Bluetooth Speaker",
+    product: "Gaming Mechanical Keyboard",
     quantity: 1,
-    amount: 79.99,
-    date: "2024-01-14",
+    amount: 149.99,
+    date: "2025-10-11",
     status: "completed",
   },
   {
     id: 3,
-    product: "Phone Case",
-    quantity: 3,
-    amount: 74.97,
-    date: "2024-01-13",
+    product: "4K Webcam HD",
+    quantity: 2,
+    amount: 159.98,
+    date: "2025-10-10",
     status: "pending",
   },
   {
     id: 4,
-    product: "Charging Cable",
+    product: "USB-C Fast Charging Cable",
+    quantity: 3,
+    amount: 29.97,
+    date: "2025-10-09",
+    status: "completed",
+  },
+  {
+    id: 5,
+    product: "Wireless Mouse RGB",
     quantity: 1,
-    amount: 19.99,
-    date: "2024-01-12",
+    amount: 45.99,
+    date: "2025-10-08",
     status: "completed",
   },
 ];
@@ -184,6 +205,51 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [orderProducts, setOrderProducts] = useState<{[key: string]: Product}>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDeliveredOrders = async () => {
+      setLoading(true);
+      
+      // First, fetch orders
+      const { data: ordersData, error: ordersError } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("status", "Delivered");
+
+      if (ordersError) {
+        console.error("Error loading orders:", ordersError);
+        setLoading(false);
+        return;
+      }
+
+      // Then, fetch all products to map with orders
+      const { data: productsData, error: productsError } = await supabase
+        .from("products")
+        .select("*");
+
+      if (productsError) {
+        console.error("Error loading products:", productsError);
+      }
+
+      // Create a map of product_id to product for easy lookup
+      const productMap: {[key: string]: Product} = {};
+      if (productsData) {
+        productsData.forEach((product: Product) => {
+          productMap[product.id] = product;
+        });
+      }
+
+      setOrders(ordersData || []);
+      setOrderProducts(productMap);
+      setLoading(false);
+    };
+
+    loadDeliveredOrders();
+  }, []);
+
   // Load products on component mount
   useEffect(() => {
     loadProducts();
@@ -191,10 +257,13 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
 
   const sellerProducts = getProductsBySeller(user?.id || "");
   const totalProducts = sellerProducts.length;
-  const totalSales = mockSalesData.length;
-  const totalRevenue = mockSalesData
-    .filter((sale) => sale.status === "completed")
-    .reduce((sum, sale) => sum + sale.amount, 0);
+
+  // ✅ Real data from Supabase
+  const totalSales = orders.length;
+  const totalRevenue = orders.reduce(
+    (sum, order) => sum + Number(order.total || 0),
+    0
+  );
 
   const handleAddProduct = () => {
     console.log("Adding product:", editingProduct);
@@ -255,7 +324,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                   Total Sales
                 </p>
                 <p className="text-2xl font-bold text-card-foreground">
-                  {mockSalesData.length}
+                  {totalSales}
                 </p>
                 <p className="text-xs text-green-600">+15% from last month</p>
               </div>
@@ -272,7 +341,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                   Revenue
                 </p>
                 <p className="text-2xl font-bold text-card-foreground">
-                  ${totalRevenue.toFixed(2)}
+                  Rs{totalRevenue.toFixed(2)}
                 </p>
                 <p className="text-xs text-green-600">+23% from last month</p>
               </div>
@@ -300,7 +369,9 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                     <p className="font-medium text-card-foreground">
                       {sale.product}
                     </p>
-                    <p className="text-sm text-muted-foreground">{sale.date}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {sale.date}
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-card-foreground">
