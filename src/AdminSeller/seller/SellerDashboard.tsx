@@ -15,6 +15,11 @@ import { Textarea } from "../admin/ui/textarea";
 import { Package, DollarSign, TrendingUp, Plus } from "lucide-react";
 import ProductForm from "./components/Product-Form";
 import ProductList from "./components/ProductList";
+import {
+  useSalesData,
+  RecentSalesList,
+  SalesTable,
+} from "./components/SalesManager";
 import supabase from "../../supabase";
 
 // Product type matching your database schema
@@ -36,19 +41,6 @@ type Product = {
   created_at: string;
   updated_at: string;
   brand_id: number;
-};
-
-// Order type for orders functionality
-type Order = {
-  id: string;
-  product_id?: string;
-  product?: string;
-  quantity?: number;
-  amount?: number;
-  total?: number;
-  date?: string;
-  created_at?: string;
-  status: string;
 };
 
 // Real auth hook using Supabase
@@ -112,88 +104,228 @@ const useProducts = () => {
 
 // ProductList component moved to separate file
 
-const AnalyticsCharts = ({ userRole }: { userRole?: string }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <Card>
-      <CardHeader>
-        <CardTitle>Sales Trend</CardTitle>
-        <CardDescription>Your sales performance over time</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64 flex items-center justify-center bg-muted rounded-lg">
-          <p className="text-muted-foreground">Sales Chart Placeholder</p>
-        </div>
-      </CardContent>
-    </Card>
+// AnalyticsCharts component with real data
+const AnalyticsCharts = ({
+  userRole,
+  orders,
+  orderProducts,
+}: {
+  userRole?: string;
+  orders: any[];
+  orderProducts: { [key: string]: any };
+}) => {
+  // Generate pie chart data for product sales distribution
+  const generatePieChartData = () => {
+    const productSales: {
+      [key: string]: { name: string; count: number; revenue: number };
+    } = {};
 
-    <Card>
-      <CardHeader>
-        <CardTitle>Top Products</CardTitle>
-        <CardDescription>Your best selling products</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Wireless Headphones</span>
-            <span className="text-sm text-muted-foreground">24 sold</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Smartphone Case</span>
-            <span className="text-sm text-muted-foreground">18 sold</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">USB-C Cable</span>
-            <span className="text-sm text-muted-foreground">15 sold</span>
+    orders.forEach((order) => {
+      const productId = order.product_id;
+      const productName =
+        orderProducts[productId]?.title || `Product ${productId}`;
+      const quantity = order.quantity || 1;
+      const amount = order.amount || 0;
+
+      if (!productSales[productId]) {
+        productSales[productId] = { name: productName, count: 0, revenue: 0 };
+      }
+
+      productSales[productId].count += quantity;
+      productSales[productId].revenue += amount;
+    });
+
+    // Convert to array and sort by sales count
+    const salesArray = Object.values(productSales).sort(
+      (a, b) => b.count - a.count
+    );
+
+    // If more than 5 products, group the rest as "Others"
+    if (salesArray.length > 5) {
+      const top4 = salesArray.slice(0, 4);
+      const others = salesArray.slice(4);
+      const othersTotal = others.reduce((sum, item) => sum + item.count, 0);
+      const othersRevenue = others.reduce((sum, item) => sum + item.revenue, 0);
+
+      return [
+        ...top4,
+        { name: "Others", count: othersTotal, revenue: othersRevenue },
+      ];
+    }
+
+    return salesArray;
+  };
+
+  const pieData = generatePieChartData();
+  const totalSalesCount = pieData.reduce((sum, item) => sum + item.count, 0);
+
+  // Generate colors for pie chart
+  const colors = [
+    "#3b82f6", // blue
+    "#ef4444", // red
+    "#10b981", // green
+    "#f59e0b", // yellow
+    "#8b5cf6", // purple
+    "#6b7280", // gray for others
+  ];
+
+  // Simple Pie Chart Component
+  const SalesChart = () => {
+    if (totalSalesCount === 0) {
+      return (
+        <div className="h-64 flex items-center justify-center">
+          <p className="text-muted-foreground">No sales data available</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="h-64 p-4">
+        <div className="flex items-center justify-center h-48">
+          <div className="relative">
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 200 200"
+              className="transform -rotate-90"
+            >
+              {pieData.map((item, index) => {
+                const percentage = (item.count / totalSalesCount) * 100;
+                const angle = (percentage / 100) * 360;
+                const previousAngles = pieData
+                  .slice(0, index)
+                  .reduce(
+                    (sum, prevItem) =>
+                      sum + (prevItem.count / totalSalesCount) * 360,
+                    0
+                  );
+
+                // Calculate path for pie slice
+                const startAngle = (previousAngles * Math.PI) / 180;
+                const endAngle = ((previousAngles + angle) * Math.PI) / 180;
+
+                const largeArcFlag = angle > 180 ? 1 : 0;
+                const x1 = 100 + 80 * Math.cos(startAngle);
+                const y1 = 100 + 80 * Math.sin(startAngle);
+                const x2 = 100 + 80 * Math.cos(endAngle);
+                const y2 = 100 + 80 * Math.sin(endAngle);
+
+                const pathData = [
+                  `M 100 100`,
+                  `L ${x1} ${y1}`,
+                  `A 80 80 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                  "Z",
+                ].join(" ");
+
+                return (
+                  <path
+                    key={index}
+                    d={pathData}
+                    fill={colors[index % colors.length]}
+                    className="transition-opacity hover:opacity-80"
+                  />
+                );
+              })}
+            </svg>
+
+            {/* Center text */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-2xl font-bold">{totalSalesCount}</div>
+                <div className="text-xs text-muted-foreground">Total Sales</div>
+              </div>
+            </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
-  </div>
-);
 
-// Mock data for seller dashboard - realistic recent sales
-const mockSalesData = [
-  {
-    id: 1,
-    product: "Wireless Bluetooth Headphones",
-    quantity: 1,
-    amount: 89.99,
-    date: "2025-10-12",
-    status: "completed",
-  },
-  {
-    id: 2,
-    product: "Gaming Mechanical Keyboard",
-    quantity: 1,
-    amount: 149.99,
-    date: "2025-10-11",
-    status: "completed",
-  },
-  {
-    id: 3,
-    product: "4K Webcam HD",
-    quantity: 2,
-    amount: 159.98,
-    date: "2025-10-10",
-    status: "pending",
-  },
-  {
-    id: 4,
-    product: "USB-C Fast Charging Cable",
-    quantity: 3,
-    amount: 29.97,
-    date: "2025-10-09",
-    status: "completed",
-  },
-  {
-    id: 5,
-    product: "Wireless Mouse RGB",
-    quantity: 1,
-    amount: 45.99,
-    date: "2025-10-08",
-    status: "completed",
-  },
-];
+        {/* Legend */}
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          {pieData.map((item, index) => (
+            <div key={index} className="flex items-center gap-2 text-sm">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: colors[index % colors.length] }}
+              />
+              <span className="truncate">
+                {item.name} ({item.count})
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Calculate top products from real order data
+  const getTopProducts = () => {
+    const productSales: {
+      [key: string]: { name: string; count: number; revenue: number };
+    } = {};
+
+    orders.forEach((order) => {
+      const productId = order.product_id;
+      const productName =
+        orderProducts[productId]?.title || `Product ${productId}`;
+      const quantity = order.quantity || 1;
+      const amount = order.amount || 0;
+
+      if (!productSales[productId]) {
+        productSales[productId] = { name: productName, count: 0, revenue: 0 };
+      }
+
+      productSales[productId].count += quantity;
+      productSales[productId].revenue += amount;
+    });
+
+    // Sort by quantity sold and return top 3
+    return Object.values(productSales)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+  };
+
+  const topProducts = getTopProducts();
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Sales by Product</CardTitle>
+          <CardDescription>
+            Distribution of sales across your products
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SalesChart />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Top Products</CardTitle>
+          <CardDescription>Your best selling products</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {topProducts.length === 0 ? (
+              <div className="text-center text-muted-foreground py-4">
+                No sales data available
+              </div>
+            ) : (
+              topProducts.map((product, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-sm font-medium">{product.name}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {product.count} sold
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 interface SellerDashboardProps {
   activeTab: string;
@@ -205,52 +337,15 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [orderProducts, setOrderProducts] = useState<{
-    [key: string]: Product;
-  }>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadDeliveredOrders = async () => {
-      setLoading(true);
-
-      // First, fetch orders
-      const { data: ordersData, error: ordersError } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("status", "Delivered");
-
-      if (ordersError) {
-        console.error("Error loading orders:", ordersError);
-        setLoading(false);
-        return;
-      }
-
-      // Then, fetch all products to map with orders
-      const { data: productsData, error: productsError } = await supabase
-        .from("products")
-        .select("*");
-
-      if (productsError) {
-        console.error("Error loading products:", productsError);
-      }
-
-      // Create a map of product_id to product for easy lookup
-      const productMap: { [key: string]: Product } = {};
-      if (productsData) {
-        productsData.forEach((product: Product) => {
-          productMap[product.id] = product;
-        });
-      }
-
-      setOrders(ordersData || []);
-      setOrderProducts(productMap);
-      setLoading(false);
-    };
-
-    loadDeliveredOrders();
-  }, []);
+  // Use the SalesManager hook for all sales data (no user filtering needed)
+  const {
+    orders,
+    deliveredOrders,
+    orderProducts,
+    loading,
+    totalSales,
+    totalRevenue,
+  } = useSalesData();
 
   // Load products on component mount
   useEffect(() => {
@@ -259,13 +354,6 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
 
   const sellerProducts = getProductsBySeller(user?.id || "");
   const totalProducts = sellerProducts.length;
-
-  // ✅ Real data from Supabase
-  const totalSales = orders.length;
-  const totalRevenue = orders.reduce(
-    (sum, order) => sum + Number(order.total || 0),
-    0
-  );
 
   const handleAddProduct = () => {
     console.log("Adding product:", editingProduct);
@@ -395,7 +483,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                 <p className="text-2xl font-bold text-card-foreground">
                   {totalProducts}
                 </p>
-                <p className="text-xs text-green-600">+2 this month</p>
+                <p className="text-xs text-muted-foreground">Products listed</p>
               </div>
               <Package className="h-8 w-8 text-blue-600" />
             </div>
@@ -412,7 +500,9 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                 <p className="text-2xl font-bold text-card-foreground">
                   {totalSales}
                 </p>
-                <p className="text-xs text-green-600">+15% from last month</p>
+                <p className="text-xs text-muted-foreground">
+                  Completed orders
+                </p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-600" />
             </div>
@@ -429,7 +519,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                 <p className="text-2xl font-bold text-card-foreground">
                   Rs{totalRevenue.toFixed(2)}
                 </p>
-                <p className="text-xs text-green-600">+23% from last month</p>
+                <p className="text-xs text-muted-foreground">Total earned</p>
               </div>
               <DollarSign className="h-8 w-8 text-purple-600" />
             </div>
@@ -445,33 +535,12 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
             <CardDescription>Your latest transactions</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {mockSalesData.slice(0, 3).map((sale) => (
-                <div
-                  key={sale.id}
-                  className="flex items-center justify-between"
-                >
-                  <div>
-                    <p className="font-medium text-card-foreground">
-                      {sale.product}
-                    </p>
-                    <p className="text-sm text-muted-foreground">{sale.date}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium text-card-foreground">
-                      ${sale.amount}
-                    </p>
-                    <Badge
-                      variant={
-                        sale.status === "completed" ? "completed" : "pending"
-                      }
-                    >
-                      {sale.status}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <RecentSalesList
+              orders={orders}
+              orderProducts={orderProducts}
+              loading={loading}
+              maxItems={3}
+            />
           </CardContent>
         </Card>
 
@@ -549,7 +618,11 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
       <h3 className="text-lg font-semibold text-card-foreground">
         My Sales Analytics
       </h3>
-      <AnalyticsCharts userRole="seller" />
+      <AnalyticsCharts
+        userRole="seller"
+        orders={deliveredOrders}
+        orderProducts={orderProducts}
+      />
 
       <Card>
         <CardHeader>
@@ -557,50 +630,11 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
           <CardDescription>Your latest transactions</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-border">
-                <tr>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Product
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Quantity
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Amount
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Date
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockSalesData.map((sale) => (
-                  <tr key={sale.id} className="border-b border-border">
-                    <td className="p-4 text-card-foreground">{sale.product}</td>
-                    <td className="p-4 text-card-foreground">
-                      {sale.quantity}
-                    </td>
-                    <td className="p-4 text-card-foreground">${sale.amount}</td>
-                    <td className="p-4 text-muted-foreground">{sale.date}</td>
-                    <td className="p-4">
-                      <Badge
-                        variant={
-                          sale.status === "completed" ? "completed" : "pending"
-                        }
-                      >
-                        {sale.status}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <SalesTable
+            orders={orders}
+            orderProducts={orderProducts}
+            loading={loading}
+          />
         </CardContent>
       </Card>
     </div>
