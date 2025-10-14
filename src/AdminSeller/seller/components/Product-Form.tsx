@@ -274,7 +274,55 @@ export default function ProductForm({
         }
         productData.images = JSON.stringify(finalImageUrls);
 
-        const { error } = await supabase.from("products").insert([productData]);
+        // Helpers to link product to seller_products (schema: seller_id, product_id, price, stock)
+        const getSellerId = async (): Promise<number | null> => {
+          try {
+            const auth = await supabase.auth.getUser();
+            const uid = user?.id || auth.data?.user?.id;
+            if (!uid) return null;
+            const { data: sellerRow, error: sellerErr } = await supabase
+              .from("sellers")
+              .select("seller_id")
+              .eq("user_id", uid)
+              .single();
+            if (sellerErr) {
+              console.warn("Could not fetch seller_id:", sellerErr.message);
+              return null;
+            }
+            return sellerRow?.seller_id ?? null;
+          } catch (e) {
+            console.warn("getSellerId failed:", e);
+            return null;
+          }
+        };
+
+        const linkSellerProduct = async (newProductId?: string | null) => {
+          try {
+            if (!newProductId) return;
+            const sellerId = await getSellerId();
+            if (!sellerId) return;
+            const payload = {
+              seller_id: sellerId,
+              product_id: newProductId,
+              price: parseFloat(productData.price),
+              stock: stockQuantity,
+            } as const;
+            const { error: spErr } = await supabase
+              .from("seller_products")
+              .insert([payload]);
+            if (spErr) {
+              console.warn("seller_products insert failed:", spErr.message);
+            }
+          } catch (e) {
+            console.warn("linkSellerProduct failed:", e);
+          }
+        };
+
+        const { data: insertedProduct, error } = await supabase
+          .from("products")
+          .insert([productData])
+          .select()
+          .single();
 
         if (error) {
           // If foreign key constraint fails, try with minimal data
@@ -299,10 +347,15 @@ export default function ProductForm({
               reviews: productData.reviews,
             };
 
-            const { error: retryError } = await supabase
+            const { data: minimalInserted, error: retryError } = await supabase
               .from("products")
-              .insert([minimalProductData]);
+              .insert([minimalProductData])
+              .select()
+              .single();
             if (retryError) throw retryError;
+
+            // Link to seller_products per schema
+            await linkSellerProduct(minimalInserted?.id);
 
             alert(
               "Product added successfully! (Note: Category information was not saved due to database constraints)"
@@ -311,6 +364,8 @@ export default function ProductForm({
             throw error;
           }
         } else {
+          // Link to seller_products per schema
+          await linkSellerProduct(insertedProduct?.id);
           alert("Product added successfully!");
         }
       }
