@@ -425,7 +425,7 @@ export default function SellerForm() {
                     <SelectTrigger>
                       <SelectValue placeholder="Select your business category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-md">
                       <SelectItem value="electronics">
                         Electronics & Technology
                       </SelectItem>
