@@ -129,9 +129,67 @@ const useSellerAuth = () => ({
           );
         } else {
           console.log("Basic profile created successfully");
+          // Also create a seller record (matching schema)
+          try {
+            const sellerRow = {
+              user_id: userId,
+              company_name: formData.businessName,
+              address: formData.businessAddress || null,
+              status: "active",
+            };
+            const attemptSeller = async () =>
+              await supabase.from("sellers").insert(sellerRow).select();
+            let { error: sellerErr } = await attemptSeller();
+            if (
+              sellerErr &&
+              /users_id_fkey|foreign key|23503/i.test(sellerErr.message)
+            ) {
+              await new Promise((r) => setTimeout(r, 800));
+              ({ error: sellerErr } = await attemptSeller());
+            }
+            if (
+              sellerErr &&
+              !/duplicate key value|23505/i.test(sellerErr.message)
+            ) {
+              console.warn("Sellers insert failed:", sellerErr.message);
+            } else {
+              console.log("Seller record created or already exists");
+            }
+          } catch (e) {
+            console.warn("Sellers insert threw:", e);
+          }
         }
       } else {
         console.log("Full profile created successfully");
+        // Also create a seller record (matching schema)
+        try {
+          const sellerRow = {
+            user_id: userId,
+            company_name: formData.businessName,
+            address: formData.businessAddress || null,
+            status: "active",
+          };
+          const attemptSeller = async () =>
+            await supabase.from("sellers").insert(sellerRow).select();
+          let { error: sellerErr } = await attemptSeller();
+          if (
+            sellerErr &&
+            /users_id_fkey|foreign key|23503/i.test(sellerErr.message)
+          ) {
+            await new Promise((r) => setTimeout(r, 800));
+            ({ error: sellerErr } = await attemptSeller());
+          }
+          if (
+            sellerErr &&
+            !/duplicate key value|23505/i.test(sellerErr.message)
+          ) {
+            console.warn("Sellers insert failed:", sellerErr.message);
+          } else {
+            console.log("Seller record created or already exists");
+          }
+        } catch (e) {
+          console.warn("Sellers insert threw:", e);
+        }
       }
 
       return {

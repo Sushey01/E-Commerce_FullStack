@@ -57,6 +57,11 @@ type Product = {
   updated_at?: string;
 };
 
+type Brand = {
+  brand_id: number;
+  brand_name: string;
+};
+
 interface ProductFormProps {
   product?: Product;
   onClose: () => void;
@@ -74,42 +79,115 @@ export default function ProductForm({
   const [stockQuantity, setStockQuantity] = useState(100);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const imageUploadRef = useRef<ImageUploadRef>(null);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
+    []
+  );
+  const [subcategories, setSubcategories] = useState<
+    { id: string; name: string; category_id: string }[]
+  >([]);
+  const [subsubcategories, setSubsubcategories] = useState<
+    { id: string; name: string; subcategory_id: string }[]
+  >([]);
 
-  // Initialize categories in database
-  const initializeCategories = async () => {
-    const categories = [
-      { id: "00000000-0000-0000-0000-000000000001", name: "Electronics" },
-      { id: "00000000-0000-0000-0000-000000000002", name: "Clothing" },
-      { id: "00000000-0000-0000-0000-000000000003", name: "Home & Garden" },
-      { id: "00000000-0000-0000-0000-000000000004", name: "Sports" },
-      { id: "00000000-0000-0000-0000-000000000005", name: "Books" },
-      {
-        id: "00000000-0000-0000-0000-000000000006",
-        name: "Beauty & Personal Care",
-      },
-      { id: "00000000-0000-0000-0000-000000000007", name: "Automotive" },
-      { id: "00000000-0000-0000-0000-000000000008", name: "Toys & Games" },
-    ];
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    product?.category_id || ""
+  );
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>(
+    product?.subcategory_id || ""
+  );
+  const [selectedSubsubcategory, setSelectedSubsubcategory] = useState<string>(
+    product?.subsubcategory_id || ""
+  );
 
-    try {
-      for (const category of categories) {
-        const { error } = await supabase
-          .from("categories")
-          .upsert(category, { onConflict: "id" });
-
-        if (error) {
-          console.error(`Error creating category ${category.name}:`, error);
-        }
-      }
-      console.log("Categories initialized successfully");
-    } catch (error) {
-      console.error("Failed to initialize categories:", error);
-    }
-  };
-
-  // Initialize categories when component mounts
+  // Load categories from DB
   React.useEffect(() => {
-    initializeCategories();
+    const loadCats = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("categories")
+          .select("id, name")
+          .order("name", { ascending: true });
+        if (error) {
+          console.error("Failed to load categories:", error);
+          return;
+        }
+        setCategories(data || []);
+      } catch (err) {
+        console.error("Unexpected error loading categories:", err);
+      }
+    };
+    loadCats();
+  }, []);
+
+  // Load subcategories when selectedCategory changes
+  React.useEffect(() => {
+    const loadSubs = async () => {
+      setSubcategories([]);
+      setSubsubcategories([]);
+      setSelectedSubcategory("");
+      setSelectedSubsubcategory("");
+      if (!selectedCategory) return;
+      try {
+        const { data, error } = await supabase
+          .from("subcategories")
+          .select("id, name, category_id")
+          .eq("category_id", selectedCategory)
+          .order("name", { ascending: true });
+        if (error) {
+          console.error("Failed to load subcategories:", error);
+          return;
+        }
+        setSubcategories(data || []);
+      } catch (err) {
+        console.error("Unexpected error loading subcategories:", err);
+      }
+    };
+    loadSubs();
+  }, [selectedCategory]);
+
+  // Load subsubcategories when selectedSubcategory changes
+  React.useEffect(() => {
+    const loadSubSubs = async () => {
+      setSubsubcategories([]);
+      setSelectedSubsubcategory("");
+      if (!selectedSubcategory) return;
+      try {
+        const { data, error } = await supabase
+          .from("subsubcategories")
+          .select("id, name, subcategory_id")
+          .eq("subcategory_id", selectedSubcategory)
+          .order("name", { ascending: true });
+        if (error) {
+          console.error("Failed to load sub-subcategories:", error);
+          return;
+        }
+        setSubsubcategories(data || []);
+      } catch (err) {
+        console.error("Unexpected error loading sub-subcategories:", err);
+      }
+    };
+    loadSubSubs();
+  }, [selectedSubcategory]);
+
+  // Load brands for dropdown
+  React.useEffect(() => {
+    const loadBrands = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("brands")
+          .select("brand_id, brand_name")
+          .order("brand_name", { ascending: true });
+        if (error) {
+          console.error("Failed to load brands:", error);
+          return;
+        }
+        setBrands(data || []);
+      } catch (err) {
+        console.error("Unexpected error loading brands:", err);
+      }
+    };
+    loadBrands();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -120,7 +198,13 @@ export default function ProductForm({
     const title = formData.get("productTitle") as string;
     const description = formData.get("productDescription") as string;
     const price = formData.get("productPrice") as string;
-    const category = formData.get("productCategory") as string;
+    const category =
+      selectedCategory || (formData.get("productCategory") as string);
+    const subcategory =
+      selectedSubcategory || (formData.get("productSubcategory") as string);
+    const subsubcategory =
+      selectedSubsubcategory ||
+      (formData.get("productSubsubcategory") as string);
 
     if (!title?.trim()) {
       alert("Product title is required");
@@ -166,9 +250,9 @@ export default function ProductForm({
             .filter(Boolean) || [],
       }),
       outofstock: stockQuantity === 0,
-      category_id: category || "00000000-0000-0000-0000-000000000001",
-      subcategory_id: null,
-      subsubcategory_id: null,
+      category_id: category || null,
+      subcategory_id: subcategory || null,
+      subsubcategory_id: subsubcategory || null,
       brand_id: parseInt((formData.get("productBrand") as string) || "1"),
     };
 
@@ -241,19 +325,7 @@ export default function ProductForm({
     }
   };
 
-  const categories = [
-    { id: "00000000-0000-0000-0000-000000000001", name: "Electronics" },
-    { id: "00000000-0000-0000-0000-000000000002", name: "Clothing" },
-    { id: "00000000-0000-0000-0000-000000000003", name: "Home & Garden" },
-    { id: "00000000-0000-0000-0000-000000000004", name: "Sports" },
-    { id: "00000000-0000-0000-0000-000000000005", name: "Books" },
-    {
-      id: "00000000-0000-0000-0000-000000000006",
-      name: "Beauty & Personal Care",
-    },
-    { id: "00000000-0000-0000-0000-000000000007", name: "Automotive" },
-    { id: "00000000-0000-0000-0000-000000000008", name: "Toys & Games" },
-  ];
+  // categories are loaded dynamically via Supabase
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -310,16 +382,17 @@ export default function ProductForm({
                   <Label htmlFor="productCategory">Category *</Label>
                   <Select
                     name="productCategory"
-                    defaultValue={product?.category_id || ""}
+                    value={selectedCategory}
+                    onValueChange={(val) => setSelectedCategory(val)}
                     required
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-md">
+                      {categories.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -327,14 +400,81 @@ export default function ProductForm({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="productBrand">Brand ID</Label>
-                  <Input
-                    id="productBrand"
-                    name="productBrand"
-                    type="number"
-                    defaultValue={product?.brand_id || 1}
-                    placeholder="Enter brand ID"
-                  />
+                  <Label htmlFor="productSubcategory">Subcategory</Label>
+                  <Select
+                    name="productSubcategory"
+                    value={selectedSubcategory}
+                    onValueChange={(val) => setSelectedSubcategory(val)}
+                    disabled={!selectedCategory || subcategories.length === 0}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a subcategory" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-md">
+                      {subcategories.map((sc) => (
+                        <SelectItem key={sc.id} value={sc.id}>
+                          {sc.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="productSubsubcategory">Sub-Subcategory</Label>
+                  <Select
+                    name="productSubsubcategory"
+                    value={selectedSubsubcategory}
+                    onValueChange={(val) => setSelectedSubsubcategory(val)}
+                    disabled={
+                      !selectedSubcategory || subsubcategories.length === 0
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a sub-subcategory" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-md">
+                      {subsubcategories.map((ssc) => (
+                        <SelectItem key={ssc.id} value={ssc.id}>
+                          {ssc.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="productBrand">Brand</Label>
+                  {brands.length > 0 ? (
+                    <Select
+                      name="productBrand"
+                      defaultValue={
+                        product?.brand_id ? String(product.brand_id) : ""
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a brand" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-md">
+                        {brands.map((b) => (
+                          <SelectItem
+                            key={b.brand_id}
+                            value={String(b.brand_id)}
+                          >
+                            {b.brand_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      id="productBrand"
+                      name="productBrand"
+                      type="number"
+                      defaultValue={product?.brand_id || 1}
+                      placeholder="Enter brand ID"
+                    />
+                  )}
                 </div>
               </div>
 
