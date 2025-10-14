@@ -303,14 +303,14 @@ export default function DashboardLayout() {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <div className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
+        <div className="h-16 bg-white md:bg-gray-50 border-b border-border flex items-center justify-between px-6 shadow-sm">
           <Button
             variant="ghost"
             size="sm"
-            className="lg:hidden"
+            className="lg:hidden bg-gray-100 hover:bg-gray-200 border border-gray-300 shadow-sm"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="h-4 w-4" />
+            <Menu className="h-4 w-4 text-gray-700" />
           </Button>
 
           <div className="flex items-center space-x-4">

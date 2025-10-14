@@ -70,7 +70,7 @@ const useSellerAuth = () => ({
       }
 
       // Wait a moment for auth to complete
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // This is a new seller registration - don't allow existing users to convert
 
