@@ -228,8 +228,9 @@ export default function DashboardLayout() {
       )}
 
       {/* Sidebar */}
+      {/* sidebar has a transparent color in the global css but i used gray-300 */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-300 border-r border-sidebar-border transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
