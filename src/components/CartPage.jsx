@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaHeart, FaStore } from "react-icons/fa";
 import { BsTrash } from "react-icons/bs";
-import Sunglass from "../assets/images/sunglass.webp";
+import Iphone from "../assets/images/sunglass.webp";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {
@@ -10,6 +10,7 @@ import {
   deleteCartItem,
   clearCart,
 } from "../supabase/carts";
+import supabase from "../supabase";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -21,19 +22,77 @@ const CartPage = () => {
   useEffect(() => {
     (async () => {
       const items = await fetchCartItems();
-      setCartItems(
-        items.map((item) => ({
-          id: item.id,
-          product_id: item.product_id,
-          seller_product_id: item.seller_product_id ?? null,
-          quantity: item.quantity,
-          price: item.price,
-          variant: item.variant ?? {},
-          title: item.title ?? item.name ?? "Product",
-          image: item.image ?? Sunglass,
-          seller: item.seller ?? "Unknown Seller",
-        }))
-      );
+      const baseItems = items.map((item) => ({
+        id: item.id,
+        product_id: item.product_id,
+        seller_product_id: item.seller_product_id ?? null,
+        quantity: item.quantity,
+        price: item.price,
+        variant: item.variant ?? {},
+        title: item.title ?? item.name ?? "Product",
+        image: item.image ?? Iphone,
+        seller: item.seller ?? undefined, // we'll fill from seller_products
+      }));
+
+      // Enrich with seller/company name using seller_product_id -> seller_id -> sellers.company_name
+      try {
+        const spIds = [
+          ...new Set(
+            baseItems
+              .map((it) => it.seller_product_id)
+              .filter((v) => v !== null && v !== undefined)
+          ),
+        ];
+
+        let spIdToSellerId = {};
+        if (spIds.length > 0) {
+          const { data: spRows, error: spErr } = await supabase
+            .from("seller_products")
+            .select("seller_product_id, seller_id")
+            .in("seller_product_id", spIds);
+          if (spErr) throw spErr;
+
+          spRows?.forEach((r) => {
+            spIdToSellerId[r.seller_product_id] = r.seller_id;
+          });
+        }
+
+        const sellerIds = [
+          ...new Set(Object.values(spIdToSellerId).filter(Boolean)),
+        ];
+        let sellerIdToName = {};
+        if (sellerIds.length > 0) {
+          const { data: sellersRows, error: sErr } = await supabase
+            .from("sellers")
+            .select("seller_id, company_name")
+            .in("seller_id", sellerIds);
+          if (sErr) throw sErr;
+
+          sellersRows?.forEach((s) => {
+            sellerIdToName[s.seller_id] =
+              s.company_name || `Seller ${s.seller_id}`;
+          });
+        }
+
+        // Update baseItems in place with seller name and set state
+        baseItems.forEach((it) => {
+          const name =
+            it.seller ||
+            sellerIdToName[spIdToSellerId[it.seller_product_id]] ||
+            "Unknown Seller";
+          it.seller = name;
+        });
+        setCartItems(baseItems);
+      } catch (e) {
+        console.warn("Failed to enrich cart items with seller name:", e);
+        // Fallback: set with Unknown Seller when enrichment fails
+        setCartItems(
+          baseItems.map((it) => ({
+            ...it,
+            seller: it.seller || "Unknown Seller",
+          }))
+        );
+      }
     })();
   }, []);
 
@@ -230,6 +289,17 @@ const CartPage = () => {
             </div>
           ))}
 
+          {/* Removed per-seller checkout button; single global checkout below */}
+        </div>
+      ))}
+
+      {cartItems.length === 0 && (
+        <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
+      )}
+
+      {/* Global Checkout Button */}
+      {cartItems.length > 0 && (
+        <div className="flex justify-end mt-6">
           <button
             onClick={() =>
               navigate("/order", {
@@ -241,15 +311,11 @@ const CartPage = () => {
               })
             }
             disabled={selectedItems.length === 0}
-            className="bg-blue-600 text-white float-end px-6 py-2 rounded-lg mt-4 disabled:opacity-50"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg disabled:opacity-50"
           >
             Checkout ({selectedItems.length})
           </button>
         </div>
-      ))}
-
-      {cartItems.length === 0 && (
-        <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
       )}
     </div>
   );
