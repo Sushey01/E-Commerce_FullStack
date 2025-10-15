@@ -25,6 +25,7 @@ const CartPage = () => {
         items.map((item) => ({
           id: item.id,
           product_id: item.product_id,
+          seller_product_id: item.seller_product_id ?? null,
           quantity: item.quantity,
           price: item.price,
           variant: item.variant ?? {},
@@ -56,7 +57,7 @@ const CartPage = () => {
       items.map((item) => {
         if (item.id === id) {
           const newQty = Math.max(1, item.quantity + change);
-          saveCartItem({ ...item, quantity: newQty }); // Update in DB
+          saveCartItem({ ...item, quantity: newQty }); // Update in DB (includes seller_product_id)
           return { ...item, quantity: newQty };
         }
         return item;

@@ -48,26 +48,59 @@ const useAuth = () => {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const getUser = async () => {
+    let isMounted = true;
+
+    const loadUser = async () => {
       const {
         data: { user: authUser },
       } = await supabase.auth.getUser();
-      if (authUser) {
-        const { data: profile } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", authUser.id)
-          .single();
+      if (!authUser) {
+        if (isMounted) setUser(null);
+        return;
+      }
 
+      const { data: profile } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", authUser.id)
+        .single();
+
+      // Fetch seller_id for this user (if exists)
+      let sellerId: string | undefined = undefined;
+      try {
+        const { data: sellerRow } = await supabase
+          .from("sellers")
+          .select("seller_id")
+          .eq("user_id", authUser.id)
+          .single();
+        sellerId = sellerRow?.seller_id;
+      } catch {}
+
+      if (isMounted) {
         setUser({
           id: authUser.id,
+          seller_id: sellerId,
           name: profile?.full_name || authUser.email,
           email: authUser.email,
           ...profile,
         });
       }
     };
-    getUser();
+
+    // Initial load
+    loadUser();
+
+    // Subscribe to auth state changes to keep seller_id fresh
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      (_event, _session) => {
+        loadUser();
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      subscription?.subscription?.unsubscribe?.();
+    };
   }, []);
 
   return { user };
@@ -80,23 +113,35 @@ const sampleProducts: Product[] = [];
 const useProducts = () => {
   const [products, setProducts] = useState<Product[]>(sampleProducts);
 
-  const loadProducts = async () => {
+  const loadProducts = async (sellerId?: string) => {
     try {
-      const { data, error } = await supabase.from("products").select("*");
+      if (sellerId) {
+        // Only load products that belong to this seller via seller_products
+        const { data, error } = await supabase
+          .from("seller_products")
+          .select("product:products(*)")
+          .eq("seller_id", sellerId);
 
-      if (error) {
-        console.error("Error loading products:", error);
-        return;
+        if (error) {
+          console.error("Error loading seller products:", error);
+          return;
+        }
+
+        const sellerProds = (data || [])
+          .map((row: any) => row.product)
+          .filter(Boolean) as Product[];
+        setProducts(sellerProds);
+      } else {
+        // No seller context on seller dashboard; show nothing to avoid leaking global products
+        setProducts([]);
       }
-
-      setProducts(data || []);
     } catch (error) {
       console.error("Error loading products:", error);
     }
   };
 
   const getProductsBySeller = (sellerId: string) => {
-    return products; // Return all products for now since we don't have seller relationship
+    return products; // Already filtered by loadProducts(sellerId)
   };
 
   return { products, getProductsBySeller, loadProducts };
@@ -337,6 +382,8 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
+  const sellerId = user?.seller_id;
+
   // Use the SalesManager hook for all sales data (no user filtering needed)
   const {
     orders,
@@ -345,14 +392,16 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
     loading,
     totalSales,
     totalRevenue,
-  } = useSalesData();
+  } = useSalesData(sellerId);
 
-  // Load products on component mount
+  // Load products for this seller
   useEffect(() => {
-    loadProducts();
-  }, []);
+    if (sellerId) {
+      loadProducts(sellerId);
+    }
+  }, [sellerId]);
 
-  const sellerProducts = getProductsBySeller(user?.id || "");
+  const sellerProducts = getProductsBySeller(sellerId || "");
   const totalProducts = sellerProducts.length;
 
   const handleAddProduct = () => {
@@ -375,8 +424,8 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
           return;
         }
 
-        // Reload products after successful deletion
-        loadProducts();
+        // Reload products after successful deletion (scoped to current seller)
+        loadProducts(sellerId);
         console.log("Product deleted successfully");
       } catch (error) {
         console.error("Error deleting product:", error);
@@ -517,7 +566,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                   Revenue
                 </p>
                 <p className="text-2xl font-bold text-card-foreground">
-                  Rs{totalRevenue.toFixed(2)}
+                  Rs {totalRevenue.toFixed(2)}
                 </p>
                 <p className="text-xs text-muted-foreground">Total earned</p>
               </div>
@@ -598,7 +647,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
           onSuccess={() => {
             setShowProductForm(false);
             setEditingProduct(undefined);
-            loadProducts(); // Refresh products list
+            loadProducts(sellerId); // Refresh products list for this seller
           }}
         />
       )}

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { addToCartlist } from "../features/cartlistSlice";
 import { formatPrice } from "../utils/formatPrice";
 import { saveCartItem } from "../supabase/carts";
+import supabase from "../supabase";
 
 // Helper function to map color names to actual colors
 const getColorValue = (colorName) => {
@@ -95,9 +96,31 @@ const ProductDetailInfo = ({ product }) => {
       return;
     }
 
+    const baseId = product.id || product.product_id;
+    if (!baseId) {
+      alert("Missing product id");
+      return;
+    }
+
+    // Lookup seller_product_id for this product (first match)
+    let sellerProductId = null;
+    try {
+      const { data: sp, error: spErr } = await supabase
+        .from("seller_products")
+        .select("seller_product_id")
+        .eq("product_id", baseId)
+        .limit(1);
+      if (!spErr && sp && sp.length > 0) {
+        sellerProductId = sp[0].seller_product_id;
+      }
+    } catch (e) {
+      console.warn("seller_products lookup failed", e);
+    }
+
     const cartItem = {
-      product_id: product.id,
-      id: product.id,
+      product_id: baseId,
+      id: baseId,
+      seller_product_id: sellerProductId,
       name: `${product.title1} ${product.subtitle || ""}`.trim(),
       price: product.price || 60000,
       oldPrice: product.oldPrice || null, // ✅ keep old price if exists

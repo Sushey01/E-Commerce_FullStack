@@ -22,7 +22,7 @@ export type Product = {
 };
 
 // Sales data hook
-export const useSalesData = () => {
+export const useSalesData = (sellerId?: string) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [orderProducts, setOrderProducts] = useState<{
     [key: string]: Product;
@@ -31,18 +31,49 @@ export const useSalesData = () => {
 
   useEffect(() => {
     const loadOrdersWithProducts = async () => {
-      console.log("🔍 Loading sales data for all orders (no user filtering)");
+      if (!sellerId) {
+        setOrders([]);
+        setOrderProducts({});
+        setLoading(false);
+        return;
+      }
+      console.log("🔍 Loading sales data for seller", sellerId);
       setLoading(true);
 
       try {
-        console.log("🔍 Fetching order_items with orders data...");
+        // Step 1: Get all seller_product_ids owned by this seller
+        const { data: spRows, error: spErr } = await supabase
+          .from("seller_products")
+          .select("seller_product_id, product_id")
+          .eq("seller_id", sellerId);
+        if (spErr) {
+          console.error("❌ Error fetching seller_products:", spErr);
+          setLoading(false);
+          return;
+        }
 
-        // Step 1: Fetch order_items with orders data (only delivered orders for sales count)
-        const { data: orderItemsData, error: orderItemsError } =
-          await supabase.from("order_items").select(`
+        const sellerProductIds = (spRows || []).map(
+          (r: any) => r.seller_product_id
+        );
+        const sellerProductIdSet = new Set(sellerProductIds);
+        console.log("🧾 seller_product_ids:", sellerProductIds.length);
+
+        if (sellerProductIds.length === 0) {
+          setOrders([]);
+          setOrderProducts({});
+          setLoading(false);
+          return;
+        }
+
+        // Step 2: Fetch order_items for only those seller_product_ids, join orders for status
+        const { data: orderItemsData, error: orderItemsError } = await supabase
+          .from("order_items")
+          .select(
+            `
             id,
             order_id,
             product_id,
+            seller_product_id,
             quantity,
             price,
             created_at,
@@ -51,7 +82,9 @@ export const useSalesData = () => {
               status,
               created_at
             )
-          `);
+          `
+          )
+          .in("seller_product_id", sellerProductIds);
 
         if (orderItemsError) {
           console.error("❌ Error loading order items:", orderItemsError);
@@ -59,16 +92,10 @@ export const useSalesData = () => {
           return;
         }
 
-        console.log("✅ Order items loaded:", orderItemsData?.length || 0);
-
-        // Since there's no seller_id in orders table, show all order items
-        // In the future, you can add seller_id column or filter by product ownership
-        const filteredOrderItems = orderItemsData || [];
-
-        console.log(
-          "📋 All order items (no seller filtering):",
-          filteredOrderItems.length
+        const filteredOrderItems = (orderItemsData || []).filter((it: any) =>
+          sellerProductIdSet.has(it.seller_product_id)
         );
+        console.log("✅ Order items loaded:", filteredOrderItems.length);
 
         // Filter by status for sales count (confirmed, completed, delivered, paid)
         const salesOrderItems = filteredOrderItems.filter((item: any) => {
@@ -81,72 +108,28 @@ export const useSalesData = () => {
           );
         });
 
-        console.log(
-          "� Sales order items (confirmed/completed/delivered/paid):",
-          salesOrderItems.length
-        );
-
-        // Step 2: Extract unique product_ids from ALL orders (not just sales)
-        const allProductIds = [
+        // Step 3: Build product map directly from product UUIDs
+        const uuidProductIds = [
           ...new Set(filteredOrderItems.map((item: any) => item.product_id)),
         ];
-        console.log("🎯 All unique product IDs needed:", allProductIds);
-
-        const salesProductIds = [
-          ...new Set(salesOrderItems.map((item: any) => item.product_id)),
-        ];
-        console.log("💰 Sales product IDs:", salesProductIds);
-
-        // Step 3: FIX UUID/integer mismatch with smart mapping
-        let productsData: Product[] = [];
         const productMap: { [key: string]: Product } = {};
-
-        if (allProductIds.length > 0) {
-          console.log("� Fixing UUID/integer mismatch...");
-          console.log("🎯 Order product IDs (integers):", allProductIds);
-
-          // Get all products ordered by creation time to match with integer indices
-          const { data: allProducts, error: allProductsError } = await supabase
+        if (uuidProductIds.length > 0) {
+          const { data: prodRows, error: prodErr } = await supabase
             .from("products")
-            .select("*")
-            .order("created_at", { ascending: true });
-
-          if (allProductsError) {
-            console.error("❌ Error fetching products:", allProductsError);
-          } else if (allProducts && allProducts.length > 0) {
-            console.log("📋 Found", allProducts.length, "products in database");
-            console.log("� Sample product:", allProducts[0]);
-
-            // Map integer IDs to products based on creation order
-            // Integer "1" = 1st product, "2" = 2nd product, etc.
-            allProductIds.forEach((integerIdStr) => {
-              const integerIndex = parseInt(integerIdStr) - 1; // Convert to 0-based index
-              if (integerIndex >= 0 && integerIndex < allProducts.length) {
-                const product = allProducts[integerIndex];
-                productMap[integerIdStr] = product;
-                console.log(
-                  `✅ Mapped ID ${integerIdStr} -> "${product.title}"`
-                );
-              } else {
-                console.log(
-                  `❌ No product at index ${integerIndex} for ID ${integerIdStr}`
-                );
-              }
-            });
-
-            console.log(
-              "📚 Product mapping complete:",
-              Object.keys(productMap).length,
-              "mapped"
-            );
+            .select("id, title, price, images")
+            .in("id", uuidProductIds);
+          if (prodErr) {
+            console.error("❌ Error fetching products:", prodErr);
           } else {
-            console.log("⚠️ No products found in database");
+            (prodRows || []).forEach((p: any) => {
+              productMap[p.id] = p as Product;
+            });
           }
         }
 
-        // Step 5: Build orders array for rendering (using all filtered items for display)
+        // Step 4: Build orders array for rendering
         const ordersArray: Order[] = filteredOrderItems.map((item: any) => ({
-          id: `${item.orders.id}-${item.product_id}`, // Unique identifier
+          id: `${item.orders.id}-${item.product_id}-${item.seller_product_id}`,
           order_id: item.orders.id,
           product_id: item.product_id,
           quantity: item.quantity,
@@ -154,13 +137,10 @@ export const useSalesData = () => {
           status: item.orders.status,
           created_at: item.orders.created_at,
         }));
-
-        console.log("📈 All orders array built:", ordersArray.length, "orders");
-        console.log("📋 Sample order:", ordersArray[0]);
 
         // Build sales orders array (only confirmed/completed orders for sales metrics)
         const salesArray: Order[] = salesOrderItems.map((item: any) => ({
-          id: `${item.orders.id}-${item.product_id}`,
+          id: `${item.orders.id}-${item.product_id}-${item.seller_product_id}`,
           order_id: item.orders.id,
           product_id: item.product_id,
           quantity: item.quantity,
@@ -168,16 +148,6 @@ export const useSalesData = () => {
           status: item.orders.status,
           created_at: item.orders.created_at,
         }));
-
-        console.log("💰 Sales orders array:", salesArray.length, "sales");
-
-        // Log all order statuses for debugging
-        const statusCounts = ordersArray.reduce((acc: any, order) => {
-          const status = order.status?.toLowerCase() || "unknown";
-          acc[status] = (acc[status] || 0) + 1;
-          return acc;
-        }, {});
-        console.log("📊 Order status breakdown:", statusCounts);
 
         // Store both all orders and sales orders
         setOrders(ordersArray);
@@ -201,7 +171,7 @@ export const useSalesData = () => {
     };
 
     loadOrdersWithProducts();
-  }, []); // Remove userId dependency
+  }, [sellerId]);
 
   // Calculate sales orders for metrics (confirmed, completed, delivered, paid)
   const salesOrders = orders.filter((order) => {

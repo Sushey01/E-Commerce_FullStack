@@ -1,6 +1,5 @@
 import supabase from "../supabase";
 
-
 const TEMP_USER_ID = "aa62b313-11dc-400d-aad3-a476c328a0d5";
 
 export async function createOrder(orderData, items) {
@@ -33,15 +32,12 @@ export async function createOrder(orderData, items) {
       .select()
       .single();
 
-
-
     // Example: cancel expired orders
     await supabase
       .from("orders")
       .update({ status: "Cancelled", cancelled_at: new Date() })
       .lt("expires_at", new Date())
       .eq("status", "Payment Pending");
-      
 
     if (orderError) throw new Error(orderError.message);
 
@@ -51,7 +47,8 @@ export async function createOrder(orderData, items) {
 
     const itemsToInsert = items.map((item) => ({
       order_id: orderId,
-      product_id: item.id, // Maps item.id to product_id
+      product_id: item.product_id || item.id, // prefer explicit product_id
+      seller_product_id: item.seller_product_id ?? null,
       price: item.price,
       quantity: item.quantity,
       variant: item.variant ?? {},

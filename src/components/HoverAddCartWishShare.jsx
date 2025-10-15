@@ -1,6 +1,7 @@
 import { Heart, Share2, ShoppingCart } from "lucide-react";
 import React from "react";
 import { saveCartItem } from "../supabase/carts";
+import supabase from "../supabase";
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "../features/wishlistSlice";
 import { addToCartlist } from "../features/cartlistSlice";
@@ -16,9 +17,27 @@ const HoverAddCartWishShare = ({ product = {} }) => {
 
   const onAddToCart = async () => {
     try {
+      const baseId = product.id || product.product_id;
+      if (!baseId) {
+        toast.error("Missing product id");
+        return;
+      }
+
+      // Attempt to fetch seller_product_id linked to this product
+      let sellerProductId = null;
+      const { data: sp, error: spErr } = await supabase
+        .from("seller_products")
+        .select("seller_product_id")
+        .eq("product_id", baseId)
+        .limit(1);
+      if (!spErr && sp && sp.length > 0) {
+        sellerProductId = sp[0].seller_product_id;
+      }
+
       const productWithId = {
         ...product,
-        product_id: product.id ?? Date.now().toString(),
+        product_id: baseId,
+        seller_product_id: sellerProductId,
         quantity: 1,
       };
       await saveCartItem(productWithId);
