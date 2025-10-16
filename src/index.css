@@ -28,3 +28,15 @@
   animation: slideIn 0.3s ease-out forwards;
 }
 
+/* Remove spinner arrows in WebKit browsers */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove spinner arrows in Firefox */
+.no-spinner {
+  -moz-appearance: textfield;
+}
+

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../../admin/ui/button";
 import { Input } from "../../admin/ui/input";
 import { Label } from "../../admin/ui/label";
@@ -50,7 +50,11 @@ type Product = {
   rating: string;
   reviews: number;
   images: string;
-  variant: string;
+  variant: {
+    sizes?: string[];
+    colors?: string[];
+    materials?: string[];
+  };
   outofstock: boolean;
   brand_id: number;
   created_at?: string;
@@ -76,10 +80,14 @@ export default function ProductForm({
   user,
 }: ProductFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [stockQuantity, setStockQuantity] = useState(100);
+  const [stockQuantity, setStockQuantity] = useState(0);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const imageUploadRef = useRef<ImageUploadRef>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [colors, setColors] = useState("");
+  const [sizes, setSizes] = useState(""); // <-- string
+
+  const [materials, setMaterials] = useState("");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
   );
@@ -100,6 +108,58 @@ export default function ProductForm({
     product?.subsubcategory_id || ""
   );
 
+  // Preload existing images when editing
+  useEffect(() => {
+    if (!product) return;
+    try {
+      const imgs =
+        typeof product.images === "string"
+          ? JSON.parse(product.images)
+          : product.images;
+      if (Array.isArray(imgs)) {
+        setImageUrls(imgs);
+      } else if (
+        typeof product.images === "string" &&
+        product.images.startsWith("http")
+      ) {
+        setImageUrls([product.images]);
+      }
+    } catch {
+      // ignore parse issues
+    }
+  }, [product]);
+
+  // Hydrate seller-specific stock on edit from seller_products
+  useEffect(() => {
+    const loadSellerStock = async () => {
+      try {
+        if (!product?.id) return;
+        const auth = await supabase.auth.getUser();
+        const uid = user?.id || auth.data?.user?.id;
+        if (!uid) return;
+        const { data: sellerRow } = await supabase
+          .from("sellers")
+          .select("seller_id")
+          .eq("user_id", uid)
+          .single();
+        const currentSellerId = sellerRow?.seller_id;
+        if (!currentSellerId) return;
+        const { data: spRows } = await supabase
+          .from("seller_products")
+          .select("stock")
+          .eq("seller_id", currentSellerId)
+          .eq("product_id", product.id)
+          .limit(1);
+        if (spRows && spRows.length > 0) {
+          const s = Number(spRows[0].stock ?? 0);
+          if (!Number.isNaN(s)) setStockQuantity(s);
+        }
+      } catch (e) {
+        // non-fatal
+      }
+    };
+    loadSellerStock();
+  }, [product, user]);
   // Load categories from DB
   React.useEffect(() => {
     const loadCats = async () => {
@@ -259,12 +319,66 @@ export default function ProductForm({
     setIsLoading(true);
     try {
       if (product?.id) {
+        // Upload images first (if any new ones), else keep current imageUrls
+        let finalImageUrls = imageUrls;
+        if (imageUploadRef.current) {
+          const uploaded = await imageUploadRef.current.uploadAllImages();
+          if (uploaded && uploaded.length) {
+            finalImageUrls = uploaded;
+          }
+        }
+        productData.images = JSON.stringify(finalImageUrls);
+
         const { error } = await supabase
           .from("products")
           .update(productData)
           .eq("id", product.id);
 
         if (error) throw error;
+
+        // Update seller_products price & stock for current seller
+        try {
+          const auth = await supabase.auth.getUser();
+          const uid = user?.id || auth.data?.user?.id;
+          if (uid) {
+            const { data: sellerRow } = await supabase
+              .from("sellers")
+              .select("seller_id")
+              .eq("user_id", uid)
+              .single();
+            const currentSellerId = sellerRow?.seller_id;
+            if (currentSellerId) {
+              const { data: spExisting } = await supabase
+                .from("seller_products")
+                .select("seller_product_id")
+                .eq("seller_id", currentSellerId)
+                .eq("product_id", product.id)
+                .limit(1);
+              if (spExisting && spExisting.length > 0) {
+                await supabase
+                  .from("seller_products")
+                  .update({
+                    price: parseFloat(productData.price),
+                    stock: stockQuantity,
+                  })
+                  .eq("seller_id", currentSellerId)
+                  .eq("product_id", product.id);
+              } else {
+                await supabase.from("seller_products").insert([
+                  {
+                    seller_id: currentSellerId,
+                    product_id: product.id,
+                    price: parseFloat(productData.price),
+                    stock: stockQuantity,
+                  },
+                ]);
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("seller_products upsert on edit failed:", e);
+        }
+
         alert("Product updated successfully!");
       } else {
         // Upload images first
@@ -611,7 +725,19 @@ export default function ProductForm({
                     <Minus className="h-4 w-4" />
                   </Button>
                   <span className="w-16 text-center font-medium">
-                    {stockQuantity}
+                    <input
+                      type="number"
+                      value={stockQuantity}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        if (!isNaN(value) && value >= 0) {
+                          setStockQuantity(value);
+                        }
+                      }}
+                      min={0}
+                      className="no-spinner w-20  text-black text-center focus:outline-none focus:ring-0"
+                      placeholder="Stock"
+                    />
                   </span>
                   <Button
                     type="button"
@@ -642,6 +768,7 @@ export default function ProductForm({
                   <Input
                     id="productSizes"
                     name="productSizes"
+                    defaultValue={product?.variant?.sizes?.join(", ") || ""}
                     placeholder="S, M, L, XL"
                   />
                   <p className="text-xs text-muted-foreground">
@@ -654,6 +781,7 @@ export default function ProductForm({
                   <Input
                     id="productColors"
                     name="productColors"
+                    defaultValue={product?.variant?.colors?.join(", ") || ""}
                     placeholder="Red, Blue, Green, Black"
                   />
                   <p className="text-xs text-muted-foreground">
@@ -666,6 +794,7 @@ export default function ProductForm({
                   <Input
                     id="productMaterials"
                     name="productMaterials"
+                    defaultValue={product?.variant?.materials?.join(", ") || ""}
                     placeholder="Cotton, Polyester, Leather"
                   />
                   <p className="text-xs text-muted-foreground">

@@ -22,8 +22,8 @@ import {
 } from "./components/SalesManager";
 import supabase from "../../supabase";
 
-// Product type matching your database schema
-type Product = {
+// Local product type for dashboard tables (matches ProductList expectations)
+type DashboardProduct = {
   id: string;
   category_id: string;
   subcategory_id: string;
@@ -36,7 +36,7 @@ type Product = {
   rating: string;
   reviews: number;
   images: string;
-  variant: string;
+  variant: string; // stored as JSON string in DB for listing table
   outofstock: boolean;
   created_at: string;
   updated_at: string;
@@ -107,11 +107,11 @@ const useAuth = () => {
 };
 
 // Sample products - start with empty array, will load from database
-const sampleProducts: Product[] = [];
+const sampleProducts: DashboardProduct[] = [];
 
 // Products hook with database loading
 const useProducts = () => {
-  const [products, setProducts] = useState<Product[]>(sampleProducts);
+  const [products, setProducts] = useState<DashboardProduct[]>(sampleProducts);
 
   const loadProducts = async (sellerId?: string) => {
     try {
@@ -129,7 +129,7 @@ const useProducts = () => {
 
         const sellerProds = (data || [])
           .map((row: any) => row.product)
-          .filter(Boolean) as Product[];
+          .filter(Boolean) as DashboardProduct[];
         setProducts(sellerProds);
       } else {
         // No seller context on seller dashboard; show nothing to avoid leaking global products
@@ -380,7 +380,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const { user } = useAuth();
   const { products, getProductsBySeller, loadProducts } = useProducts();
   const [showProductForm, setShowProductForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const [editingProduct, setEditingProduct] = useState<any>();
 
   const sellerId = user?.seller_id;
 
@@ -411,22 +411,50 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   };
 
   const handleDeleteProduct = async (productId: string) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to remove this product from your listings?"
+      )
+    ) {
       try {
-        const { error } = await supabase
-          .from("products")
-          .delete()
-          .eq("id", productId);
-
-        if (error) {
-          console.error("Error deleting product:", error);
-          alert("Failed to delete product. Please try again.");
+        if (!sellerId) {
+          alert("Missing seller context. Please re-login and try again.");
           return;
         }
 
-        // Reload products after successful deletion (scoped to current seller)
-        loadProducts(sellerId);
-        console.log("Product deleted successfully");
+        // 1) Unlink this product from the current seller (prevents FK violation)
+        const { error: unlinkErr } = await supabase
+          .from("seller_products")
+          .delete()
+          .eq("seller_id", sellerId)
+          .eq("product_id", productId);
+        if (unlinkErr) {
+          console.error("Error unlinking seller product:", unlinkErr);
+          alert("Failed to remove product from your list.");
+          return;
+        }
+
+        // 2) If no sellers remain linked to this product, delete the global product row
+        const { data: remainingLinks, error: linkErr } = await supabase
+          .from("seller_products")
+          .select("seller_product_id")
+          .eq("product_id", productId)
+          .limit(1);
+        if (linkErr) {
+          console.warn("Could not verify remaining links:", linkErr);
+        } else if (!remainingLinks || remainingLinks.length === 0) {
+          const { error: prodDelErr } = await supabase
+            .from("products")
+            .delete()
+            .eq("id", productId);
+          if (prodDelErr) {
+            console.warn("Product cleanup failed:", prodDelErr);
+          }
+        }
+
+        // Reload products after successful unlink (scoped to current seller)
+        await loadProducts(sellerId);
+        console.log("Product removed from seller list successfully");
       } catch (error) {
         console.error("Error deleting product:", error);
         alert("Failed to delete product. Please try again.");
@@ -653,9 +681,21 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
       )}
 
       <ProductList
-        products={sellerProducts}
+        products={sellerProducts as any}
         showSellerColumn={false}
-        onEdit={(product) => setEditingProduct(product)}
+        onEdit={(product: any) => {
+          // Normalize variant for ProductForm (expects object)
+          let parsedVariant: any = {};
+          try {
+            parsedVariant =
+              typeof product?.variant === "string" && product?.variant
+                ? JSON.parse(product.variant)
+                : product?.variant || {};
+          } catch {
+            parsedVariant = {};
+          }
+          setEditingProduct({ ...product, variant: parsedVariant });
+        }}
         onView={(product) => console.log("View product:", product)}
         onDelete={handleDeleteProduct}
       />
