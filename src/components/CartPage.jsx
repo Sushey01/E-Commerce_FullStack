@@ -301,15 +301,25 @@ const CartPage = () => {
       {cartItems.length > 0 && (
         <div className="flex justify-end mt-6">
           <button
-            onClick={() =>
-              navigate("/order", {
-                state: {
-                  selectedItems: cartItems.filter((item) =>
-                    selectedItems.includes(item.id)
-                  ),
-                },
-              })
-            }
+            onClick={async () => {
+              const { data } = await supabase.auth.getUser();
+              const currentUser = data?.user;
+              const chosen = cartItems.filter((item) =>
+                selectedItems.includes(item.id)
+              );
+              if (!currentUser) {
+                // redirect to login with return path and preserve selection
+                navigate("/loginPage", {
+                  state: {
+                    returnTo: "/order",
+                    selectedItems: chosen,
+                    reason: "login_required",
+                  },
+                });
+                return;
+              }
+              navigate("/order", { state: { selectedItems: chosen } });
+            }}
             disabled={selectedItems.length === 0}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg disabled:opacity-50"
           >

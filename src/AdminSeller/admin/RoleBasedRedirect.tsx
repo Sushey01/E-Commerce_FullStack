@@ -63,8 +63,8 @@ const RoleBasedRedirect = () => {
   } else if (userRole === "seller") {
     return <Navigate to="/admin/dashboard" replace />; // Sellers also use admin dashboard but with different permissions
   } else if (userRole === "customer") {
-    return <Navigate to="/login" replace />;
-  } else {
+    return <Navigate to="/" replace />;
+  } else if (userRole === "guest") {
     // Customer or unknown role - redirect to home
     return <Navigate to="/" replace />;
   }

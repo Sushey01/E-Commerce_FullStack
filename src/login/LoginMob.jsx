@@ -5,7 +5,7 @@ import Facebook from "../assets/images/facebook.png";
 import { MdEmail } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import LoginBg from "../assets/images/loginbg.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LoginMob = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +14,7 @@ const LoginMob = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignin = async () => {
     if (!email || !password) {
@@ -60,13 +61,25 @@ const LoginMob = () => {
         return;
       }
 
-      // Navigate based on role - FIXED: moved before any return statements
+      // Navigate based on role and optional returnTo for customers
       if (profile.role === "admin") {
         navigate("/role-layout");
       } else if (profile.role === "seller") {
         navigate("/seller/dashboard");
       } else {
-        navigate("/");
+        const returnTo = location.state?.returnTo;
+        const selectedItems = location.state?.selectedItems;
+        if (returnTo) {
+          if (returnTo === "/order") {
+            navigate("/order", {
+              state: { selectedItems: selectedItems || [] },
+            });
+          } else {
+            navigate(returnTo);
+          }
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       console.error("Unexpected error:", err);
