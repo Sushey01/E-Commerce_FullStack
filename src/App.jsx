@@ -117,12 +117,6 @@ const App = () => {
         />
       </Routes>
     </Router>
-    //  <Router>
-    //     {/* <AdminDashboard/> */}
-    //       {/* <AnalyticsCharts/> */}
-    //     {/* <SellerDashboard /> */}
-    //     {/* <DashboardLayout/> */}
-    //   </Router>
   );
 };
 
