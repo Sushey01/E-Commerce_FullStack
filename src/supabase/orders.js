@@ -82,6 +82,83 @@ export async function createOrder(orderData, items) {
       throw new Error(`Payment insertion failed: ${paymentError.message}`);
     }
 
+    // Decrement stock for each ordered seller_product and update product out-of-stock status
+    try {
+      // Use the original items array to ensure we have seller_product_id and product_id/quantity
+      for (const item of items) {
+        const sellerProductId = item.seller_product_id;
+        const productId = item.product_id || item.id;
+        const qty = Number(item.quantity || 0);
+        if (!sellerProductId || !productId || !qty) continue;
+
+        // 1) Fetch current stock for the seller_product
+        const { data: spRow, error: spFetchErr } = await supabase
+          .from("seller_products")
+          .select("stock")
+          .eq("seller_product_id", sellerProductId)
+          .single();
+        if (spFetchErr) {
+          console.warn(
+            "Stock fetch failed for seller_product_id",
+            sellerProductId,
+            spFetchErr.message
+          );
+          continue;
+        }
+
+        const currentStock = Number(spRow?.stock ?? 0);
+        const newStock = Math.max(0, currentStock - qty);
+
+        // 2) Update the seller_product stock
+        const { error: spUpdateErr } = await supabase
+          .from("seller_products")
+          .update({ stock: newStock })
+          .eq("seller_product_id", sellerProductId);
+        if (spUpdateErr) {
+          console.warn(
+            "Stock update failed for seller_product_id",
+            sellerProductId,
+            spUpdateErr.message
+          );
+        }
+
+        // 3) Compute total remaining stock across all sellers for this product to set products.outofstock
+        const { data: allSpRows, error: allSpErr } = await supabase
+          .from("seller_products")
+          .select("stock")
+          .eq("product_id", productId);
+        if (allSpErr) {
+          console.warn(
+            "Failed to aggregate stock for product",
+            productId,
+            allSpErr.message
+          );
+          continue;
+        }
+
+        const totalRemaining = (allSpRows || []).reduce(
+          (sum, r) => sum + Number(r.stock || 0),
+          0
+        );
+        const isOut = totalRemaining <= 0;
+
+        const { error: prodUpdateErr } = await supabase
+          .from("products")
+          .update({ outofstock: isOut })
+          .eq("id", productId);
+        if (prodUpdateErr) {
+          console.warn(
+            "Failed to update products.outofstock for",
+            productId,
+            prodUpdateErr.message
+          );
+        }
+      }
+    } catch (stockErr) {
+      console.warn("Stock decrement encountered an error:", stockErr);
+      // Non-fatal: order was created; stock may be stale until next edit/refresh
+    }
+
     return order;
   } catch (error) {
     console.error("❌ Order creation failed:", error.message);
