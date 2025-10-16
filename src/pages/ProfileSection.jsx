@@ -14,7 +14,7 @@ const ProfileSection = () => {
         
         {loggedin ? <div className="w-full md:w-[80%] ">
           <UserProfilePage />
-        </div> : <LoginMob />}
+        </div> : <div className='md:w-full justify-center flex'> <div className='md:w-1/2'><LoginMob /></div></div>}
       </div>
     </>
   );
