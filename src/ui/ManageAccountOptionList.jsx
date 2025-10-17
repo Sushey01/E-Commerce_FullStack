@@ -6,12 +6,12 @@ const ManageAccountOptionList = () => {
 
   const options = [
     { name: "My Profile", path: "/profile" },
-    { name: "Address Book", path: "/address-book" },
-    { name: "Payment Options", path: "/payment-options" },
-    { name: "My Review", path: "/my-reviews" },
-    { name: "My Return", path: "/my-returns" },
-    { name: "My Cancellation", path: "/my-cancellations" },
-    { name: "Become a Seller", path: "/become-seller" },
+    { name: "Address Book", path: "/profile/address-book" },
+    { name: "Orders & Payments", path: "/profile/payment-orders" },
+    { name: "My Review", path: "/profile/my-reviews" },
+    { name: "My Return", path: "/profile/my-returns" },
+    { name: "My Cancellation", path: "/profile/my-cancellations" },
+    { name: "Become a Seller", path: "/profile/become-seller" },
   ];
 
   const handleOptionClick = (path) => {

@@ -3,6 +3,8 @@ import ManageAccountOptionList from "../ui/ManageAccountOptionList";
 import UserProfilePage from "../components/UserProfilePage";
 import LoginMob from "../login/LoginMob";
 import supabase from "../supabase";
+// import SellerForm from "../AdminSeller/seller/SellerForm";
+import { Outlet } from "react-router-dom";
 
 const ProfileSection = () => {
   const [user, setUser] = React.useState(null);
@@ -33,6 +35,9 @@ const ProfileSection = () => {
       authListener?.subscription?.unsubscribe?.();
     };
   }, []);
+
+  // Render based on auth state below; avoid early return to prevent flicker during checking
+
   return (
     <>
       <div className="flex w-full gap-4 p-2 ">
@@ -45,8 +50,8 @@ const ProfileSection = () => {
             Checking authentication...
           </div>
         ) : user ? (
-          <div className="w-full md:w-[80%] ">
-            <UserProfilePage />
+          <div className="w-full md:w-[80%]">
+            <Outlet />
           </div>
         ) : (
           <div className="md:w-full justify-center flex">

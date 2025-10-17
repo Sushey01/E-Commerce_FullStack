@@ -15,6 +15,12 @@ import ProductDetail from "./pages/ProductDetail";
 import ProductLayout from "./layouts/ProductLayout";
 import DynamicPageSlider from "./pages/DynamicPageSlider";
 import ProfileSection from "./pages/ProfileSection";
+import UserProfilePage from "./components/UserProfilePage";
+import AddressBook from "./components/profile/AddressBook";
+import OrdersAndPayments from "./components/profile/OrdersAndPayments";
+import MyReviews from "./components/profile/MyReviews";
+import MyReturns from "./components/profile/MyReturns";
+import MyCancellations from "./components/profile/MyCancellations";
 import CheckoutPage from "./checkout/CheckoutPage";
 import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
@@ -80,7 +86,23 @@ const App = () => {
 
                 {/* Cart, Profile, Wishlist */}
                 <Route path="/cart" element={<CartPage />} />
-                <Route path="/profile" element={<ProfileSection />} />
+                <Route path="/profile" element={<ProfileSection />}>
+                  {/* Default profile content */}
+                  <Route index element={<UserProfilePage />} />
+                  {/* Sub-pages */}
+                  <Route path="address-book" element={<AddressBook />} />
+                  <Route
+                    path="payment-orders"
+                    element={<OrdersAndPayments />}
+                  />
+                  <Route path="my-reviews" element={<MyReviews />} />
+                  <Route path="my-returns" element={<MyReturns />} />
+                  <Route
+                    path="my-cancellations"
+                    element={<MyCancellations />}
+                  />
+                  <Route path="become-seller" element={<SellerForm />} />
+                </Route>
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/loginPage" element={<LoginPage />} />
                 <Route path="/register" element={<SignupPage />} />
