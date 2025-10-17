@@ -19,96 +19,116 @@ const HomeProductFilterSort = ({ onFilterClick, filters }) => {
   const [showCount, setShowCount] = useState(12);
   const [error, setError] = useState(null);
 
-const fetchProducts = async () => {
-  setLoading(true);
-  setError(null);
+  // Robust image normalizer: supports array, JSON string, or direct URL
+  const getImageUrl = (product) => {
+    try {
+      const raw = product?.images;
+      if (Array.isArray(raw))
+        return raw[0] || "https://via.placeholder.com/150";
+      if (typeof raw === "string") {
+        // Try parsing JSON array strings like '["http://..."]'
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed))
+          return parsed[0] || "https://via.placeholder.com/150";
+        // If string is already a URL, return as-is
+        if (/^https?:\/\//i.test(raw)) return raw;
+        return "https://via.placeholder.com/150";
+      }
+      return "https://via.placeholder.com/150";
+    } catch {
+      return "https://via.placeholder.com/150";
+    }
+  };
 
-  try {
-    let subcategoryIds = [];
-    let brandIds = [];
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
 
-    // Step 1: map category names → subcategory IDs
-    if (filters.selectedCategories?.length > 0) {
-      const { data: subcategories, error: subcatError } = await supabase
-        .from("subcategories")
-        .select("id")
-        .in("name", filters.selectedCategories);
+    try {
+      let subcategoryIds = [];
+      let brandIds = [];
 
-      if (subcatError) {
-        console.error("Error fetching subcategories:", subcatError.message);
+      // Step 1: map category names → subcategory IDs
+      if (filters.selectedCategories?.length > 0) {
+        const { data: subcategories, error: subcatError } = await supabase
+          .from("subcategories")
+          .select("id")
+          .in("name", filters.selectedCategories);
+
+        if (subcatError) {
+          console.error("Error fetching subcategories:", subcatError.message);
+        } else {
+          subcategoryIds = subcategories.map((sc) => sc.id);
+        }
+      }
+
+      // Step 2: map brand names → brand IDs
+      if (filters.selectedBrands?.length > 0) {
+        const { data: brands, error: brandError } = await supabase
+          .from("brands")
+          .select("brand_id, brand_name")
+          .in("brand_name", filters.selectedBrands);
+
+        if (brandError) {
+          console.error("Error fetching brands:", brandError.message);
+        } else if (brands?.length > 0) {
+          brandIds = brands.map((b) => b.brand_id);
+        }
+      }
+
+      // Step 3: build product query
+      let query = supabase.from("products").select("*");
+
+      if (subcategoryIds.length > 0) {
+        query = query.in("subcategory_id", subcategoryIds);
+      }
+
+      if (brandIds.length > 0) {
+        query = query.in("brand_id", brandIds);
+      }
+
+      if (filters.selectedColors?.length > 0) {
+        const color = filters.selectedColors[0]; // TODO: support multiple
+        query = query.filter("variant->color", "cs", `["${color}"]`);
+      }
+
+      if (
+        filters.priceRange?.min !== undefined &&
+        filters.priceRange?.max !== undefined
+      ) {
+        query = query
+          .gte("price", filters.priceRange.min)
+          .lte("price", filters.priceRange.max);
+      }
+
+      // Sorting
+      if (sortBy === "Latest")
+        query = query.order("created_at", { ascending: false });
+      else if (sortBy === "Popular")
+        query = query.order("sold", { ascending: false });
+      else if (sortBy === "Price: Low to High")
+        query = query.order("price", { ascending: true });
+      else if (sortBy === "Price: High to Low")
+        query = query.order("price", { ascending: false });
+
+      const { data, error: productError } = await query;
+
+      if (productError) {
+        console.error("Error fetching products:", productError.message);
+        setProducts([]);
+        setError("Failed to load products. Please try again later.");
       } else {
-        subcategoryIds = subcategories.map((sc) => sc.id);
+        setProducts(data || []);
+        setError(null);
       }
-    }
-
-    // Step 2: map brand names → brand IDs
-    if (filters.selectedBrands?.length > 0) {
-      const { data: brands, error: brandError } = await supabase
-        .from("brands")
-        .select("brand_id, brand_name")
-        .in("brand_name", filters.selectedBrands);
-
-      if (brandError) {
-        console.error("Error fetching brands:", brandError.message);
-      } else if (brands?.length > 0) {
-        brandIds = brands.map((b) => b.brand_id);
-      }
-    }
-
-    // Step 3: build product query
-    let query = supabase.from("products").select("*");
-
-    if (subcategoryIds.length > 0) {
-      query = query.in("subcategory_id", subcategoryIds);
-    }
-
-    if (brandIds.length > 0) {
-      query = query.in("brand_id", brandIds);
-    }
-
-    if (filters.selectedColors?.length > 0) {
-      const color = filters.selectedColors[0]; // TODO: support multiple
-      query = query.filter("variant->color", "cs", `["${color}"]`);
-    }
-
-    if (
-      filters.priceRange?.min !== undefined &&
-      filters.priceRange?.max !== undefined
-    ) {
-      query = query
-        .gte("price", filters.priceRange.min)
-        .lte("price", filters.priceRange.max);
-    }
-
-    // Sorting
-    if (sortBy === "Latest")
-      query = query.order("created_at", { ascending: false });
-    else if (sortBy === "Popular")
-      query = query.order("sold", { ascending: false });
-    else if (sortBy === "Price: Low to High")
-      query = query.order("price", { ascending: true });
-    else if (sortBy === "Price: High to Low")
-      query = query.order("price", { ascending: false });
-
-    const { data, error: productError } = await query;
-
-    if (productError) {
-      console.error("Error fetching products:", productError.message);
+    } catch (err) {
+      console.error("Unexpected error:", err);
       setProducts([]);
-      setError("Failed to load products. Please try again later.");
-    } else {
-      setProducts(data || []);
-      setError(null);
+      setError("Something went wrong.");
     }
-  } catch (err) {
-    console.error("Unexpected error:", err);
-    setProducts([]);
-    setError("Something went wrong.");
-  }
 
-  setLoading(false);
-};
-
+    setLoading(false);
+  };
 
   const debouncedFetchProducts = debounce(fetchProducts, 300);
 
@@ -205,11 +225,7 @@ const fetchProducts = async () => {
               title={product.title}
               price={product.price}
               oldPrice={product.old_price}
-              image={
-                Array.isArray(product.images)
-                  ? product.images[0]
-                  : product.images || "https://via.placeholder.com/150"
-              }
+              image={getImageUrl(product)}
               sold={product.sold || 10}
               inStock={product.outofstock ? 0 : 1}
               discount={

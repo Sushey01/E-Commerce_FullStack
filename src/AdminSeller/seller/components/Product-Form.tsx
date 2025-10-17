@@ -117,7 +117,7 @@ export default function ProductForm({
           ? JSON.parse(product.images)
           : product.images;
       if (Array.isArray(imgs)) {
-        setImageUrls(imgs);
+        setImageUrls(imgs.slice(0, 4));
       } else if (
         typeof product.images === "string" &&
         product.images.startsWith("http")
@@ -283,7 +283,10 @@ export default function ProductForm({
       return;
     }
 
-    const productData = {
+  // Ensure we never persist more than 4 images; index 0 is primary
+  const cappedImages = (imageUrls || []).slice(0, 4);
+
+  const productData = {
       title: title.trim(),
       subtitle: (formData.get("productSubtitle") as string)?.trim() || null,
       description: description.trim(),
@@ -291,7 +294,7 @@ export default function ProductForm({
       old_price: (formData.get("productOldPrice") as string) || "0.00",
       rating: "0.00",
       reviews: parseInt((formData.get("productReviews") as string) || "0"),
-      images: JSON.stringify(imageUrls),
+  images: JSON.stringify(cappedImages),
       variant: JSON.stringify({
         sizes:
           (formData.get("productSizes") as string)
@@ -320,11 +323,11 @@ export default function ProductForm({
     try {
       if (product?.id) {
         // Upload images first (if any new ones), else keep current imageUrls
-        let finalImageUrls = imageUrls;
+        let finalImageUrls = (imageUrls || []).slice(0, 4);
         if (imageUploadRef.current) {
           const uploaded = await imageUploadRef.current.uploadAllImages();
           if (uploaded && uploaded.length) {
-            finalImageUrls = uploaded;
+            finalImageUrls = uploaded.slice(0, 4);
           }
         }
         productData.images = JSON.stringify(finalImageUrls);
@@ -382,9 +385,13 @@ export default function ProductForm({
         alert("Product updated successfully!");
       } else {
         // Upload images first
-        let finalImageUrls = imageUrls;
+        let finalImageUrls = (imageUrls || []).slice(0, 4);
         if (imageUploadRef.current) {
-          finalImageUrls = await imageUploadRef.current.uploadAllImages();
+          const uploaded = await imageUploadRef.current.uploadAllImages();
+          finalImageUrls = (uploaded && uploaded.length
+            ? uploaded
+            : finalImageUrls
+          ).slice(0, 4);
         }
         productData.images = JSON.stringify(finalImageUrls);
 

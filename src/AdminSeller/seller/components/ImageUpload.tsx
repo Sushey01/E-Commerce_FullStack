@@ -22,6 +22,7 @@ export interface ImageUploadRef {
 
 const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
   ({ imageUrls, onImagesChange, disabled }, ref) => {
+    const MAX_IMAGES = 4;
     const [uploadingImages, setUploadingImages] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +58,7 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
     const handleFileSelect = async (
       event: React.ChangeEvent<HTMLInputElement>
     ) => {
-      const files = Array.from(event.target.files || []);
+  const files = Array.from(event.target.files || []);
       const maxSizeInMB = 5;
       const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
 
@@ -75,25 +76,28 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
 
       if (validFiles.length === 0) return;
 
-      // Limit total images to 8
-      const totalImages = imageUrls.length + validFiles.length;
-      if (totalImages > 8) {
-        alert(
-          `You can only upload up to 8 images. You currently have ${imageUrls.length}`
-        );
+      // Enforce max of 4 images; first is primary, others secondary
+      if (imageUrls.length >= MAX_IMAGES) {
+        alert("You can upload up to 4 images only. The first will be Primary and other up to 3 will be Secondary.");
         return;
+      }
+
+      const availableSlots = Math.max(0, MAX_IMAGES - imageUrls.length);
+      const filesToUse = validFiles.slice(0, availableSlots);
+      if (filesToUse.length < validFiles.length) {
+        alert(`Only ${availableSlots} more image(s) can be added (max 4 total).`);
       }
 
       setUploadingImages(true);
 
       try {
         // 1️⃣ Show temporary preview immediately
-        const previewUrls = validFiles.map((f) => URL.createObjectURL(f));
-        onImagesChange([...imageUrls, ...previewUrls]);
+        const previewUrls = filesToUse.map((f) => URL.createObjectURL(f));
+        onImagesChange([...imageUrls, ...previewUrls].slice(0, MAX_IMAGES));
 
         // 2️⃣ Upload files to Supabase in parallel
         const uploadedUrls = await Promise.all(
-          validFiles.map((file) => uploadToSupabase(file))
+          filesToUse.map((file) => uploadToSupabase(file))
         );
 
         // 3️⃣ Replace blob URLs with Supabase public URLs
@@ -102,7 +106,7 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
           finalUrls.push(url);
         });
 
-        onImagesChange(finalUrls);
+        onImagesChange(finalUrls.slice(0, MAX_IMAGES));
       } catch (err) {
         console.error("Failed to upload images:", err);
       } finally {
@@ -159,16 +163,16 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
             onClick={triggerFileInput}
             variant="outline"
             className="flex-1"
-            disabled={uploadingImages || disabled}
+            disabled={uploadingImages || disabled || imageUrls.length >= MAX_IMAGES}
           >
             <Upload className="h-4 w-4 mr-2" />
-            {uploadingImages ? "Uploading..." : "Browse Images"}
+            {uploadingImages ? "Uploading..." : imageUrls.length >= MAX_IMAGES ? "Max 4 images" : "Browse Images"}
           </Button>
           <Button
             type="button"
             variant="secondary"
             onClick={triggerFileInput}
-            disabled={uploadingImages || disabled}
+            disabled={uploadingImages || disabled || imageUrls.length >= MAX_IMAGES}
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -176,7 +180,10 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
 
         {imageUrls.length > 0 && (
           <div className="space-y-2">
-            <Label>Product Images ({imageUrls.length})</Label>
+            <Label>
+              Product Images ({imageUrls.length}/4)
+            </Label>
+            <p className="text-xs text-gray-500">First image is Primary. You can add up to 3 Secondary images.</p>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {imageUrls.map((url, index) => (
                 <div
@@ -203,13 +210,19 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
-                  {index === 0 && (
+                  {index === 0 ? (
                     <div className="absolute top-2 left-2">
                       <Badge
                         variant="default"
                         className="text-xs bg-blue-500 text-white"
                       >
                         Main
+                      </Badge>
+                    </div>
+                  ) : (
+                    <div className="absolute top-2 left-2">
+                      <Badge variant="inactive" className="text-xs">
+                        Secondary
                       </Badge>
                     </div>
                   )}

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import BottomNavBarMobile from "../mobileNav/BottomNavBarMobile";
 import RedirectTopButton from "../ui/RedirectTopButton";
 import HelpCustomerChat from "../ui/HelpCustomerChat";
+import supabase from "../supabase";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -268,9 +269,16 @@ const Navbar = () => {
                   <li
                     onClick={() => {
                       setShowProfileMenu(false);
-                      navigate("/loginPage")
-                      // Handle logout logic here
-                      console.log("Signed out");
+                      // Properly sign out via Supabase then navigate
+                      (async () => {
+                        try {
+                          await supabase.auth.signOut();
+                        } catch (e) {
+                          console.warn("Error signing out:", e);
+                        } finally {
+                          navigate("/loginPage", { replace: true });
+                        }
+                      })();
                     }}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600"
                   >
