@@ -58,7 +58,7 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
     const handleFileSelect = async (
       event: React.ChangeEvent<HTMLInputElement>
     ) => {
-  const files = Array.from(event.target.files || []);
+      const files = Array.from(event.target.files || []);
       const maxSizeInMB = 5;
       const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
 
@@ -78,14 +78,18 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
 
       // Enforce max of 4 images; first is primary, others secondary
       if (imageUrls.length >= MAX_IMAGES) {
-        alert("You can upload up to 4 images only. The first will be Primary and other up to 3 will be Secondary.");
+        alert(
+          "You can upload up to 4 images only. The first will be Primary and other up to 3 will be Secondary."
+        );
         return;
       }
 
       const availableSlots = Math.max(0, MAX_IMAGES - imageUrls.length);
       const filesToUse = validFiles.slice(0, availableSlots);
       if (filesToUse.length < validFiles.length) {
-        alert(`Only ${availableSlots} more image(s) can be added (max 4 total).`);
+        alert(
+          `Only ${availableSlots} more image(s) can be added (max 4 total).`
+        );
       }
 
       setUploadingImages(true);
@@ -163,16 +167,24 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
             onClick={triggerFileInput}
             variant="outline"
             className="flex-1"
-            disabled={uploadingImages || disabled || imageUrls.length >= MAX_IMAGES}
+            disabled={
+              uploadingImages || disabled || imageUrls.length >= MAX_IMAGES
+            }
           >
             <Upload className="h-4 w-4 mr-2" />
-            {uploadingImages ? "Uploading..." : imageUrls.length >= MAX_IMAGES ? "Max 4 images" : "Browse Images"}
+            {uploadingImages
+              ? "Uploading..."
+              : imageUrls.length >= MAX_IMAGES
+              ? "Max 4 images"
+              : "Browse Images"}
           </Button>
           <Button
             type="button"
             variant="secondary"
             onClick={triggerFileInput}
-            disabled={uploadingImages || disabled || imageUrls.length >= MAX_IMAGES}
+            disabled={
+              uploadingImages || disabled || imageUrls.length >= MAX_IMAGES
+            }
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -180,10 +192,10 @@ const ImageUpload = forwardRef<ImageUploadRef, ImageUploadProps>(
 
         {imageUrls.length > 0 && (
           <div className="space-y-2">
-            <Label>
-              Product Images ({imageUrls.length}/4)
-            </Label>
-            <p className="text-xs text-gray-500">First image is Primary. You can add up to 3 Secondary images.</p>
+            <Label>Product Images ({imageUrls.length}/4)</Label>
+            <p className="text-xs text-gray-500">
+              First image is Primary. You can add up to 3 Secondary images.
+            </p>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {imageUrls.map((url, index) => (
                 <div

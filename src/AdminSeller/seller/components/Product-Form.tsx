@@ -283,10 +283,10 @@ export default function ProductForm({
       return;
     }
 
-  // Ensure we never persist more than 4 images; index 0 is primary
-  const cappedImages = (imageUrls || []).slice(0, 4);
+    // Ensure we never persist more than 4 images; index 0 is primary
+    const cappedImages = (imageUrls || []).slice(0, 4);
 
-  const productData = {
+    const productData = {
       title: title.trim(),
       subtitle: (formData.get("productSubtitle") as string)?.trim() || null,
       description: description.trim(),
@@ -294,7 +294,7 @@ export default function ProductForm({
       old_price: (formData.get("productOldPrice") as string) || "0.00",
       rating: "0.00",
       reviews: parseInt((formData.get("productReviews") as string) || "0"),
-  images: JSON.stringify(cappedImages),
+      images: JSON.stringify(cappedImages),
       variant: JSON.stringify({
         sizes:
           (formData.get("productSizes") as string)
@@ -388,9 +388,8 @@ export default function ProductForm({
         let finalImageUrls = (imageUrls || []).slice(0, 4);
         if (imageUploadRef.current) {
           const uploaded = await imageUploadRef.current.uploadAllImages();
-          finalImageUrls = (uploaded && uploaded.length
-            ? uploaded
-            : finalImageUrls
+          finalImageUrls = (
+            uploaded && uploaded.length ? uploaded : finalImageUrls
           ).slice(0, 4);
         }
         productData.images = JSON.stringify(finalImageUrls);

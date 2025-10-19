@@ -27,16 +27,16 @@ const Navbar = () => {
 
   return (
     <>
-    {/* <div className="max-w-[1400px] mx-auto w-full"> */}
+      {/* <div className="max-w-[1400px] mx-auto w-full"> */}
 
       <RedirectTopButton />
       <div className="md:block hidden">
-      <HelpCustomerChat />
+        <HelpCustomerChat />
       </div>
       <div className="block lg:hidden ">
         <BottomNavBarMobile />
       </div>
-    {/* </div> */}
+      {/* </div> */}
 
       {/* Sidebar sliding panel */}
       {menuOpen && (
@@ -154,7 +154,7 @@ const Navbar = () => {
           <div className={styles.firstNav}>
             <div className={styles.bars}>
               <div className={styles.category}>
-<select className="border border-gray-300 bg-white text-gray-800 px-3  rounded focus:outline-none focus:border-gray-300 focus:ring-0">
+                <select className="border border-gray-300 bg-white text-gray-800 px-3  rounded focus:outline-none focus:border-gray-300 focus:ring-0">
                   <option>Select Category</option>
                   <option>Electronics</option>
                   <option>Fashion</option>
