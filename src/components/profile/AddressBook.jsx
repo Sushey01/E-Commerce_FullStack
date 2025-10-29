@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
+import supabase from "../../supabase";
+import Spinner from "../Spinner";
 
 const emptyForm = {
   id: null,
@@ -18,6 +20,8 @@ const AddressBook = () => {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   // Load/save from localStorage for demo persistence
   useEffect(() => {

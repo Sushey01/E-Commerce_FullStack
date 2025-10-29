@@ -3,61 +3,132 @@ import supabase from "../supabase";
 import Spinner from "./Spinner";
 
 const ProfileAccountManagement = () => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    city: "",
+  });
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    async function fetchUserData() {
+    const fetchUserData = async () => {
       try {
-        const { data, error: userError } = await supabase.auth.getUser();
-        const user = data?.user;
-        if (userError || !user) {
-          console.error("No user logged in");
+        // 1️⃣ Get auth user
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+        if (authError || !user) {
+          console.error("No user logged in", authError);
           setLoading(false);
           return;
         }
 
-        const { data: addresses, error } = await supabase
-          .from("addresses")
+        // 2️⃣ Ensure user_settings exists
+        await supabase.from("user_settings").upsert(
+          {
+            user_id: user.id,
+            full_name: user.user_metadata?.full_name || "",
+            email: user.email,
+            phone: "",
+            preferences: { city: "" },
+          },
+          { onConflict: ["user_id"] }
+        );
+
+        // 3️⃣ Fetch user_settings
+        const { data: settings, error: settingsError } = await supabase
+          .from("user_settings")
           .select("*")
           .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(1);
+          .maybeSingle();
+        if (settingsError) throw settingsError;
 
-        if (error) {
-          console.error("Error fetching address:", error);
-          setLoading(false);
-          return;
-        }
+        const prefs = settings?.preferences || {};
 
-        if (addresses.length > 0) {
-          const row = addresses[0];
-          const parsedAddress =
-            typeof row.address === "string"
-              ? JSON.parse(row.address)
-              : row.address;
-          setUserData({ ...row, address: parsedAddress });
-        } else {
-          setUserData({ address: {} });
-        }
+        // 4️⃣ Fetch users table
+        const { data: usersRow, error: usersError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (usersError) throw usersError;
+
+        // 5️⃣ Set form state with proper fallbacks
+        setUserData({
+          full_name:
+            settings?.full_name ||
+            usersRow?.full_name ||
+            user.user_metadata?.full_name ||
+            "",
+          email: settings?.email || user.email || "",
+          phone: settings?.phone || usersRow?.phone || "",
+          city: prefs.city || "",
+        });
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching user data:", err);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchUserData();
   }, []);
 
-  const handleAddressChange = (field, value) => {
-    setUserData({
-      ...userData,
-      address: {
-        ...userData.address,
-        [field]: value,
-      },
-    });
+  const handleChange = (field, value) => {
+    setUserData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        alert("You must be logged in");
+        return;
+      }
+
+      // 1️⃣ Update user_settings
+      const { error: settingsError } = await supabase
+        .from("user_settings")
+        .upsert(
+          {
+            user_id: user.id,
+            full_name: userData.full_name,
+            email: userData.email,
+            phone: userData.phone,
+            preferences: {
+              city: userData.city,
+            },
+          },
+          { onConflict: ["user_id"] }
+        );
+      if (settingsError) throw settingsError;
+
+      // 2️⃣ Update users table
+      const { error: usersError } = await supabase.from("users").upsert(
+        {
+          id: user.id,
+          full_name: userData.full_name,
+          phone: userData.phone,
+          email: userData.email, // required
+        },
+        { onConflict: ["id"] }
+      );
+      if (usersError) throw usersError;
+
+      alert("✅ Profile updated successfully!");
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      alert("❌ Failed to update profile. See console for details.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading)
@@ -68,82 +139,63 @@ const ProfileAccountManagement = () => {
     );
 
   return (
-    <div className="p-4 flex gap-3 flex-col w-full border rounded-lg shadow-[0px_-5px_5px_rgba(0,0,0,0.2)]">
+    <div className="p-4 flex flex-col gap-4 w-full border rounded-lg shadow-md">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 border-b-2 gap-2">
-        <p className="text-xl">Manage My Account</p>
+      <div className="flex justify-between items-center py-4 border-b">
+        <p className="text-xl font-semibold">Manage My Account</p>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+        >
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
       </div>
 
-      {/* Form Inputs */}
+      {/* Form */}
       <div className="flex flex-col gap-6">
-        {/* Row 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 md:gap-x-20">
-          <div className="flex flex-col gap-1 w-full">
-            <p>Full Name</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Full Name */}
+          <div className="flex flex-col gap-1">
+            <label>Full Name</label>
             <input
               className="px-4 py-2 w-full border rounded-sm"
-              value={userData.address?.firstname || ""}
-              onChange={(e) => handleAddressChange("firstname", e.target.value)}
-              placeholder="Enter Your Full Name"
+              value={userData.full_name}
+              onChange={(e) => handleChange("full_name", e.target.value)}
             />
           </div>
 
-          <div className="flex flex-col gap-1 w-full">
-            <p>Mobile Number</p>
+          {/* Mobile Number */}
+          <div className="flex flex-col gap-1">
+            <label>Mobile Number</label>
             <input
               className="px-4 py-2 w-full border rounded-sm"
-              value={userData.address?.phonenumber || ""}
-              onChange={(e) =>
-                handleAddressChange("phonenumber", e.target.value)
-              }
-              placeholder="Enter Mobile Number"
-            />
-          </div>
-        </div>
-
-        {/* Row 2 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 md:gap-x-20">
-          <div className="flex flex-col gap-1 w-full">
-            <p>Shipping Address</p>
-            <input
-              className="px-4 py-2 w-full border rounded-sm"
-              value={userData.address?.street || ""}
-              onChange={(e) => handleAddressChange("street", e.target.value)}
-              placeholder="Enter Shipping Address"
+              value={userData.phone}
+              onChange={(e) => handleChange("phone", e.target.value)}
             />
           </div>
 
-          <div className="flex flex-col gap-1 w-full">
-            <p>Default Billing Address</p>
+          {/* City */}
+          <div className="flex flex-col gap-1">
+            <label>City</label>
             <input
               className="px-4 py-2 w-full border rounded-sm"
-              value={userData.address?.billing || ""}
-              onChange={(e) => handleAddressChange("billing", e.target.value)}
-              placeholder="Enter Billing Address"
-            />
-          </div>
-        </div>
-
-        {/* Row 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 md:gap-x-20">
-          <div className="flex flex-col gap-1 w-full">
-            <p>City / Province</p>
-            <input
-              className="px-4 py-2 w-full border rounded-sm"
-              value={userData.address?.city || ""}
-              onChange={(e) => handleAddressChange("city", e.target.value)}
-              placeholder="Enter City"
+              value={userData.city}
+              onChange={(e) => handleChange("city", e.target.value)}
             />
           </div>
 
-          <div className="flex flex-col gap-1 w-full">
-            <p>Postal / Country</p>
+          {/* Email (readonly) */}
+          <div className="flex flex-col gap-1 md:col-span-2">
+            <label>Email</label>
             <input
-              className="px-4 py-2 w-full border rounded-sm"
-              value={userData.address?.postalno || ""}
-              onChange={(e) => handleAddressChange("postalno", e.target.value)}
-              placeholder="Enter Postal / Country"
+              className="px-4 py-2 w-full border rounded-sm bg-gray-100 text-gray-600 cursor-not-allowed"
+              value={userData.email}
+              readOnly
             />
+            <p className="text-sm text-gray-500">
+              Your email is linked to your account and cannot be changed.
+            </p>
           </div>
         </div>
       </div>
