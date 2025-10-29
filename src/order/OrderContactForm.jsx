@@ -3,6 +3,7 @@ import MasterCard from "../assets/images/mastercard.png";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import supabase from "../supabase";
 
 const OrderContactForm = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const OrderContactForm = () => {
 
   const { register, handleSubmit, watch, reset } = useForm();
 
-  function onSubmit(data) {
+  async function onSubmit(data) {
     let saved = JSON.parse(localStorage.getItem("orderinfo"));
 
     // If saved is null or not an array, initialize as empty array
@@ -31,7 +32,44 @@ const OrderContactForm = () => {
     localStorage.setItem("orderinfo", JSON.stringify(updated));
     setSubmittedData(data); // show latest
     // console.log("form data:", data);
+
+    //Get current user
+    const {data: {user}, error:userError} = await supabase.auth.getUser();
+    if (userError || !user){
+      console.error("User not authenticated:", userError);
+      return;
+    }
+
+
+    // Prepare record for supabase
+const newAddress = {
+  user_id: user.id,
+  type: "shipping",
+  label: null,
+  address: {
+    firstname: data.firstname,
+    lastname: data.lastname,
+    email: data.email,
+    phonenumber: data.phonenumber,
+    delivery_method: data.deliveryMethod,
+    country: data.country,
+    city: data.city,
+    street: data.street,
+    postal_code: data.postal_code,
+    province: data.province,
+    landmark: data.landmark,
+  },
+  is_default: false
+};
+
+  // Insert into Supabase
+  const {error} = await supabase.from("addresses").insert([newAddress]);
+  if (error){
+    console.error("Error savoing to supabase:", error);
+  }else{
+    console.log("Address saved to supabase successfully.")
   }
+}
 
   const handleCancel = (e) => {
     e.preventDefault();
