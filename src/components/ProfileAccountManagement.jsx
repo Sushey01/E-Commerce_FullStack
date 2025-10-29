@@ -26,19 +26,27 @@ const ProfileAccountManagement = () => {
           return;
         }
 
-        // 2️⃣ Ensure user_settings exists
-        await supabase.from("user_settings").upsert(
-          {
+        // 2️⃣ Check if user_settings exists
+        const { data: existing, error: existingError } = await supabase
+          .from("user_settings")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (existingError) throw existingError;
+
+        // 3️⃣ If not, create a new record (DON’T overwrite existing)
+        if (!existing) {
+          await supabase.from("user_settings").insert({
             user_id: user.id,
             full_name: user.user_metadata?.full_name || "",
             email: user.email,
             phone: "",
             preferences: { city: "" },
-          },
-          { onConflict: ["user_id"] }
-        );
+          });
+        }
 
-        // 3️⃣ Fetch user_settings
+        // 4️⃣ Fetch user_settings again (now guaranteed to exist)
         const { data: settings, error: settingsError } = await supabase
           .from("user_settings")
           .select("*")
@@ -48,7 +56,7 @@ const ProfileAccountManagement = () => {
 
         const prefs = settings?.preferences || {};
 
-        // 4️⃣ Fetch users table
+        // 5️⃣ Fetch users table
         const { data: usersRow, error: usersError } = await supabase
           .from("users")
           .select("*")
@@ -56,7 +64,7 @@ const ProfileAccountManagement = () => {
           .maybeSingle();
         if (usersError) throw usersError;
 
-        // 5️⃣ Set form state with proper fallbacks
+        // 6️⃣ Set form state with proper fallbacks
         setUserData({
           full_name:
             settings?.full_name ||

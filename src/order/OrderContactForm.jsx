@@ -5,81 +5,133 @@ import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import supabase from "../supabase";
 
-const OrderContactForm = () => {
+const OrderContactForm = ({ onSaved, initialAddress }) => {
   const location = useLocation();
   const selectedItems = location.state?.selectedItems || [];
-  
-  const [deliveryMethod, setDeliveryMethod]= useState("standard")
-  const shipping = deliveryMethod === "express" ? 5:0;
 
+  const [deliveryMethod, setDeliveryMethod] = useState("standard");
+  const shipping = deliveryMethod === "express" ? 5 : 0;
 
-  
-
-  const [submittedData, setSubmittedData] = useState(()=>{
-    const saved = JSON.parse(localStorage.getItem("orderinfo"))||[];
-    return saved.length?saved[saved.length-1]:null;
+  const [submittedData, setSubmittedData] = useState(() => {
+    if (initialAddress) return initialAddress;
+    const saved = JSON.parse(localStorage.getItem("orderinfo")) || [];
+    return saved.length ? saved[saved.length - 1] : null;
   });
 
   const { register, handleSubmit, watch, reset } = useForm();
 
   async function onSubmit(data) {
-    let saved = JSON.parse(localStorage.getItem("orderinfo"));
-
-    // If saved is null or not an array, initialize as empty array
-    if (!Array.isArray(saved)) saved = [];
-
-    const updated = [...saved, data]; // append new address
-    localStorage.setItem("orderinfo", JSON.stringify(updated));
-    setSubmittedData(data); // show latest
-    // console.log("form data:", data);
+    // Normalize to the AddressBook schema
+    const normalized = {
+      full_name: `${data.firstname ?? ""} ${data.lastname ?? ""}`.trim(),
+      phone: data.phonenumber ?? "",
+      line1: data.address ?? "",
+      line2: data.landmark ?? "",
+      city: data.city ?? "",
+      state: data.province ?? "",
+      postal_code: data.postalno ?? "",
+      country: data.country ?? "",
+      // keep email only for local UI needs
+      email: data.email ?? "",
+      is_default: false,
+    };
 
     //Get current user
-    const {data: {user}, error:userError} = await supabase.auth.getUser();
-    if (userError || !user){
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
       console.error("User not authenticated:", userError);
+      // Persist to localStorage only when not authenticated (fallback)
+      let saved = JSON.parse(localStorage.getItem("orderinfo"));
+      if (!Array.isArray(saved)) saved = [];
+      localStorage.setItem("orderinfo", JSON.stringify([...saved, normalized]));
+      setSubmittedData(normalized);
+      if (typeof onSaved === "function") onSaved(normalized);
       return;
     }
 
+    // Determine if this should be default (if user has no addresses yet)
+    let isDefault = normalized.is_default;
+    try {
+      const { data: existing, error: fetchErr } = await supabase
+        .from("addresses")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      if (!fetchErr && existing === null) {
+        // When using head:true, data is null; use count from response
+      }
+      // Supabase-js v2 returns count on the response object, but since we didn't destructure it,
+      // we infer default by trying a second query without head if needed.
+      if (fetchErr) {
+        // noop; fall back
+      }
+      // Fallback simple fetch to check emptiness
+      const { data: list } = await supabase
+        .from("addresses")
+        .select("id")
+        .eq("user_id", user.id)
+        .limit(1);
+      if (!list || list.length === 0) isDefault = true;
+    } catch (_e) {
+      // ignore, keep default false
+    }
 
-    // Prepare record for supabase
-const newAddress = {
-  user_id: user.id,
-  type: "shipping",
-  label: null,
-  address: {
-    firstname: data.firstname,
-    lastname: data.lastname,
-    email: data.email,
-    phonenumber: data.phonenumber,
-    delivery_method: data.deliveryMethod,
-    country: data.country,
-    city: data.city,
-    street: data.street,
-    postal_code: data.postal_code,
-    province: data.province,
-    landmark: data.landmark,
-  },
-  is_default: false
-};
+    // Prepare record for supabase using JSONB 'address' per your schema
+    const record = {
+      user_id: user.id,
+      type: "shipping",
+      label: null,
+      address: {
+        full_name: normalized.full_name,
+        phone: normalized.phone,
+        line1: normalized.line1,
+        line2: normalized.line2,
+        city: normalized.city,
+        state: normalized.state,
+        postal_code: normalized.postal_code,
+        country: normalized.country,
+      },
+      is_default: isDefault,
+    };
 
-  // Insert into Supabase
-  const {error} = await supabase.from("addresses").insert([newAddress]);
-  if (error){
-    console.error("Error savoing to supabase:", error);
-  }else{
-    console.log("Address saved to supabase successfully.")
+    const { data: inserted, error } = await supabase
+      .from("addresses")
+      .insert([record])
+      .select()
+      .single();
+    if (error) {
+      console.error("Error saving to supabase:", error);
+    } else {
+      // Use the inserted row so our checkout card matches Address Book exactly
+      setSubmittedData(inserted);
+      if (typeof onSaved === "function") onSaved(inserted);
+    }
   }
-}
 
   const handleCancel = (e) => {
     e.preventDefault();
     reset();
   };
 
-  const handleEdit = ()=>{
-    reset(submittedData); //populate form with current address
+  const handleEdit = () => {
+    // Map normalized submittedData back into form fields
+    const fullName = submittedData?.full_name ?? "";
+    const [fn = "", ln = ""] = fullName.split(" ");
+    reset({
+      firstname: submittedData?.firstname ?? fn,
+      lastname: submittedData?.lastname ?? ln,
+      email: submittedData?.email ?? "",
+      phonenumber: submittedData?.phone ?? submittedData?.phonenumber ?? "",
+      country: submittedData?.country ?? "",
+      city: submittedData?.city ?? "",
+      address: submittedData?.line1 ?? submittedData?.address ?? "",
+      postalno: submittedData?.postal_code ?? submittedData?.postalno ?? "",
+      province: submittedData?.state ?? submittedData?.province ?? "",
+    });
     setSubmittedData(null); //show form
-  }
+  };
 
   return (
     <>
@@ -223,29 +275,48 @@ const newAddress = {
           </form>
         </div>
       ) : (
-        //Show Billing or Shipping Address.
-
-        <div className="p-2 flex flex-col w-full md:w-1/2 bg-gray-100 border rounded-none">
-          <div className="flex justify-between">
-            <p className="text-sm">Shipping Address</p>
-            <button onClick={handleEdit} className="text-blue-500">
-              EDIT
-            </button>
-          </div>
-          <div className="flex gap-4">
-            <p>
-              Name:{submittedData.firstname} {submittedData.lastname}
-            </p>
-            <p>Number:{submittedData.phonenumber}</p>
-          </div>
-          <div className="flex gap-3">
-            <button className="bg-orange-500 border rounded-full px-4 text-white text-base">
-              HOME
-            </button>
-            <p>
-              Address:{submittedData.address}, {submittedData.city},{" "}
-              {submittedData.country}, {submittedData.postalno}
-            </p>
+        // Show saved Shipping Address in aligned card style similar to Address Book
+        <div className="w-full md:w-2/3 lg:w-1/2">
+          <div className="border rounded p-4 bg-white space-y-2 shadow-sm">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Shipping Address</p>
+                <p className="font-semibold">
+                  {submittedData.full_name
+                    ? submittedData.full_name
+                    : `${submittedData.firstname ?? ""} ${
+                        submittedData.lastname ?? ""
+                      }`.trim()}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700">
+                  Home
+                </span>
+                <button
+                  onClick={handleEdit}
+                  className="text-blue-600 text-sm hover:underline"
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
+            <div className="text-sm text-gray-700">
+              <p>{submittedData.line1 ?? submittedData.address}</p>
+              <p>
+                {submittedData.city}
+                {submittedData.state || submittedData.province
+                  ? `, ${submittedData.state ?? submittedData.province}`
+                  : ""}
+                {submittedData.country ? `, ${submittedData.country}` : ""}
+                {submittedData.postal_code || submittedData.postalno
+                  ? ` ${submittedData.postal_code ?? submittedData.postalno}`
+                  : ""}
+              </p>
+              <p className="text-gray-500">
+                📞 {submittedData.phone ?? submittedData.phonenumber}
+              </p>
+            </div>
           </div>
         </div>
       )}
