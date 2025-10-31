@@ -43,7 +43,26 @@ const OrderPage = () => {
   // }
 
   const location = useLocation();
-  const selectedItems = location.state?.selectedItems || [];
+  // const selectedItems = location.state?.selectedItems || [];
+
+
+// Instead of storing selectedItems in localStorage, we can use zustand context as a state management.
+// Lazy initializor = arrow function to avoid running on every render
+
+  const [selectedItems, setSelectedItems] = useState(()=>{
+    const fromState = location.state?.selectedItems;
+    if (fromState && fromState.length>0) return fromState;
+
+      const saved = localStorage.getItem("selectedItems");
+      return saved ?JSON.parse(saved):[]
+    
+  })
+
+  useEffect(() => {
+    if (selectedItems.length>0){
+      localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+    }
+  }, [selectedItems])
 
   const [submittedAddress, setSubmittedAddress] = useState(() => {
     const savedAddress = JSON.parse(localStorage.getItem("orderinfo")) || [];

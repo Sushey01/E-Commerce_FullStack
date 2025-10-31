@@ -47,6 +47,7 @@ import SellerForm from "./AdminSeller/seller/SellerForm";
 import HomePage from "./AdminSeller/app/Page";
 import SignupPage from "./components/SignupPage";
 
+
 const App = () => {
   return (
     <Router>
@@ -83,6 +84,7 @@ const App = () => {
                     </>
                   }
                 />
+
 
                 {/* Cart, Profile, Wishlist */}
                 <Route path="/cart" element={<CartPage />} />
