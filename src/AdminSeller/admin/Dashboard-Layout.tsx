@@ -99,16 +99,22 @@ interface NavItem {
   id: string;
   permission?: keyof ReturnType<typeof useCanAccess>;
   badge?: number;
-  children?:{
-    label:string;
-    id:string;
-  }[] | undefined;
+  children?:
+    | {
+        label: string;
+        id: string;
+      }[]
+    | undefined;
 }
 
 export default function DashboardLayout() {
   const { user, loading, logout, getSellerRequests } = useAuth();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeSub, setActiveSub] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  //Track expanded dropdowns sepearately so expand/collapse doesn't change activeTab
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const canAccess = useCanAccess();
 
   // Show loading screen while checking authentication
@@ -153,11 +159,11 @@ export default function DashboardLayout() {
       id: "products",
       permission: "canManageAllProducts",
       children: [
-        {label: "All Products", id:"all-products"},
-        {label: "Seller Products", id:"seller-products"},
-        {label: "Categories", id:"categories"},
-        {label: "Brands", id:"brands"},
-      ]
+        { label: "All Products", id: "all-products" },
+        { label: "Seller Products", id: "seller-products" },
+        { label: "Categories", id: "categories" },
+        { label: "Brands", id: "brands" },
+      ],
     },
     {
       icon: BarChart3,
@@ -212,7 +218,7 @@ export default function DashboardLayout() {
       return (
         <ProtectedRoute requiredPermission={currentNavItem.permission}>
           {user?.role === "admin" ? (
-            <AdminDashboard activeTab={activeTab} />
+            <AdminDashboard activeTab={activeTab} activeSub={activeSub} />
           ) : (
             <SellerDashboard activeTab={activeTab} />
           )}
@@ -221,7 +227,7 @@ export default function DashboardLayout() {
     }
 
     return user?.role === "admin" ? (
-      <AdminDashboard activeTab={activeTab} />
+      <AdminDashboard activeTab={activeTab} activeSub={activeSub} />
     ) : (
       <SellerDashboard activeTab={activeTab} />
     );
@@ -258,73 +264,89 @@ export default function DashboardLayout() {
           </Button>
         </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-2">
-  {filteredNavItems.map((item) => {
-    const hasChildren = item.children && item.children.length > 0;
-    const isExpanded = activeTab === item.id; // simple control, or you can use a separate expanded state
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {filteredNavItems.map((item) => {
+            const hasChildren =
+              Array.isArray(item.children) && item.children.length > 0;
+            // Use separate expanded state so expand/collapse doesn't change activeTab
+            const isExpanded = !!expanded[item.id];
+            const isActiveParent = activeTab === item.id;
 
-    return (
-      <div key={item.id} className="space-y-1">
-        {/* Parent item */}
-        <Button
-          variant={activeTab === item.id ? "secondary" : "ghost"}
-          className="w-full justify-between relative"
-          onClick={() => {
-            if (hasChildren) {
-              // Toggle dropdown instead of changing main tab
-              setActiveTab((prev) => (prev === item.id ? "" : item.id));
-            } else {
-              setActiveTab(item.id);
-              setSidebarOpen(false);
-            }
-          }}
-        >
-          <div className="flex items-center">
-            <item.icon className="mr-3 h-4 w-4" />
-            {item.label}
-          </div>
+            return (
+              <div key={item.id} className="space-y-1">
+                {/* Parent item */}
+                <Button
+                  variant={isActiveParent ? "secondary" : "ghost"}
+                  // variant={activeTab === item.id ? "secondary" : "ghost"}
+                  className="w-full justify-between relative"
+                  onClick={() => {
+                    if (hasChildren) {
+                      // toggle expand/collapse state
+                      setExpanded((prev) => ({
+                        ...prev,
+                        [item.id]: !prev[item.id],
+                      }));
 
-          {/* Show dropdown arrow if children exist */}
-          {hasChildren && (
-            <span className="ml-auto">
-              {isExpanded ? "▾" : "▸"}
-            </span>
-          )}
+                      // set parent as active so its main view (All Products) is selectable
+                      setActiveTab(item.id);
 
-          {/* Optional badge */}
-          {item.badge && item.badge > 0 && (
-            <Badge
-              variant="pending"
-              className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
-            >
-              {item.badge}
-            </Badge>
-          )}
-        </Button>
+                      // Clear any selected sub so parent shows its 'All' view
+                      setActiveSub(null);
 
-        {/* Dropdown children */}
-        {hasChildren && isExpanded && (
-          <div className="pl-8 space-y-1">
-            {item.children.map((child) => (
-              <Button
-                key={child.id}
-                variant="ghost"
-                className="w-full justify-start text-sm"
-                onClick={() => {
-                  setActiveTab(child.id);
-                  setSidebarOpen(false);
-                }}
-              >
-                {child.label}
-              </Button>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  })}
-</nav>
+                      // Close sidebar on mobile when selecting parent
+                      setSidebarOpen(false);
+                    } else {
+                      setActiveTab(item.id);
+                      setActiveSub(null);
+                      setSidebarOpen(false);
+                    }
+                  }}
+                >
+                  <div className="flex items-center">
+                    <item.icon className="mr-3 h-4 w-4" />
+                    {item.label}
+                  </div>
 
+                  {/* Show dropdown arrow if children exist */}
+                  {hasChildren && (
+                    <span className="ml-auto">{isExpanded ? "▾" : "▸"}</span>
+                  )}
+
+                  {/* Optional badge */}
+                  {item.badge && item.badge > 0 && (
+                    <Badge
+                      variant="pending"
+                      className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                    >
+                      {item.badge}
+                    </Badge>
+                  )}
+                </Button>
+
+                {/* Dropdown children */}
+                {hasChildren && isExpanded && (
+                  <div className="pl-8 space-y-1">
+                    {item.children?.map((child) => (
+                      <Button
+                        key={child.id}
+                        variant="ghost"
+                        className="w-full justify-start text-sm"
+                        onClick={() => {
+                          // Keep parent as activeTab and set activeSub to indicate the selected child
+                          setActiveTab(item.id);
+                          setActiveSub(child.id);
+                          setSidebarOpen(false);
+                        }}
+                      >
+                        {child.label}
+                      </Button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </nav>
 
         <div className="p-4 border-t border-sidebar-border">
           <div className="flex items-center space-x-3 mb-4">

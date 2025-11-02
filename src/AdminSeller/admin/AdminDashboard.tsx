@@ -22,6 +22,9 @@ import {
   Clock,
 } from "lucide-react";
 import supabase from "../../supabase";
+import ProductList from "./components/ProductList";
+import { mockProducts, mockSellers, statsCards } from "./mockData";
+import BrandsList from "./components/BrandsList";
 
 // Types
 type Product = {
@@ -40,8 +43,6 @@ const useProducts = () => ({
 });
 
 const useAuth = () => ({
-
-
   getSellerRequests: () =>
     [
       {
@@ -107,80 +108,7 @@ const AnalyticsCharts = ({ userRole }: { userRole?: string }) => (
   </Card>
 );
 
-const ProductList = ({
-  showSellerColumn,
-  onEdit,
-  onView,
-}: {
-  showSellerColumn?: boolean;
-  onEdit?: (product: any) => void;
-  onView?: (product: any) => void;
-}) => (
-  <Card>
-    <CardContent className="p-0">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="border-b border-border">
-            <tr>
-              <th className="text-left p-4 font-medium">Name</th>
-              <th className="text-left p-4 font-medium">Category</th>
-              <th className="text-left p-4 font-medium">Price</th>
-              <th className="text-left p-4 font-medium">Stock</th>
-              {showSellerColumn && (
-                <th className="text-left p-4 font-medium">Seller</th>
-              )}
-              <th className="text-left p-4 font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockProducts.map((product) => (
-              <tr key={product.id} className="border-b border-border">
-                <td className="p-4 font-medium">{product.name}</td>
-                <td className="p-4 text-muted-foreground">
-                  {product.category}
-                </td>
-                <td className="p-4">${product.price}</td>
-                <td className="p-4">
-                  <Badge variant={product.stock > 0 ? "default" : "outOfStock"}>
-                    {product.stock > 0
-                      ? `${product.stock} in stock`
-                      : "Out of stock"}
-                  </Badge>
-                </td>
-                {showSellerColumn && (
-                  <td className="p-4 text-muted-foreground">
-                    {product.seller}
-                  </td>
-                )}
-                <td className="p-4">
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onView?.(product)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEdit?.(product)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </CardContent>
-  </Card>
-);
+// ProductList and mock data moved to separate files for readability
 
 const ProductForm = ({
   product,
@@ -218,119 +146,36 @@ const ProductForm = ({
   </Card>
 );
 
-// Mock data for admin dashboard
-const mockSellers = [
-  {
-    id: 1,
-    name: "John Smith",
-    email: "john@example.com",
-    products: 12,
-    sales: 2450,
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    email: "sarah@example.com",
-    products: 8,
-    sales: 1890,
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Mike Wilson",
-    email: "mike@example.com",
-    products: 15,
-    sales: 3200,
-    status: "inactive",
-  },
-  {
-    id: 4,
-    name: "Emma Davis",
-    email: "emma@example.com",
-    products: 6,
-    sales: 1200,
-    status: "active",
-  },
-];
-
-const mockProducts = [
-  {
-    id: 1,
-    name: "Wireless Headphones",
-    seller: "John Smith",
-    price: 99.99,
-    stock: 45,
-    category: "Electronics",
-  },
-  {
-    id: 2,
-    name: "Coffee Mug",
-    seller: "Sarah Johnson",
-    price: 15.99,
-    stock: 120,
-    category: "Home & Garden",
-  },
-  {
-    id: 3,
-    name: "Laptop Stand",
-    seller: "Mike Wilson",
-    price: 49.99,
-    stock: 0,
-    category: "Electronics",
-  },
-  {
-    id: 4,
-    name: "Yoga Mat",
-    seller: "Emma Davis",
-    price: 29.99,
-    stock: 78,
-    category: "Sports",
-  },
-];
-
-const statsCards = [
-  {
-    title: "Total Sellers",
-    value: "24",
-    change: "+12%",
-    icon: Users,
-    color: "text-blue-600",
-  },
-  {
-    title: "Total Products",
-    value: "156",
-    change: "+8%",
-    icon: Package,
-    color: "text-green-600",
-  },
-  {
-    title: "Total Revenue",
-    value: "$12,450",
-    change: "+23%",
-    icon: DollarSign,
-    color: "text-purple-600",
-  },
-  {
-    title: "Growth Rate",
-    value: "18.2%",
-    change: "+5%",
-    icon: TrendingUp,
-    color: "text-orange-600",
-  },
-];
+// mock data (products, sellers, stats) moved to ./mockData
 
 interface AdminDashboardProps {
   activeTab: string;
+  activeSub?: string | null;
 }
 
-export default function AdminDashboard({ activeTab }: AdminDashboardProps) {
+export default function AdminDashboard({
+  activeTab,
+  activeSub,
+}: AdminDashboardProps) {
   const { products } = useProducts();
   const { getSellerRequests, approveSellerRequest, rejectSellerRequest } =
     useAuth();
   const { toast } = useToast();
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+
+  const allCategories = Array.from(
+    new Set(mockProducts.map((p: any) => p.category).filter(Boolean))
+  );
+  const allBrands = Array.from(
+    new Set(
+      mockProducts
+        .map((p: any) => (p as any).seller || (p as any).brand)
+        .filter(Boolean)
+    )
+  );
 
   const renderDashboard = () => (
     <div className="space-y-6">
@@ -541,6 +386,142 @@ export default function AdminDashboard({ activeTab }: AdminDashboardProps) {
     </div>
   );
 
+  const renderSellerProducts = () => (
+    // For admin, show all products but include seller column
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-card-foreground">
+          Seller Products
+        </h3>
+      </div>
+      <ProductList
+        productsParam={mockProducts as any}
+        showSellerColumn={true}
+        onEdit={(p) => setEditingProduct(p)}
+        onView={(p) => console.log(p)}
+      />
+    </div>
+  );
+
+  const renderCategories = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="col-span-1">
+        <Card>
+          <CardHeader>
+            <CardTitle>Categories</CardTitle>
+            <CardDescription>Select a category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {allCategories.map((c) => (
+                <li key={c}>
+                  <Button
+                    variant={selectedCategory === c ? "secondary" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setSelectedCategory(c)}
+                  >
+                    {c}
+                  </Button>
+                </li>
+              ))}
+              <li>
+                <Button
+                  variant={selectedCategory === null ? "secondary" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setSelectedCategory(null)}
+                >
+                  All Categories
+                </Button>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="col-span-1 lg:col-span-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Products</CardTitle>
+            <CardDescription>Products filtered by category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ProductList
+              productsParam={
+                (selectedCategory
+                  ? mockProducts.filter((p) => p.category === selectedCategory)
+                  : mockProducts) as any
+              }
+              showSellerColumn={true}
+              onEdit={(p) => setEditingProduct(p)}
+              onView={(p) => console.log(p)}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
+  const renderBrands = () => (
+    <BrandsList />
+    // <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    //   <div className="col-span-1">
+    //     <Card>
+    //       <CardHeader>
+    //         <CardTitle>Brands</CardTitle>
+    //         <CardDescription>Select a brand</CardDescription>
+    //       </CardHeader>
+    //       <CardContent>
+    //         <ul className="space-y-2">
+    //           {allBrands.map((b) => (
+    //             <li key={b}>
+    //               <Button
+    //                 variant={selectedBrand === b ? "secondary" : "ghost"}
+    //                 className="w-full text-left"
+    //                 onClick={() => setSelectedBrand(b)}
+    //               >
+    //                 {b}
+    //               </Button>
+    //             </li>
+    //           ))}
+    //           <li>
+    //             <Button
+    //               variant={selectedBrand === null ? "secondary" : "ghost"}
+    //               className="w-full text-left"
+    //               onClick={() => setSelectedBrand(null)}
+    //             >
+    //               All Brands
+    //             </Button>
+    //           </li>
+    //         </ul>
+    //       </CardContent>
+    //     </Card>
+    //   </div>
+    //   <div className="col-span-1 lg:col-span-3">
+    //     <Card>
+    //       <CardHeader>
+    //         <CardTitle>Products</CardTitle>
+    //         <CardDescription>Products filtered by brand</CardDescription>
+    //       </CardHeader>
+    //       <CardContent>
+    //         <ProductList
+    //           productsParam={
+    //             (selectedBrand
+    //               ? mockProducts.filter(
+    //                   (p) =>
+    //                     ((p as any).seller || (p as any).brand) ===
+    //                     selectedBrand
+    //                 )
+    //               : mockProducts) as any
+    //           }
+    //           showSellerColumn={true}
+    //           onEdit={(p) => setEditingProduct(p)}
+    //           onView={(p) => console.log(p)}
+    //         />
+    //       </CardContent>
+    //     </Card>
+    //   </div>
+    // </div>
+  );
+
   const renderAnalytics = () => (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-card-foreground">
@@ -728,6 +709,21 @@ export default function AdminDashboard({ activeTab }: AdminDashboardProps) {
     });
   };
 
+  // If the Products parent is active but a child is selected, render the child's view
+  if (activeTab === "products" && activeSub) {
+    switch (activeSub) {
+      case "seller-products":
+        return renderSellerProducts();
+      case "categories":
+        return renderCategories();
+      case "brands":
+        return renderBrands();
+      case "all-products":
+      default:
+        return renderProducts();
+    }
+  }
+
   switch (activeTab) {
     case "dashboard":
       return renderDashboard();
@@ -737,6 +733,12 @@ export default function AdminDashboard({ activeTab }: AdminDashboardProps) {
       return renderSellerRequests();
     case "products":
       return renderProducts();
+    case "seller-products":
+      return renderSellerProducts();
+    case "categories":
+      return renderCategories();
+    case "brands":
+      return renderBrands();
     case "analytics":
       return renderAnalytics();
     case "settings":
