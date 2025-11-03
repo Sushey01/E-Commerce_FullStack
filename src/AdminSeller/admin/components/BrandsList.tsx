@@ -1,138 +1,80 @@
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import useBrands, { Brand as BrandType } from "../hooks/useBrands";
 
-type Brand = {
-  id: number;
-  name: string;
-  logoUrl: string;
-  category: string[];
-};
-
-const BrandsList = () => {
-  const [brands, setBrands] = useState<Brand[]>([
-    {
-      id: 1,
-      name: "Acer",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/4/48/Acer_2011.svg",
-      category: ["Laptop", "Monitor"],
-    },
-    {
-      id: 2,
-      name: "Asus",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/5/56/AsusTek_black_logo.svg",
-      category: ["Laptop", "Motherboard", "Gaming"],
-    },
-    {
-      id: 3,
-      name: "Dell",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg",
-      category: ["Laptop", "Monitor", "Server"],
-    },
-    {
-      id: 4,
-      name: "HP",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/3/32/HP_logo_2012.svg",
-      category: ["Laptop", "Printer", "Desktop"],
-    },
-    {
-      id: 5,
-      name: "Lenovo",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/6/6f/Lenovo_logo_2015.svg",
-      category: ["Laptop", "Tablet", "Smartphone"],
-    },
-    {
-      id: 6,
-      name: "Apple",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-      category: ["Smartphone", "Laptop", "Tablet", "Smartwatch"],
-    },
-    {
-      id: 7,
-      name: "Samsung",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
-      category: ["Smartphone", "TV", "Appliances", "Tablet"],
-    },
-    {
-      id: 8,
-      name: "Xiaomi",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/2/29/Xiaomi_logo.svg",
-      category: ["Smartphone", "TV", "Smartwatch", "Tablet"],
-    },
-    {
-      id: 9,
-      name: "Sony",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/2/2e/Sony_logo.svg",
-      category: ["TV", "Camera", "Audio"],
-    },
-    {
-      id: 10,
-      name: "LG",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/1/1e/LG_logo_%282015%29.svg",
-      category: ["TV", "Appliances", "Monitor"],
-    },
-    {
-      id: 11,
-      name: "Realme",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/6/6e/Realme_logo.svg",
-      category: ["Smartphone", "Smartwatch"],
-    },
-    {
-      id: 12,
-      name: "Huawei",
-      logoUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/0/00/Huawei_logo.svg",
-      category: ["Smartphone", "Tablet", "Networking"],
-    },
-  ]);
+const BrandsList: React.FC = () => {
+  const {
+    brands,
+    loading,
+    error,
+    totalCount,
+    currentPage,
+    pageSize,
+    fetchBrands,
+    createBrand,
+    updateBrand,
+    deleteBrand,
+  } = useBrands();
 
   const [openMenu, setOpenMenu] = useState<number | null>(null);
-
-  // Controlled form state
   const [newBrandName, setNewBrandName] = useState("");
   const [newBrandLogo, setNewBrandLogo] = useState<File | null>(null);
+  const [editingBrand, setEditingBrand] = useState<BrandType | null>(null);
 
-  const handleEdit = (brand: Brand) => {
-    console.log("Edit:", brand);
-    setOpenMenu(null);
-  };
+  const totalPages = Math.ceil(totalCount / pageSize);
 
-  const handleDelete = (id: number) => {
-    setBrands(brands.filter((brand) => brand.id !== id));
-    setOpenMenu(null);
-  };
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = () => setOpenMenu(null);
+    if (openMenu !== null) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [openMenu]);
 
-  const handleSaveBrand = () => {
-    if (!newBrandName) return;
-
-    // In a real app you would upload the logo file and get a URL
-    const newBrand: Brand = {
-      id: Date.now(),
-      name: newBrandName,
-      logoUrl: newBrandLogo
-        ? URL.createObjectURL(newBrandLogo)
-        : "https://via.placeholder.com/100x40?text=Logo",
-      category: [],
-    };
-
-    setBrands([...brands, newBrand]);
-    setNewBrandName("");
+  const handleEdit = (brand: BrandType) => {
+    setEditingBrand(brand);
+    setNewBrandName(brand.brand_name || "");
     setNewBrandLogo(null);
+    setOpenMenu(null);
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteBrand(id);
+    } catch (e) {
+      console.error("Delete brand failed:", e);
+    } finally {
+      setOpenMenu(null);
+    }
+  };
+
+  const handleSaveBrand = async () => {
+    if (!newBrandName) return;
+    try {
+      if (editingBrand) {
+        // Note: updateBrand internally maps 'name' to 'brand_name'
+        await updateBrand(editingBrand.brand_id, {
+          name: newBrandName,
+          logoFile: newBrandLogo || undefined,
+        } as any);
+        setEditingBrand(null);
+      } else {
+        await createBrand({
+          name: newBrandName,
+          logoFile: newBrandLogo || undefined,
+        });
+      }
+      setNewBrandName("");
+      setNewBrandLogo(null);
+    } catch (e) {
+      console.error("Save brand failed:", e);
+      alert(`Failed to save brand: ${(e as Error).message}`);
+    }
   };
 
   return (
     <div className="space-y-6 flex flex-col md:flex-row gap-4 w-full">
-      {/* Brand List */}
       <div className="w-full md:w-1/2 bg-white rounded-lg shadow-md">
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h2 className="text-lg font-semibold text-gray-800">Brands</h2>
@@ -144,69 +86,181 @@ const BrandsList = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left text-sm">
-            <thead className="bg-gray-100 text-gray-700 uppercase">
-              <tr>
-                <th className="px-4 py-2 border-b">#</th>
-                <th className="px-4 py-2 border-b">Name</th>
-                <th className="px-4 py-2 border-b">Logo</th>
-                <th className="px-4 py-2 border-b">Options</th>
-              </tr>
-            </thead>
-            <tbody>
-              {brands.map((brand, index) => (
-                <tr
-                  key={brand.id}
-                  className="hover:bg-gray-50 transition duration-200 relative"
-                >
-                  <td className="px-4 py-2 border-b">{index + 1}</td>
-                  <td className="px-4 py-2 border-b">{brand.name}</td>
-                  <td className="px-4 py-2 border-b">
-                    <img
-                      src={brand.logoUrl}
-                      alt={brand.name}
-                      className="w-16 h-10 object-contain bg-white p-1"
-                    />
-                  </td>
-                  <td className="px-4 py-2 border-b relative">
-                    <button
-                      className="text-gray-600 hover:text-gray-800"
-                      onClick={() =>
-                        setOpenMenu(openMenu === brand.id ? null : brand.id)
-                      }
+          {(() => {
+            if (loading)
+              return (
+                <div className="p-4 text-center text-sm text-muted-foreground">
+                  Loading brands...
+                </div>
+              );
+            if (error)
+              return (
+                <div className="p-4 text-center text-sm text-red-600">
+                  Error loading brands: {error}
+                </div>
+              );
+            if (!brands || brands.length === 0)
+              return (
+                <div className="p-6 text-center text-muted-foreground">
+                  No brands found. Add one using the form on the right.
+                </div>
+              );
+
+            return (
+              <table className="w-full border-collapse text-left text-sm">
+                <thead className="bg-gray-100 text-gray-700 uppercase">
+                  <tr>
+                    <th className="px-4 py-2 border-b">#</th>
+                    <th className="px-4 py-2 border-b">Name</th>
+                    <th className="px-4 py-2 border-b">Logo</th>
+                    <th className="px-4 py-2 border-b">Options</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {brands.map((brand, index) => (
+                    <tr
+                      key={brand.brand_id}
+                      className="hover:bg-gray-50 transition duration-200"
                     >
-                      <BsThreeDotsVertical size={18} />
-                    </button>
-                    {openMenu === brand.id && (
-                      <div className="absolute right-0 top-full mt-1 bg-white border rounded shadow-lg w-28 z-10">
-                        <button
-                          onClick={() => handleEdit(brand)}
-                          className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(brand.id)}
-                          className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <td className="px-4 py-2 border-b">
+                        {(currentPage - 1) * pageSize + index + 1}
+                      </td>
+                      <td className="px-4 py-2 border-b">{brand.brand_name}</td>
+                      <td className="px-4 py-2 border-b">
+                        <img
+                          src={
+                            brand.logo_url ||
+                            "https://via.placeholder.com/100x40?text=Logo"
+                          }
+                          alt={brand.brand_name}
+                          className="w-16 h-10 object-contain bg-white p-1"
+                        />
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        <div className="relative inline-block">
+                          <button
+                            className="text-gray-600 hover:text-gray-800"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenMenu(
+                                openMenu === brand.brand_id
+                                  ? null
+                                  : brand.brand_id
+                              );
+                            }}
+                          >
+                            <BsThreeDotsVertical size={18} />
+                          </button>
+                          {openMenu === brand.brand_id && (
+                            <div
+                              className="absolute right-0 top-full mt-1 bg-white border rounded shadow-lg w-28 z-50"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEdit(brand);
+                                }}
+                                className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(brand.brand_id);
+                                }}
+                                className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            );
+          })()}
+        </div>
+
+        {/* Pagination */}
+        <div className="px-4 py-3 border-t flex items-center justify-between">
+          <div className="text-sm text-gray-700">
+            Showing{" "}
+            <span className="font-medium">
+              {brands.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}
+            </span>{" "}
+            to{" "}
+            <span className="font-medium">
+              {Math.min(currentPage * pageSize, totalCount)}
+            </span>{" "}
+            of <span className="font-medium">{totalCount}</span> brands
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => fetchBrands(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1 text-sm border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => {
+                  // Show first page, last page, current page, and pages around current
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => fetchBrands(page)}
+                        className={`px-3 py-1 text-sm border rounded ${
+                          currentPage === page
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "hover:bg-gray-100"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  } else if (
+                    page === currentPage - 2 ||
+                    page === currentPage + 2
+                  ) {
+                    return (
+                      <span key={page} className="px-2">
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                }
+              )}
+            </div>
+            <button
+              onClick={() => fetchBrands(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 text-sm border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Add New Brand Form */}
       <div className="border rounded-lg py-2 w-full md:w-1/2 px-4 flex flex-col">
-        <h2 className="text-[18px] font-semibold mb-4">Add New Brand</h2>
+        <h2 className="text-[18px] font-semibold mb-4">
+          {editingBrand ? "Edit Brand" : "Add New Brand"}
+        </h2>
         <form
           onSubmit={(e) => {
-            e.preventDefault(); // ✅ prevents full page reload
+            e.preventDefault();
             handleSaveBrand();
           }}
           className="flex flex-col gap-5 p-6 bg-white border rounded-xl shadow-sm w-full max-w-2xl mx-auto"
@@ -243,12 +297,25 @@ const BrandsList = () => {
             </p>
           </div>
 
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end mt-4 gap-2">
+            {editingBrand && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingBrand(null);
+                  setNewBrandName("");
+                  setNewBrandLogo(null);
+                }}
+                className="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-md py-2 px-4 transition"
+              >
+                Cancel
+              </button>
+            )}
             <button
               type="submit"
               className="w-full sm:w-1/3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md py-2 px-4 transition"
             >
-              Save
+              {editingBrand ? "Update" : "Save"}
             </button>
           </div>
         </form>

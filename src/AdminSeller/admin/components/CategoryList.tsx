@@ -1,42 +1,54 @@
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-
-type Category = {
-  id: number;
-  name: string;
-};
+import CategoryForm from "./CategoryForm";
+import useCategories, {
+  Category as CategoryType,
+} from "../hooks/useCategories";
 
 const CategoryList = () => {
-  const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: "Women Clothing & Fashion" },
-    { id: 2, name: "Men Clothing & Fashion" },
-    { id: 3, name: "Electronics" },
-    { id: 4, name: "Home & Living" },
-    { id: 5, name: "Beauty & Personal Care" },
-    { id: 6, name: "Health & Wellness" },
-    { id: 7, name: "Sports & Outdoor" },
-    { id: 8, name: "Baby & Kids" },
-    { id: 9, name: "Groceries & Essentials" },
-    { id: 10, name: "Books & Stationery" },
-    { id: 11, name: "Automotive" },
-    { id: 12, name: "Jewelry & Accessories" },
-    { id: 13, name: "Pet Supplies" },
-    { id: 14, name: "Gaming" },
-    { id: 15, name: "Furniture" },
-  ]);
+  const {
+    categories,
+    loading,
+    error,
+    totalCount,
+    currentPage,
+    pageSize,
+    fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    setCategories,
+    setCurrentPage,
+  } = useCategories();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingName, setEditingName] = useState<string>("");
+  const [editingName, setEditingName] = useState("");
+  const [showAddForm, setShowAddForm] = useState(false);
 
-  // Delete a category
+  const itemsPerPage = pageSize;
+
+  // Filter and paginate
+  const filteredCategories = categories.filter((cat) =>
+    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const totalItems = filteredCategories.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredCategories.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  // Delete category
   const handleDelete = (id: number) => {
     setCategories(categories.filter((cat) => cat.id !== id));
     setOpenMenu(null);
   };
 
-  // Enable edit mode
+  // Enable edit
   const handleEdit = (id: number, name: string) => {
     setEditingId(id);
     setEditingName(name);
@@ -53,20 +65,54 @@ const CategoryList = () => {
     setEditingId(null);
   };
 
-  // Filter categories based on search
-  const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Page change
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
+  // Handle new category save from CategoryForm
+  const handleAddCategory = (newCategory: Omit<CategoryType, "id">) => {
+    const nextId =
+      categories.length > 0
+        ? Math.max(...categories.map((cat) => cat.id)) + 1
+        : 1;
+    setCategories([...categories, { id: nextId, name: newCategory.name }]);
+    setShowAddForm(false);
+  };
 
   return (
     <div className="flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl text-gray-500">All Categories</h1>
-        <button className="flex border rounded-3xl p-3 bg-blue-500 text-white hover:bg-blue-600">
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="flex border rounded-3xl p-3 bg-blue-500 text-white hover:bg-blue-600"
+        >
           Add New Category
         </button>
       </div>
+
+      {/* Show Add Category Form */}
+      {showAddForm && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center overflow-y-auto"
+          onClick={() => setShowAddForm(false)} // closes when clicking background
+        >
+          <div
+            className="bg-white rounded-lg shadow-xl w-full max-w-4xl p-8 relative animate-slide-up"
+            onClick={(e) => e.stopPropagation()} // prevent close when clicking inside
+          >
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl"
+            >
+              ✕
+            </button>
+            <CategoryForm onSave={handleAddCategory} />
+          </div>
+        </div>
+      )}
 
       {/* Search Input */}
       <div>
@@ -88,11 +134,11 @@ const CategoryList = () => {
             <p>Options</p>
           </div>
 
-          {filteredCategories.length > 0 ? (
-            filteredCategories.map((cat) => (
+          {currentItems.length > 0 ? (
+            currentItems.map((cat) => (
               <div
                 key={cat.id}
-                className="flex items-center justify-between relative group"
+                className="flex items-center justify-between border-b relative group"
               >
                 <div className="flex items-center gap-3 p-3">
                   <button className="border px-1 bg-blue-50 rounded-sm text-blue-200">
@@ -158,6 +204,35 @@ const CategoryList = () => {
             </p>
           )}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-2 mt-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={`px-3 py-1 border rounded ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+            <span className="px-3 py-1 text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={`px-3 py-1 border rounded ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
