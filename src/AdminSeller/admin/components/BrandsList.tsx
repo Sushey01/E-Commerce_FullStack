@@ -139,6 +139,7 @@ const BrandsList = () => {
                       className="w-10 h-auto"
                     />
                   </td>
+                  
                   <td className="px-4 py-2 border-b">
                     <button className="text-gray-600 hover:text-gray-800">
                       <BsThreeDotsVertical size={18} />
@@ -154,29 +155,98 @@ const BrandsList = () => {
       <div className="border rounded-lg py-2 w-1/2 px-4 flex flex-col">
         <div className="w-full">
           <h2 className="text-[18px] ">Add New Brand</h2>
-          <form className="flex flex-col ">
-            <div>
-              <p>Name</p>
-              <input type="text" placeholder="Name" />
+          <form className="flex flex-col gap-5 p-6 bg-white border rounded-xl shadow-sm w-full max-w-2xl mx-auto">
+            {/* Name */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="name" className="text-gray-700 font-medium">
+                Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter category name"
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
-            <div>
-              <p>Logo</p>
-              <input type="text" placeholder="submit" />
-              <div>
-                <p>Meta Title</p>
-                <input type="text" placeholder="Meta Title" />
+
+            {/* Logo Upload */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="logo" className="text-gray-700 font-medium">
+                Logo
+              </label>
+              <div className="flex flex-col  gap-3">
+                <input
+                  id="logo"
+                  type="file"
+                  accept="image/*"
+                  className="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  type="button"
+                  className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 text-sm"
+                >
+                  Upload
+                </button>
               </div>
-              <div>
-                <p>Meta Description</p>
-                <input type="text" />
-              </div>
-              <div>
-                <p>Meta Keywords</p>
-                <input type="text" placeholder="keyword, keyword" />
-              </div>
+              <p className="text-xs text-gray-400">
+                Supported formats: JPG, PNG, SVG
+              </p>
             </div>
+
+            {/* Meta Title */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="metaTitle" className="text-gray-700 font-medium">
+                Meta Title
+              </label>
+              <input
+                id="metaTitle"
+                type="text"
+                placeholder="Enter meta title for SEO"
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Meta Description */}
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="metaDescription"
+                className="text-gray-700 font-medium"
+              >
+                Meta Description
+              </label>
+              <textarea
+                id="metaDescription"
+                placeholder="Enter meta description for SEO"
+                rows={3}
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              ></textarea>
+            </div>
+
+            {/* Meta Keywords */}
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="metaKeywords"
+                className="text-gray-700 font-medium"
+              >
+                Meta Keywords
+              </label>
+              <input
+                id="metaKeywords"
+                type="text"
+                placeholder="keyword1, keyword2, keyword3"
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-400">
+                Separate keywords with commas
+              </p>
+            </div>
+
+            {/* Submit Button */}
             <div className="flex justify-end mt-4">
-              <button className="border w-[20%]  rounded-md bg-blue-600 text-white justify-center py-2 px-1 flex">
+              <button
+                type="submit"
+                className="w-full sm:w-1/3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md py-2 px-4 transition"
+              >
                 Save
               </button>
             </div>
