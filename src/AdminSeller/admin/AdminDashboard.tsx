@@ -25,6 +25,7 @@ import supabase from "../../supabase";
 import ProductList from "./components/ProductList";
 import { mockProducts, mockSellers, statsCards } from "./mockData";
 import BrandsList from "./components/BrandsList";
+import CategoryList from "./components/CategoryList";
 
 // Types
 type Product = {
@@ -404,60 +405,61 @@ export default function AdminDashboard({
   );
 
   const renderCategories = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <div className="col-span-1">
-        <Card>
-          <CardHeader>
-            <CardTitle>Categories</CardTitle>
-            <CardDescription>Select a category</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {allCategories.map((c) => (
-                <li key={c}>
-                  <Button
-                    variant={selectedCategory === c ? "secondary" : "ghost"}
-                    className="w-full text-left"
-                    onClick={() => setSelectedCategory(c)}
-                  >
-                    {c}
-                  </Button>
-                </li>
-              ))}
-              <li>
-                <Button
-                  variant={selectedCategory === null ? "secondary" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setSelectedCategory(null)}
-                >
-                  All Categories
-                </Button>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
-      </div>
-      <div className="col-span-1 lg:col-span-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Products</CardTitle>
-            <CardDescription>Products filtered by category</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ProductList
-              productsParam={
-                (selectedCategory
-                  ? mockProducts.filter((p) => p.category === selectedCategory)
-                  : mockProducts) as any
-              }
-              showSellerColumn={true}
-              onEdit={(p) => setEditingProduct(p)}
-              onView={(p) => console.log(p)}
-            />
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <CategoryList/>
+    // <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    //   <div className="col-span-1">
+    //     <Card>
+    //       <CardHeader>
+    //         <CardTitle>Categories</CardTitle>
+    //         <CardDescription>Select a category</CardDescription>
+    //       </CardHeader>
+    //       <CardContent>
+    //         <ul className="space-y-2">
+    //           {allCategories.map((c) => (
+    //             <li key={c}>
+    //               <Button
+    //                 variant={selectedCategory === c ? "secondary" : "ghost"}
+    //                 className="w-full text-left"
+    //                 onClick={() => setSelectedCategory(c)}
+    //               >
+    //                 {c}
+    //               </Button>
+    //             </li>
+    //           ))}
+    //           <li>
+    //             <Button
+    //               variant={selectedCategory === null ? "secondary" : "ghost"}
+    //               className="w-full text-left"
+    //               onClick={() => setSelectedCategory(null)}
+    //             >
+    //               All Categories
+    //             </Button>
+    //           </li>
+    //         </ul>
+    //       </CardContent>
+    //     </Card>
+    //   </div>
+    //   <div className="col-span-1 lg:col-span-3">
+    //     <Card>
+    //       <CardHeader>
+    //         <CardTitle>Products</CardTitle>
+    //         <CardDescription>Products filtered by category</CardDescription>
+    //       </CardHeader>
+    //       <CardContent>
+    //         <ProductList
+    //           productsParam={
+    //             (selectedCategory
+    //               ? mockProducts.filter((p) => p.category === selectedCategory)
+    //               : mockProducts) as any
+    //           }
+    //           showSellerColumn={true}
+    //           onEdit={(p) => setEditingProduct(p)}
+    //           onView={(p) => console.log(p)}
+    //         />
+    //       </CardContent>
+    //     </Card>
+    //   </div>
+    // </div>
   );
 
   const renderBrands = () => (
