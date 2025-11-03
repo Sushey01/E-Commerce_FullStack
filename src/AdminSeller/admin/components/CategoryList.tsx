@@ -25,21 +25,10 @@ const CategoryList = () => {
     { id: 15, name: "Furniture" },
   ]);
 
-  const [newCategory, setNewCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState<string>("");
-
-  // Add new category on Enter
-  const handleAddCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && newCategory.trim()) {
-      setCategories([
-        ...categories,
-        { id: Date.now(), name: newCategory.trim() },
-      ]);
-      setNewCategory("");
-    }
-  };
 
   // Delete a category
   const handleDelete = (id: number) => {
@@ -54,7 +43,7 @@ const CategoryList = () => {
     setOpenMenu(null);
   };
 
-  // Save the edit
+  // Save edit
   const handleSaveEdit = (id: number) => {
     setCategories(
       categories.map((cat) =>
@@ -63,6 +52,11 @@ const CategoryList = () => {
     );
     setEditingId(null);
   };
+
+  // Filter categories based on search
+  const filteredCategories = categories.filter((cat) =>
+    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col gap-3">
@@ -74,16 +68,15 @@ const CategoryList = () => {
         </button>
       </div>
 
-      {/* Input Section */}
+      {/* Search Input */}
       <div>
-        <div className="flex justify-between px-2 py-6 border rounded-b-none rounded-xl">
+        <div className="flex justify-between items-center px-2 py-6 border rounded-b-none rounded-xl">
           <p>Categories</p>
           <input
             type="text"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            onKeyDown={handleAddCategory}
-            className="border rounded-sm text-center"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border rounded-sm text-center px-2 py-1"
             placeholder="Type name & Enter"
           />
         </div>
@@ -95,71 +88,75 @@ const CategoryList = () => {
             <p>Options</p>
           </div>
 
-          {/* Render Categories */}
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="flex items-center justify-between relative group"
-            >
-              <div className="flex items-center gap-3 p-3">
-                <button className="border px-1 bg-blue-50 rounded-sm text-blue-200">
-                  +
-                </button>
+          {filteredCategories.length > 0 ? (
+            filteredCategories.map((cat) => (
+              <div
+                key={cat.id}
+                className="flex items-center justify-between relative group"
+              >
+                <div className="flex items-center gap-3 p-3">
+                  <button className="border px-1 bg-blue-50 rounded-sm text-blue-200">
+                    +
+                  </button>
 
-                {editingId === cat.id ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
-                      className="border rounded-sm px-2 py-1 text-sm"
-                    />
-                    <button
-                      onClick={() => handleSaveEdit(cat.id)}
-                      className="text-green-600 text-sm hover:underline"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="text-gray-500 text-sm hover:underline"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <p>{cat.name}</p>
-                )}
+                  {editingId === cat.id ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        className="border rounded-sm px-2 py-1 text-sm"
+                      />
+                      <button
+                        onClick={() => handleSaveEdit(cat.id)}
+                        className="text-green-600 text-sm hover:underline"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="text-gray-500 text-sm hover:underline"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <p>{cat.name}</p>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <BsThreeDotsVertical
+                    className="cursor-pointer text-gray-600 hover:text-gray-800"
+                    onClick={() =>
+                      setOpenMenu(openMenu === cat.id ? null : cat.id)
+                    }
+                  />
+
+                  {openMenu === cat.id && (
+                    <div className="absolute right-0 top-6 bg-white border rounded shadow-lg w-28 z-10">
+                      <button
+                        onClick={() => handleEdit(cat.id, cat.name)}
+                        className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(cat.id)}
+                        className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-
-              <div className="relative">
-                <BsThreeDotsVertical
-                  className="cursor-pointer text-gray-600 hover:text-gray-800"
-                  onClick={() =>
-                    setOpenMenu(openMenu === cat.id ? null : cat.id)
-                  }
-                />
-
-                {/* Edit/Delete Dropdown */}
-                {openMenu === cat.id && (
-                  <div className="absolute right-0 top-6 bg-white border rounded shadow-lg w-28 z-10">
-                    <button
-                      onClick={() => handleEdit(cat.id, cat.name)}
-                      className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(cat.id)}
-                      className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-gray-400 text-sm text-center mt-4">
+              No categories found.
+            </p>
+          )}
         </div>
       </div>
     </div>
