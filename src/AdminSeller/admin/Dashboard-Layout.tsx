@@ -167,9 +167,14 @@ export default function DashboardLayout() {
     },
     {
       icon: BarChart3,
-      label: "Analytics",
-      id: "analytics",
+      label: "Sales",
+      id: "sales",
       permission: "canViewSystemAnalytics",
+      children:[
+        {label: "Overall Sales(Orders)", id: "overall-sales"},
+        {label: "Sales by Seller", id: "sales-by-seller"},
+        {label: "Unpaid Orders", id:"unpaid-orders"},
+      ]
     },
     {
       icon: Settings,

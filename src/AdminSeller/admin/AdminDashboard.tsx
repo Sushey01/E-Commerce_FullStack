@@ -27,6 +27,7 @@ import useAdminProducts from "./hooks/useAdminProducts";
 import { mockProducts, mockSellers, statsCards } from "./mockData";
 import BrandsList from "./components/BrandsList";
 import CategoryList from "./components/CategoryList";
+import SalesOverallList from "./components/SalesOverallList";
 
 // Types
 type Product = {
@@ -82,32 +83,33 @@ const useToast = () => ({
 });
 
 // Placeholder components - in Next.js these would be imported from separate files
-const AnalyticsCharts = ({ userRole }: { userRole?: string }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Revenue Analytics</CardTitle>
-      <CardDescription>Sales performance overview</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Monthly Revenue</p>
-          <p className="text-2xl font-bold">$12,450</p>
-          <p className="text-xs text-green-600">+23% from last month</p>
-        </div>
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Total Orders</p>
-          <p className="text-2xl font-bold">156</p>
-          <p className="text-xs text-green-600">+8% from last month</p>
-        </div>
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Active Sellers</p>
-          <p className="text-2xl font-bold">24</p>
-          <p className="text-xs text-green-600">+12% from last month</p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
+const SalesAnalytics = ({ userRole }: { userRole?: string }) => (
+  <SalesOverallList/>
+  // <Card>
+  //   <CardHeader>
+  //     <CardTitle>Revenue Analytics</CardTitle>
+  //     <CardDescription>Sales performance overview</CardDescription>
+  //   </CardHeader>
+  //   <CardContent>
+  //     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  //       <div className="space-y-2">
+  //         <p className="text-sm font-medium">Monthly Revenue</p>
+  //         <p className="text-2xl font-bold">$12,450</p>
+  //         <p className="text-xs text-green-600">+23% from last month</p>
+  //       </div>
+  //       <div className="space-y-2">
+  //         <p className="text-sm font-medium">Total Orders</p>
+  //         <p className="text-2xl font-bold">156</p>
+  //         <p className="text-xs text-green-600">+8% from last month</p>
+  //       </div>
+  //       <div className="space-y-2">
+  //         <p className="text-sm font-medium">Active Sellers</p>
+  //         <p className="text-2xl font-bold">24</p>
+  //         <p className="text-xs text-green-600">+12% from last month</p>
+  //       </div>
+  //     </div>
+  //   </CardContent>
+  // </Card>
 );
 
 // ProductList and mock data moved to separate files for readability
@@ -465,12 +467,12 @@ export default function AdminDashboard({
 
   );
 
-  const renderAnalytics = () => (
+  const renderSales = () => (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-card-foreground">
         Sales Analytics
       </h3>
-      <AnalyticsCharts userRole="admin" />
+      <SalesAnalytics userRole="admin" />
     </div>
   );
 
@@ -683,7 +685,7 @@ export default function AdminDashboard({
     case "brands":
       return renderBrands();
     case "analytics":
-      return renderAnalytics();
+      return renderSales();
     case "settings":
       return renderSettings();
     default:
