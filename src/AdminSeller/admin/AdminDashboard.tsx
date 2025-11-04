@@ -28,6 +28,8 @@ import { mockProducts, mockSellers, statsCards } from "./mockData";
 import BrandsList from "./components/Products/BrandsList";
 import CategoryList from "./components/Products/CategoryList";
 import SalesOverallList from "./components/Sales/SalesOverallList";
+import SalesBySeller from "./components/Sales/SalesBySeller";
+import UnpaidOrders from "./components/Sales/UnpaidOrders";
 
 // Types
 type Product = {
@@ -416,6 +418,8 @@ export default function AdminDashboard({
         onEdit={(product) => setEditingProduct(product)}
         onView={(product) => console.log("View product:", product)}
       />
+
+      
     </div>
   );
 
@@ -665,10 +669,23 @@ export default function AdminDashboard({
       case "brands":
         return renderBrands();
       case "all-products":
-        case "all-orders":
-          return renderSales();
+        return renderProducts();
       default:
         return renderProducts();
+    }
+  }
+
+  // Handle Sales children when Sales parent is active
+  if (activeTab === "sales" && activeSub) {
+    switch (activeSub) {
+      case "overall-orders":
+        return <SalesOverallList />;
+      case "sales-by-seller":
+        return <SalesBySeller />;
+      case "unpaid-orders":
+        return <UnpaidOrders />;
+      default:
+        return renderSales();
     }
   }
 
@@ -687,7 +704,7 @@ export default function AdminDashboard({
       return renderCategories();
     case "brands":
       return renderBrands();
-    case "analytics":
+    case "sales":
       return renderSales();
     case "settings":
       return renderSettings();
