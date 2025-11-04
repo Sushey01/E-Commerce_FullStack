@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import useBrands, { Brand as BrandType } from "../hooks/useBrands";
+import useBrands, { Brand as BrandType } from "../../hooks/useBrands";
 
 const BrandsList: React.FC = () => {
   const {

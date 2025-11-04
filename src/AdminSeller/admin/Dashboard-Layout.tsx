@@ -171,7 +171,7 @@ export default function DashboardLayout() {
       id: "sales",
       permission: "canViewSystemAnalytics",
       children:[
-        {label: "Overall Sales(Orders)", id: "overall-sales"},
+        {label: "All Orders", id: "overall-orders"},
         {label: "Sales by Seller", id: "sales-by-seller"},
         {label: "Unpaid Orders", id:"unpaid-orders"},
       ]

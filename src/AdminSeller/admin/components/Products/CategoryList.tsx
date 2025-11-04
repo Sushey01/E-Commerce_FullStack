@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlinePlus } from "react-icons/ai";
-import CategoryForm from "./Products/CategoryForm";
-import useCategories, { Category as DbCategory } from "../hooks/useCategories";
+import CategoryForm from "./CategoryForm";
+import useCategories, {
+  Category as DbCategory,
+} from "../../hooks/useCategories";
 
 const CategoryList = () => {
   const {

@@ -22,12 +22,12 @@ import {
   Clock,
 } from "lucide-react";
 import supabase from "../../supabase";
-import ProductList from "./components/ProductList";
+import ProductList from "./components/Products/ProductList";
 import useAdminProducts from "./hooks/useAdminProducts";
 import { mockProducts, mockSellers, statsCards } from "./mockData";
-import BrandsList from "./components/BrandsList";
-import CategoryList from "./components/CategoryList";
-import SalesOverallList from "./components/SalesOverallList";
+import BrandsList from "./components/Products/BrandsList";
+import CategoryList from "./components/Products/CategoryList";
+import SalesOverallList from "./components/Sales/SalesOverallList";
 
 // Types
 type Product = {
@@ -468,12 +468,13 @@ export default function AdminDashboard({
   );
 
   const renderSales = () => (
-    <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-card-foreground">
-        Sales Analytics
-      </h3>
-      <SalesAnalytics userRole="admin" />
-    </div>
+    // <div className="space-y-6">
+    //   <h3 className="text-lg font-semibold text-card-foreground">
+    //     Sales Analytics
+    //   </h3>
+    //   <SalesAnalytics userRole="admin" />
+    // </div>
+    <SalesOverallList/>
   );
 
   const renderSettings = () => (
@@ -664,6 +665,8 @@ export default function AdminDashboard({
       case "brands":
         return renderBrands();
       case "all-products":
+        case "all-orders":
+          return renderSales();
       default:
         return renderProducts();
     }

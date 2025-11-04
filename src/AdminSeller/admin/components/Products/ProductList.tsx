@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+import { Card, CardContent } from "../../ui/card";
+import { Button } from "../../ui/button";
+import { Badge } from "../../ui/badge";
 import { Eye, Edit, Trash2 } from "lucide-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
