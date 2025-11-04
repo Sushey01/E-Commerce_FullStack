@@ -1,12 +1,14 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import './index.css';
-import App from './App.jsx';
-import store from './app/store.js';
-import { ToastContainer } from 'react-toastify';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import "./index.css";
+import App from "./App.jsx";
+import store from "./app/store.js";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+// Ensure slick styles are always present globally (prevents vertical stacking if a page lazy-loads a slider)
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

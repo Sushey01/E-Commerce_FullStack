@@ -4,45 +4,30 @@ import { X } from "lucide-react";
 
 // Category type
 export type Category = {
-  id?: number;
+  id?: string; // uuid, optional for editing context
   name: string;
   type: "Physical" | "Digital";
-  parentId: number | null;
-  ordering: number;
   banner?: File | null;
   icon?: File | null;
   coverImage?: File | null;
   metaTitle?: string;
   metaDescription?: string;
   metaKeywords?: string;
-  slug?: string;
 };
 
 // Props for CategoryForm
 type CategoryFormProps = {
-  category?: Category;
+  category?: Partial<Category>;
   onSave: (category: Omit<Category, "id">) => void;
 };
 
-// Parent options example
-const parentOptions = [
-  { id: null, name: "No Parent" },
-  { id: 1, name: "Women Clothing & Fashion" },
-  { id: 5, name: "Men Clothing & Fashion" },
-];
+// No parent categories for main categories
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSave }) => {
   const [name, setName] = useState(category?.name || "");
   const [type, setType] = useState<Category["type"]>(
     category?.type || "Physical"
   );
-  const [parentId, setParentId] = useState<number | null>(
-    category?.parentId || null
-  );
-  const [ordering, setOrdering] = useState(
-    category?.ordering?.toString() || "0"
-  );
-  const [slug, setSlug] = useState(category?.slug || "");
   const [metaTitle, setMetaTitle] = useState(category?.metaTitle || "");
   const [metaDescription, setMetaDescription] = useState(
     category?.metaDescription || ""
@@ -87,15 +72,12 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSave }) => {
     onSave({
       name,
       type,
-      parentId,
-      ordering: Number(ordering),
       banner,
       icon,
       coverImage,
       metaTitle,
       metaDescription,
       metaKeywords,
-      slug,
     });
   };
 
@@ -180,7 +162,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSave }) => {
           </div>
         </div>
 
-        {/* Type & Parent */}
+        {/* Type */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -195,41 +177,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSave }) => {
               <option value="Digital">Digital</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Parent Category
-            </label>
-            <select
-              value={parentId ?? ""}
-              onChange={(e) =>
-                setParentId(e.target.value ? Number(e.target.value) : null)
-              }
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            >
-              {parentOptions.map((p) => (
-                <option key={p.id ?? "none"} value={p.id ?? ""}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
-        {/* Ordering */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ordering Number
-          </label>
-          <input
-            type="number"
-            value={ordering}
-            onChange={(e) => setOrdering(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            Higher number has higher priority
-          </p>
-        </div>
+        {/* Removed Ordering Number for main categories */}
 
         {/* File Uploads */}
         <FileUploadBox
@@ -292,17 +242,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onSave }) => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Slug
-            </label>
-            <input
-              type="text"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {/* Removed Slug for main categories */}
         </div>
 
         {/* Save Button */}

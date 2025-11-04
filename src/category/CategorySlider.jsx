@@ -7,7 +7,13 @@ import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 
 const CategorySlider = () => {
-
+  // Nudge react-slick to recalculate widths after mount/fonts load
+  React.useEffect(() => {
+    const t = setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 100);
+    return () => clearTimeout(t);
+  }, []);
 
   const navigate = useNavigate();
 
@@ -15,9 +21,9 @@ const CategorySlider = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    autoplay:true,
-    pauseOnHover:true,
-    autoPlaySpeed:3000,
+    autoplay: true,
+    pauseOnHover: true,
+    autoplaySpeed: 3000,
     slidesToShow: 4, // Number of cards visible
     slidesToScroll: 1,
     responsive: [

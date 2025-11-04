@@ -1,4 +1,4 @@
-import { Children, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import supabase from "../../supabase";
 import ProductList from "./components/ProductList";
+import useAdminProducts from "./hooks/useAdminProducts";
 import { mockProducts, mockSellers, statsCards } from "./mockData";
 import BrandsList from "./components/BrandsList";
 import CategoryList from "./components/CategoryList";
@@ -158,7 +159,18 @@ export default function AdminDashboard({
   activeTab,
   activeSub,
 }: AdminDashboardProps) {
-  const { products } = useProducts();
+  const {
+    products: adminProducts,
+    loading: productsLoading,
+    error: productsError,
+    fetchProducts,
+  } = useAdminProducts();
+  const [sellerOptions, setSellerOptions] = useState<
+    { seller_id: string; company_name: string }[]
+  >([]);
+  const [selectedSellerFilter, setSelectedSellerFilter] = useState<
+    string | null
+  >(null);
   const { getSellerRequests, approveSellerRequest, rejectSellerRequest } =
     useAuth();
   const { toast } = useToast();
@@ -177,6 +189,20 @@ export default function AdminDashboard({
         .filter(Boolean)
     )
   );
+
+  // Load sellers for dropdown once
+  useEffect(() => {
+    const loadSellers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("sellers")
+          .select("seller_id, company_name")
+          .order("company_name", { ascending: true });
+        if (!error && data) setSellerOptions(data as any);
+      } catch {}
+    };
+    loadSellers();
+  }, []);
 
   const renderDashboard = () => (
     <div className="space-y-6">
@@ -379,7 +405,11 @@ export default function AdminDashboard({
         />
       )}
 
+      {productsError && (
+        <div className="text-sm text-red-600">{productsError}</div>
+      )}
       <ProductList
+        productsParam={adminProducts as any}
         showSellerColumn={true}
         onEdit={(product) => setEditingProduct(product)}
         onView={(product) => console.log("View product:", product)}
@@ -388,15 +418,37 @@ export default function AdminDashboard({
   );
 
   const renderSellerProducts = () => (
-    // For admin, show all products but include seller column
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-card-foreground">
           Seller Products
         </h3>
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-muted-foreground">Seller:</label>
+          <select
+            value={selectedSellerFilter ?? ""}
+            onChange={(e) => {
+              const val = e.target.value || null;
+              setSelectedSellerFilter(val);
+              fetchProducts(val || undefined);
+            }}
+            className="border rounded px-3 py-2 text-sm"
+          >
+            <option value="">All Sellers</option>
+            {sellerOptions.map((s) => (
+              <option key={s.seller_id} value={s.seller_id}>
+                {s.company_name || s.seller_id}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      {productsError && (
+        <div className="text-sm text-red-600">{productsError}</div>
+      )}
       <ProductList
-        productsParam={mockProducts as any}
+        productsParam={adminProducts as any}
         showSellerColumn={true}
         onEdit={(p) => setEditingProduct(p)}
         onView={(p) => console.log(p)}
@@ -405,123 +457,12 @@ export default function AdminDashboard({
   );
 
   const renderCategories = () => (
-    <CategoryList/>
-    // <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-    //   <div className="col-span-1">
-    //     <Card>
-    //       <CardHeader>
-    //         <CardTitle>Categories</CardTitle>
-    //         <CardDescription>Select a category</CardDescription>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <ul className="space-y-2">
-    //           {allCategories.map((c) => (
-    //             <li key={c}>
-    //               <Button
-    //                 variant={selectedCategory === c ? "secondary" : "ghost"}
-    //                 className="w-full text-left"
-    //                 onClick={() => setSelectedCategory(c)}
-    //               >
-    //                 {c}
-    //               </Button>
-    //             </li>
-    //           ))}
-    //           <li>
-    //             <Button
-    //               variant={selectedCategory === null ? "secondary" : "ghost"}
-    //               className="w-full text-left"
-    //               onClick={() => setSelectedCategory(null)}
-    //             >
-    //               All Categories
-    //             </Button>
-    //           </li>
-    //         </ul>
-    //       </CardContent>
-    //     </Card>
-    //   </div>
-    //   <div className="col-span-1 lg:col-span-3">
-    //     <Card>
-    //       <CardHeader>
-    //         <CardTitle>Products</CardTitle>
-    //         <CardDescription>Products filtered by category</CardDescription>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <ProductList
-    //           productsParam={
-    //             (selectedCategory
-    //               ? mockProducts.filter((p) => p.category === selectedCategory)
-    //               : mockProducts) as any
-    //           }
-    //           showSellerColumn={true}
-    //           onEdit={(p) => setEditingProduct(p)}
-    //           onView={(p) => console.log(p)}
-    //         />
-    //       </CardContent>
-    //     </Card>
-    //   </div>
-    // </div>
+    <CategoryList />
   );
 
   const renderBrands = () => (
     <BrandsList />
-    // <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-    //   <div className="col-span-1">
-    //     <Card>
-    //       <CardHeader>
-    //         <CardTitle>Brands</CardTitle>
-    //         <CardDescription>Select a brand</CardDescription>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <ul className="space-y-2">
-    //           {allBrands.map((b) => (
-    //             <li key={b}>
-    //               <Button
-    //                 variant={selectedBrand === b ? "secondary" : "ghost"}
-    //                 className="w-full text-left"
-    //                 onClick={() => setSelectedBrand(b)}
-    //               >
-    //                 {b}
-    //               </Button>
-    //             </li>
-    //           ))}
-    //           <li>
-    //             <Button
-    //               variant={selectedBrand === null ? "secondary" : "ghost"}
-    //               className="w-full text-left"
-    //               onClick={() => setSelectedBrand(null)}
-    //             >
-    //               All Brands
-    //             </Button>
-    //           </li>
-    //         </ul>
-    //       </CardContent>
-    //     </Card>
-    //   </div>
-    //   <div className="col-span-1 lg:col-span-3">
-    //     <Card>
-    //       <CardHeader>
-    //         <CardTitle>Products</CardTitle>
-    //         <CardDescription>Products filtered by brand</CardDescription>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <ProductList
-    //           productsParam={
-    //             (selectedBrand
-    //               ? mockProducts.filter(
-    //                   (p) =>
-    //                     ((p as any).seller || (p as any).brand) ===
-    //                     selectedBrand
-    //                 )
-    //               : mockProducts) as any
-    //           }
-    //           showSellerColumn={true}
-    //           onEdit={(p) => setEditingProduct(p)}
-    //           onView={(p) => console.log(p)}
-    //         />
-    //       </CardContent>
-    //     </Card>
-    //   </div>
-    // </div>
+
   );
 
   const renderAnalytics = () => (
