@@ -1,7 +1,7 @@
 // src/components/SalesOverallList.tsx
 import React, { useState } from "react";
 import Pagination from "../Pagination";
-import useOrders, { OrderItemRow } from "../../hooks/useOrders";
+import useOrders, { OrderItemRow, OrderFilters } from "../../hooks/useOrders";
 
 // --- Helper Row for order_items ---
 interface OrderRowProps {
@@ -139,10 +139,13 @@ const OrderRow: React.FC<OrderRowProps> = ({
   );
 };
 
-// (Removed DUMMY_ORDERS; now using Supabase-backed hook)
 
 // --- Main Component: SalesOverallList ---
 const SalesOverallList: React.FC = () => {
+  const [dateFilter, setDateFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [paymentFilter, setPaymentFilter] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const {
     orders,
     loading,
@@ -206,15 +209,55 @@ const SalesOverallList: React.FC = () => {
   const isAllSelected =
     orders.length > 0 && selectedOrders.size === orders.length;
 
+  // --- Filters: compute and apply ---
+  const applyFilters = () => {
+    // Date range
+    let dateFrom: string | undefined;
+    let dateTo: string | undefined;
+    const now = new Date();
+    if (dateFilter === "7d") {
+      const d = new Date();
+      d.setDate(d.getDate() - 7);
+      dateFrom = d.toISOString();
+      dateTo = now.toISOString();
+    } else if (dateFilter === "month") {
+      const d = new Date(now.getFullYear(), now.getMonth(), 1);
+      dateFrom = d.toISOString();
+      dateTo = now.toISOString();
+    } else if (dateFilter === "3m") {
+      const d = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+      dateFrom = d.toISOString();
+      dateTo = now.toISOString();
+    }
+
+    // Normalize statuses to Title Case if your DB stores them that way
+    const statusMap: Record<string, string> = {
+      pending: "Pending",
+      confirmed: "Confirmed",
+      on_the_way: "On the way",
+      delivered: "Delivered",
+      cancelled: "Cancelled",
+    };
+    const paymentStatusMap: Record<string, string> = {
+      paid: "Paid",
+      unpaid: "Unpaid",
+    };
+
+    const filters: OrderFilters = {
+      dateFrom,
+      dateTo,
+      deliveryStatus: statusFilter ? statusMap[statusFilter] ?? statusFilter : undefined,
+      paymentStatus: paymentFilter ? paymentStatusMap[paymentFilter] ?? paymentFilter : undefined,
+      searchCode: searchTerm || undefined,
+    };
+    fetchOrders(1, filters);
+  };
+
   return (
     <div className="p-4 bg-white shadow-lg rounded-xl">
       <div className="space-y-4">
         {/* Title and Description */}
         <h3 className="text-xl font-bold text-gray-900">All Order Items</h3>
-        <div className="text-sm text-gray-500">
-          Connected to Supabase order_items with pagination. ({totalCount} total
-          items)
-        </div>
       </div>
 
       <div className="mt-4">
@@ -235,37 +278,51 @@ const SalesOverallList: React.FC = () => {
 
           {/* Filter Dropdowns and Search (Simplified) */}
           <div className="flex gap-2 ml-auto">
-            <select className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
+            <select
+            value={dateFilter}
+            onChange={(e)=>setDateFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
               <option value="">Filter by Date</option>
-              <option value="">Last 7 days </option>
-              <option value="">This Month </option>
-              <option value="">Past Three months </option>
+              <option value="7d">Last 7 days </option>
+              <option value="month">This Month </option>
+              <option value="3m">Past Three months </option>
               {/* Date options */}
             </select>
 
-            <select className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
+            <select
+           value={statusFilter}
+           onChange={(e)=>setStatusFilter(e.target.value)} 
+            className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
               <option value="">Filter by Status </option>
-              <option value="">Pending </option>
-              <option value="">Confirmed </option>
-              <option value="">On the way </option>
-              <option value="">Delivered </option>
-              <option value="">Cancelled </option>
+              <option value="pending">Pending </option>
+              <option value="confirmed">Confirmed </option>
+              <option value="on_the_way">On the way </option>
+              <option value="delivered">Delivered </option>
+              <option value="cancelled">Cancelled </option>
             </select>
 
-            <select className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
+            <select
+            value = {paymentFilter}
+            onChange={(e)=>setPaymentFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
               <option value="">Filter by Payment</option>
-              <option value="">Paid</option>
-              <option value="">UnPaid</option>
+              <option value="paid">Paid</option>
+              <option value="unpaid">UnPaid</option>
               {/* Payment status options */}
             </select>
 
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e)=>setSearchTerm(e.target.value)}
               placeholder="Type Order code"
               className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm w-48"
             />
 
-            <button className="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+            <button
+              onClick={applyFilters}
+              className="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+            >
               Filter
             </button>
           </div>

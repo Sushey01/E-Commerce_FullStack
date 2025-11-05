@@ -9,6 +9,15 @@ export type OrderItemRow = {
     product?: { id: string; title: string } | null;
 };
 
+export type OrderFilters = {
+    dateFrom?: string; // ISO string
+    dateTo?: string;   // ISO string
+    paymentStatus?: string;
+    deliveryStatus?: string;
+    paymentMethod?: string;
+    searchCode?: string; // order code search
+};
+
 export default function useOrders() {
     const [orders, setOrders] = useState<OrderItemRow[]>([]);
     const [loading, setLoading] = useState(false);
@@ -16,9 +25,12 @@ export default function useOrders() {
     const [totalCount, setTotalCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(10);
+    const [lastFilters, setLastFilters] = useState<OrderFilters | undefined>(
+        undefined
+    );
 
     const fetchOrders = useCallback(
-        async (page: number = 1) => {
+        async (page: number = 1, filters?: OrderFilters) => {
             setLoading(true);
             setError(null);
             setCurrentPage(page);
@@ -26,40 +38,98 @@ export default function useOrders() {
                 const from = (page - 1) * pageSize;
                 const to = from + pageSize - 1;
 
-                // First try: join product title (if FK is configured)
-                const first = await supabase
-                    .from("order_items")
-                    .select(
-                        "order_id, product_id, quantity, price, products(id,title)",
-                        { count: "exact" }
-                    )
-                    .order("order_id", { ascending: true })
-                    .range(from, to);
+                const appliedFilters = filters ?? lastFilters;
+                setLastFilters(appliedFilters);
+                const requiresOrdersJoin = Boolean(
+                    appliedFilters?.paymentStatus ||
+                        appliedFilters?.deliveryStatus ||
+                        appliedFilters?.paymentMethod ||
+                        appliedFilters?.searchCode
+                );
 
-                let rows: any[] = [];
-                let total = 0;
+                const baseSelect = "order_id, product_id, quantity, price, created_at";
+                const productsJoin = ", products(id,title)";
+                // Use inner join for orders when filtering by orders.* fields
+                const ordersJoin = ", orders!inner(order_code,payment_status,delivery_status,payment_method)";
 
-                let hasJoin = true;
-                if (first.error) {
-                    hasJoin = false;
-                    // Fallback: base fields only (no join)
-                    const fallback = await supabase
+                async function runWithQuery(includeOrders: boolean, includeProducts: boolean) {
+                    let query = supabase
                         .from("order_items")
-                        .select("order_id, product_id, quantity, price", { count: "exact" })
+                        .select(
+                            (baseSelect + (includeProducts ? productsJoin : "") + (includeOrders ? ordersJoin : "")) as any,
+                            { count: "exact" }
+                        )
                         .order("order_id", { ascending: true })
                         .range(from, to);
 
-                    if (fallback.error) throw fallback.error;
-                    rows = (fallback.data as any[]) || [];
-                    total = fallback.count || 0;
+                    // Apply filters
+                    if (appliedFilters?.dateFrom) {
+                        query = query.gte("created_at", appliedFilters.dateFrom);
+                    }
+                    if (appliedFilters?.dateTo) {
+                        query = query.lte("created_at", appliedFilters.dateTo);
+                    }
+                    if (includeOrders) {
+                        if (appliedFilters?.paymentStatus) {
+                            query = query.eq(
+                                "orders.payment_status",
+                                appliedFilters.paymentStatus
+                            );
+                        }
+                        if (appliedFilters?.deliveryStatus) {
+                            query = query.eq(
+                                "orders.delivery_status",
+                                appliedFilters.deliveryStatus
+                            );
+                        }
+                        if (appliedFilters?.paymentMethod) {
+                            query = query.eq(
+                                "orders.payment_method",
+                                appliedFilters.paymentMethod
+                            );
+                        }
+                        if (appliedFilters?.searchCode) {
+                            query = query.ilike(
+                                "orders.order_code",
+                                `%${appliedFilters.searchCode}%`
+                            );
+                        }
+                    }
+
+                    const res = await query;
+                    return res;
+                }
+
+                let rows: any[] = [];
+                let total = 0;
+                let hasProductsJoin = true;
+
+                // Try with products join (and orders join if required)
+                const first = await runWithQuery(requiresOrdersJoin, true);
+                if (first.error) {
+                    // Retry without products join, keep orders join if needed
+                    const second = await runWithQuery(requiresOrdersJoin, false);
+                    if (second.error) {
+                        // Final fallback: no joins
+                        const fallback = await runWithQuery(false, false);
+                        if (fallback.error) throw fallback.error;
+                        rows = (fallback.data as any[]) || [];
+                        total = fallback.count || 0;
+                        hasProductsJoin = false;
+                    } else {
+                        rows = (second.data as any[]) || [];
+                        total = second.count || 0;
+                        hasProductsJoin = false;
+                    }
                 } else {
                     rows = (first.data as any[]) || [];
                     total = first.count || 0;
+                    hasProductsJoin = true;
                 }
 
                 // If join isn't available, resolve product titles in a second query
                 let productMap: Record<string, { id: string; title: string }> = {};
-                if (!hasJoin && rows.length) {
+                if (!hasProductsJoin && rows.length) {
                     const ids = Array.from(new Set(rows.map((r) => String(r.product_id)).filter(Boolean)));
                     if (ids.length) {
                         // Try match against products.id (uuid)
