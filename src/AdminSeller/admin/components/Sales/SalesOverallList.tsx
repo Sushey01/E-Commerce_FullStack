@@ -1,262 +1,164 @@
 // src/components/SalesOverallList.tsx
 import React, { useState } from "react";
+import Pagination from "../Pagination";
+import useOrders, { OrderItemRow } from "../../hooks/useOrders";
 
-// --- Type Definition (Normally in src/types/Order.ts) ---
-interface Order {
-  id: string;
-  order_code: string;
-  num_products: number;
-  customer_name: string;
-  seller_name: string;
-  amount: number;
-  delivery_status: "Delivered" | "Pending" | "Canceled";
-  payment_status: "Paid" | "Unpaid" | "Refunded";
-  refund_status: "No Refund" | "Requested" | "Processed";
-  is_new?: boolean;
-}
-
-// --- Helper Component: OrderStatusBadge ---
-interface OrderStatusBadgeProps {
-  status:
-    | Order["payment_status"]
-    | Order["delivery_status"]
-    | Order["refund_status"];
-}
-
-const OrderStatusBadge: React.FC<OrderStatusBadgeProps> = ({ status }) => {
-  let badgeClasses =
-    "py-1 px-3 text-xs font-semibold rounded-full whitespace-nowrap";
-
-  switch (status) {
-    case "Paid":
-    case "Delivered":
-    case "Processed":
-      badgeClasses += " bg-green-100 text-green-700";
-      break;
-    case "Unpaid":
-    case "Pending":
-    case "Requested":
-      badgeClasses += " bg-red-100 text-red-700";
-      break;
-    case "Canceled":
-    case "Refunded":
-    case "No Refund":
-    default:
-      badgeClasses += " bg-gray-100 text-gray-700";
-      break;
-  }
-
-  return <span className={badgeClasses}>{status}</span>;
-};
-
-// --- Helper Component: OrderRow ---
+// --- Helper Row for order_items ---
 interface OrderRowProps {
-  order: Order;
-  onView: (id: string) => void;
-  onDownload: (id: string) => void;
-  onCancel: (id: string) => void;
-  onSelect: (id: string, isChecked: boolean) => void;
+  item: OrderItemRow;
+  onView: (orderId: string) => void;
+  onDownload: (orderId: string) => void;
+  onCancel: (orderId: string) => void;
+  onSelect: (orderId: string, isChecked: boolean) => void;
   isSelected: boolean;
 }
 
 const OrderRow: React.FC<OrderRowProps> = ({
-  order,
+  item,
   onView,
   onDownload,
   onCancel,
   onSelect,
   isSelected,
 }) => {
+  const [open, setOpen] = useState(false);
+  const toggleMenu = () => setOpen((v) => !v);
+  const closeMenu = () => setOpen(false);
   return (
     <tr className="border-b hover:bg-gray-50">
-      {/* Checkbox Column */}
       <td className="p-4 text-center">
         <input
           type="checkbox"
           checked={isSelected}
-          onChange={(e) => onSelect(order.id, e.target.checked)}
+          onChange={(e) => onSelect(item.order_id, e.target.checked)}
           className="form-checkbox h-4 w-4 text-indigo-600 rounded"
         />
       </td>
-
-      {/* Order Code */}
       <td className="p-4 text-gray-800 font-medium whitespace-nowrap">
-        {order.order_code}
-        {order.is_new && (
-          <span className="ml-2 py-0.5 px-2 text-xs font-semibold rounded-full bg-purple-100 text-purple-700">
-            new
-          </span>
-        )}
+        {item.order_id}
       </td>
-
-      {/* Num. of Products */}
-      <td className="p-4 text-center text-gray-700">{order.num_products}</td>
-
-      {/* Customer */}
       <td className="p-4 text-gray-700 whitespace-nowrap">
-        {order.customer_name}
+        {item.product?.title ?? "Unknown product"}
       </td>
-
-      {/* Seller */}
-      <td className="p-4 text-gray-700 whitespace-nowrap">
-        {order.seller_name}
-      </td>
-
-      {/* Amount */}
+      <td className="p-4 text-center text-gray-700">{item.quantity}</td>
       <td className="p-4 text-gray-800 font-medium whitespace-nowrap">
-        ${order.amount.toFixed(3)}
+        ${Number(item.price ?? 0).toFixed(2)}
       </td>
-
-      {/* Delivery Status */}
-      <td className="p-4">
-        <OrderStatusBadge status={order.delivery_status} />
-      </td>
-
-      {/* Payment Method */}
-      <td className="p-4 text-gray-700 whitespace-nowrap">
-        {order.payment_method}
-      </td>
-
-      {/* Payment Status */}
-      <td className="p-4">
-        <OrderStatusBadge status={order.payment_status} />
-      </td>
-
-      {/* Refund */}
-      <td className="p-4 text-gray-700 whitespace-nowrap">
-        {order.refund_status}
-      </td>
-
-      {/* Options (Action Icons) */}
-      <td className="p-4 space-x-2 whitespace-nowrap flex">
-        {/* View Icon (Eye) */}
-        <button
-          onClick={() => onView(order.id)}
-          className="p-1 rounded-full text-indigo-600 hover:bg-indigo-50"
-          title="View Order"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+      <td className="p-4 whitespace-nowrap">
+        <div className="relative inline-block text-left">
+          <button
+            onClick={toggleMenu}
+            className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-haspopup="true"
+            aria-expanded={open}
+            title="Actions"
           >
-            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path
-              fillRule="evenodd"
-              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-        {/* Download Icon */}
-        <button
-          onClick={() => onDownload(order.id)}
-          className="p-1 rounded-full text-blue-600 hover:bg-blue-50"
-          title="Download Invoice"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-        {/* Cancel/Trash Icon */}
-        <button
-          onClick={() => onCancel(order.id)}
-          className="p-1 rounded-full text-red-600 hover:bg-red-50"
-          title="Cancel Order"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 01-2 0v6a1 1 0 112 0V8z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
+            {/* Kebab icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-600"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+            </svg>
+          </button>
+          {open && (
+            <div className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+              <div className="py-1 text-sm">
+                <button
+                  onClick={() => {
+                    onView(item.order_id);
+                    closeMenu();
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-indigo-600"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path
+                      fillRule="evenodd"
+                      d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  View
+                </button>
+                <button
+                  onClick={() => {
+                    onDownload(item.order_id);
+                    closeMenu();
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-blue-600"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Download
+                </button>
+                <button
+                  onClick={() => {
+                    onCancel(item.order_id);
+                    closeMenu();
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 01-2 0v6a1 1 0 112 0V8z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </td>
     </tr>
   );
 };
 
-// --- DUMMY DATA ---
-const DUMMY_ORDERS: Order[] = [
-  {
-    id: "o1",
-    order_code: "20251022-1200358",
-    num_products: 1,
-    customer_name: "Paul K. Jensen",
-    seller_name: "Inhouse Order",
-    amount: 10.39,
-    delivery_status: "Delivered",
-    payment_method: "Cash On Delivery",
-    payment_status: "Paid",
-    refund_status: "No Refund",
-    is_new: false,
-  },
-  {
-    id: "o2",
-    order_code: "20251019-14112053",
-    num_products: 1,
-    customer_name: "Sarah M. Lee",
-    seller_name: "Filon Asset Store",
-    amount: 59.0,
-    delivery_status: "Pending",
-    payment_method: "DBBL",
-    payment_status: "Unpaid",
-    refund_status: "No Refund",
-    is_new: false,
-  },
-  {
-    id: "o3",
-    order_code: "20251019-14112084",
-    num_products: 3,
-    customer_name: "Adam R. Smith",
-    seller_name: "Inhouse Order",
-    amount: 521.1,
-    delivery_status: "Pending",
-    payment_method: "DBBL",
-    payment_status: "Unpaid",
-    refund_status: "No Refund",
-    is_new: true,
-  },
-  {
-    id: "o4",
-    order_code: "20251018-9005512",
-    num_products: 2,
-    customer_name: "Jane A. Doe",
-    seller_name: "Tech Gadgets Inc.",
-    amount: 150.75,
-    delivery_status: "Delivered",
-    payment_method: "Credit Card",
-    payment_status: "Paid",
-    refund_status: "Requested",
-    is_new: false,
-  },
-];
+// (Removed DUMMY_ORDERS; now using Supabase-backed hook)
 
 // --- Main Component: SalesOverallList ---
 const SalesOverallList: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>(DUMMY_ORDERS);
+  const {
+    orders,
+    loading,
+    error,
+    totalCount,
+    currentPage,
+    pageSize,
+    fetchOrders,
+    deleteOrderItem,
+  } = useOrders();
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
 
   // --- Bulk Selection Handlers ---
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const allOrderIds = new Set(orders.map((order) => order.id));
+      const allOrderIds = new Set(orders.map((o) => o.order_id));
       setSelectedOrders(allOrderIds);
     } else {
       setSelectedOrders(new Set());
@@ -280,12 +182,13 @@ const SalesOverallList: React.FC = () => {
   const handleDownload = (id: string) => {
     console.log(`Downloading invoice for order: ${id}`);
   };
-  const handleCancel = (id: string) => {
+  const handleCancel = async (id: string) => {
     if (window.confirm(`Are you sure you want to cancel order ${id}?`)) {
-      setOrders(orders.filter((order) => order.id !== id));
+      await deleteOrderItem(id);
       setSelectedOrders((prev) => {
-        prev.delete(id);
-        return new Set(prev);
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
       });
     }
   };
@@ -307,10 +210,10 @@ const SalesOverallList: React.FC = () => {
     <div className="p-4 bg-white shadow-lg rounded-xl">
       <div className="space-y-4">
         {/* Title and Description */}
-        <h3 className="text-xl font-bold text-gray-900">All Orders</h3>
+        <h3 className="text-xl font-bold text-gray-900">All Order Items</h3>
         <div className="text-sm text-gray-500">
-          Hook up to Supabase orders to list recent orders and totals. (
-          {orders.length} Total Orders)
+          Connected to Supabase order_items with pagination. ({totalCount} total
+          items)
         </div>
       </div>
 
@@ -384,31 +287,16 @@ const SalesOverallList: React.FC = () => {
                   />
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order Code
-                </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Products
+                  Order ID
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer
+                  Product
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Seller
+                  Quantity
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Delivery Status
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Payment Method
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Payment Status
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Refund
+                  Price
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Options
@@ -418,20 +306,52 @@ const SalesOverallList: React.FC = () => {
 
             {/* Table Body */}
             <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order) => (
-                <OrderRow
-                  key={order.id}
-                  order={order}
-                  onView={handleView}
-                  onDownload={handleDownload}
-                  onCancel={handleCancel}
-                  onSelect={handleSelectOrder}
-                  isSelected={selectedOrders.has(order.id)}
-                />
-              ))}
+              {loading && (
+                <tr>
+                  <td colSpan={6} className="p-6 text-center text-gray-500">
+                    Loading order items...
+                  </td>
+                </tr>
+              )}
+              {!loading && error && (
+                <tr>
+                  <td colSpan={6} className="p-6 text-center text-red-600">
+                    {error}
+                  </td>
+                </tr>
+              )}
+              {!loading && !error && orders.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="p-6 text-center text-gray-500">
+                    No order items found.
+                  </td>
+                </tr>
+              )}
+              {!loading &&
+                !error &&
+                orders.length > 0 &&
+                orders.map((item) => (
+                  <OrderRow
+                    key={`${item.order_id}-${item.product_id}`}
+                    item={item}
+                    onView={handleView}
+                    onDownload={handleDownload}
+                    onCancel={handleCancel}
+                    onSelect={handleSelectOrder}
+                    isSelected={selectedOrders.has(item.order_id)}
+                  />
+                ))}
             </tbody>
           </table>
         </div>
+
+        <Pagination
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          label="order items"
+          onPageChange={(p: number) => fetchOrders(Math.max(1, p))}
+        />
       </div>
     </div>
   );

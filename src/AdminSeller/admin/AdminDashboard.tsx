@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import supabase from "../../supabase";
 import ProductList from "./components/Products/ProductList";
+import Pagination from "./components/Pagination";
 import useAdminProducts from "./hooks/useAdminProducts";
 import { mockProducts, mockSellers, statsCards } from "./mockData";
 import BrandsList from "./components/Products/BrandsList";
@@ -86,7 +87,7 @@ const useToast = () => ({
 
 // Placeholder components - in Next.js these would be imported from separate files
 const SalesAnalytics = ({ userRole }: { userRole?: string }) => (
-  <SalesOverallList/>
+  <SalesOverallList />
   // <Card>
   //   <CardHeader>
   //     <CardTitle>Revenue Analytics</CardTitle>
@@ -167,6 +168,7 @@ export default function AdminDashboard({
     products: adminProducts,
     loading: productsLoading,
     error: productsError,
+    totalCount: productsTotalCount,
     fetchProducts,
   } = useAdminProducts();
   const [sellerOptions, setSellerOptions] = useState<
@@ -182,6 +184,9 @@ export default function AdminDashboard({
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [productsPage, setProductsPage] = useState<number>(1);
+  const [sellerProductsPage, setSellerProductsPage] = useState<number>(1);
+  const PAGE_SIZE = 10;
 
   const allCategories = Array.from(
     new Set(mockProducts.map((p: any) => p.category).filter(Boolean))
@@ -419,7 +424,17 @@ export default function AdminDashboard({
         onView={(product) => console.log("View product:", product)}
       />
 
-      
+      <Pagination
+        currentPage={productsPage}
+        pageSize={PAGE_SIZE}
+        totalCount={productsTotalCount}
+        label="products"
+        onPageChange={(p) => {
+          const page = Math.max(1, p);
+          setProductsPage(page);
+          fetchProducts(undefined, page, PAGE_SIZE);
+        }}
+      />
     </div>
   );
 
@@ -436,7 +451,8 @@ export default function AdminDashboard({
             onChange={(e) => {
               const val = e.target.value || null;
               setSelectedSellerFilter(val);
-              fetchProducts(val || undefined);
+              setSellerProductsPage(1);
+              fetchProducts(val || undefined, 1, PAGE_SIZE);
             }}
             className="border rounded px-3 py-2 text-sm"
           >
@@ -459,17 +475,24 @@ export default function AdminDashboard({
         onEdit={(p) => setEditingProduct(p)}
         onView={(p) => console.log(p)}
       />
+
+      <Pagination
+        currentPage={sellerProductsPage}
+        pageSize={PAGE_SIZE}
+        totalCount={productsTotalCount}
+        label="products"
+        onPageChange={(p) => {
+          const page = Math.max(1, p);
+          setSellerProductsPage(page);
+          fetchProducts(selectedSellerFilter || undefined, page, PAGE_SIZE);
+        }}
+      />
     </div>
   );
 
-  const renderCategories = () => (
-    <CategoryList />
-  );
+  const renderCategories = () => <CategoryList />;
 
-  const renderBrands = () => (
-    <BrandsList />
-
-  );
+  const renderBrands = () => <BrandsList />;
 
   const renderSales = () => (
     // <div className="space-y-6">
@@ -478,7 +501,7 @@ export default function AdminDashboard({
     //   </h3>
     //   <SalesAnalytics userRole="admin" />
     // </div>
-    <SalesOverallList/>
+    <SalesOverallList />
   );
 
   const renderSettings = () => (

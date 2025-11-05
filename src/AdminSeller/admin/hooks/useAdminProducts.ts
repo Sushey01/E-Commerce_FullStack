@@ -26,8 +26,13 @@ export default function useAdminProducts() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
 
-  const fetchProducts = useCallback(async (sellerId?: string | number) => {
+  const fetchProducts = useCallback(async (
+    sellerId?: string | number,
+    page: number = 1,
+    pageSize: number = 10
+  ) => {
     setLoading(true);
     setError(null);
     try {
@@ -36,13 +41,19 @@ export default function useAdminProducts() {
         .from("seller_products")
         .select(
           // fetch product core fields; we'll resolve category names client-side to avoid FK alias issues
-          "seller_product_id, seller_id, product_id, price, stock, min_order_qty, status, product:products(id,title,category_id,images), seller:sellers(seller_id,company_name)"
-        );
+          "seller_product_id, seller_id, product_id, price, stock, min_order_qty, status, product:products(id,title,category_id,images), seller:sellers(seller_id,company_name)",
+          { count: "exact" }
+        )
+        .order("seller_product_id", { ascending: true });
 
       if (sellerId) query = query.eq("seller_id", sellerId);
 
-      const { data, error } = await query;
+      // pagination
+      const start = (Math.max(1, page) - 1) * pageSize;
+      const end = start + pageSize - 1;
+      const { data, error, count } = await query.range(start, end);
       if (error) throw error;
+      setTotalCount(count || 0);
 
       const rows = (data as any[] | null) || [];
 
@@ -120,8 +131,8 @@ export default function useAdminProducts() {
 
   useEffect(() => {
     // default: load all seller-product associations
-    fetchProducts();
+    fetchProducts(undefined, 1, 10);
   }, [fetchProducts]);
 
-  return { products, loading, error, fetchProducts };
+  return { products, loading, error, totalCount, fetchProducts };
 }
