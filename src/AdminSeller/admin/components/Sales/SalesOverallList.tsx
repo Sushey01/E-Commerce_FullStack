@@ -2,10 +2,13 @@
 import React, { useState } from "react";
 import Pagination from "../Pagination";
 import useOrders, { OrderItemRow, OrderFilters } from "../../hooks/useOrders";
+import OrderDetails from "./OrderDetails";
 
 // --- Helper Row for order_items ---
 interface OrderRowProps {
   item: OrderItemRow;
+  expanded: boolean;
+  onToggleExpand: (orderId: string) => void;
   onView: (orderId: string) => void;
   onDownload: (orderId: string) => void;
   onCancel: (orderId: string) => void;
@@ -15,6 +18,8 @@ interface OrderRowProps {
 
 const OrderRow: React.FC<OrderRowProps> = ({
   item,
+  expanded,
+  onToggleExpand,
   onView,
   onDownload,
   onCancel,
@@ -26,13 +31,28 @@ const OrderRow: React.FC<OrderRowProps> = ({
   const closeMenu = () => setOpen(false);
   return (
     <tr className="border-b hover:bg-gray-50">
+      {/* Expand/Collapse button */}
+      <td className="p-4 text-center w-10">
+        <button
+          onClick={() => onToggleExpand(item.order_id)}
+          className="h-6 w-6 flex items-center justify-center rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100"
+          title="View details"
+        >
+          {/* +/- indicator */}
+          <span className="leading-none align-middle text-sm font-bold">
+            {expanded ? "−" : "+"}
+          </span>
+        </button>
+      </td>
       <td className="p-4 text-center">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={(e) => onSelect(item.order_id, e.target.checked)}
-          className="form-checkbox h-4 w-4 text-indigo-600 rounded"
-        />
+        <div className="items-center justify-center flex">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={(e) => onSelect(item.order_id, e.target.checked)}
+            className="form-checkbox h-4 w-4 text-indigo-600 rounded"
+          />
+        </div>
       </td>
       <td className="p-4 text-gray-800 font-medium whitespace-nowrap">
         {item.order_id}
@@ -139,7 +159,6 @@ const OrderRow: React.FC<OrderRowProps> = ({
   );
 };
 
-
 // --- Main Component: SalesOverallList ---
 const SalesOverallList: React.FC = () => {
   const [dateFilter, setDateFilter] = useState<string>("");
@@ -157,6 +176,7 @@ const SalesOverallList: React.FC = () => {
     deleteOrderItem,
   } = useOrders();
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   // --- Bulk Selection Handlers ---
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,8 +266,12 @@ const SalesOverallList: React.FC = () => {
     const filters: OrderFilters = {
       dateFrom,
       dateTo,
-      deliveryStatus: statusFilter ? statusMap[statusFilter] ?? statusFilter : undefined,
-      paymentStatus: paymentFilter ? paymentStatusMap[paymentFilter] ?? paymentFilter : undefined,
+      deliveryStatus: statusFilter
+        ? statusMap[statusFilter] ?? statusFilter
+        : undefined,
+      paymentStatus: paymentFilter
+        ? paymentStatusMap[paymentFilter] ?? paymentFilter
+        : undefined,
       searchCode: searchTerm || undefined,
     };
     fetchOrders(1, filters);
@@ -279,9 +303,10 @@ const SalesOverallList: React.FC = () => {
           {/* Filter Dropdowns and Search (Simplified) */}
           <div className="flex gap-2 ml-auto">
             <select
-            value={dateFilter}
-            onChange={(e)=>setDateFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm"
+            >
               <option value="">Filter by Date</option>
               <option value="7d">Last 7 days </option>
               <option value="month">This Month </option>
@@ -290,9 +315,10 @@ const SalesOverallList: React.FC = () => {
             </select>
 
             <select
-           value={statusFilter}
-           onChange={(e)=>setStatusFilter(e.target.value)} 
-            className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm"
+            >
               <option value="">Filter by Status </option>
               <option value="pending">Pending </option>
               <option value="confirmed">Confirmed </option>
@@ -302,9 +328,10 @@ const SalesOverallList: React.FC = () => {
             </select>
 
             <select
-            value = {paymentFilter}
-            onChange={(e)=>setPaymentFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm">
+              value={paymentFilter}
+              onChange={(e) => setPaymentFilter(e.target.value)}
+              className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm"
+            >
               <option value="">Filter by Payment</option>
               <option value="paid">Paid</option>
               <option value="unpaid">UnPaid</option>
@@ -314,7 +341,7 @@ const SalesOverallList: React.FC = () => {
             <input
               type="text"
               value={searchTerm}
-              onChange={(e)=>setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Type Order code"
               className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 text-sm w-48"
             />
@@ -334,14 +361,17 @@ const SalesOverallList: React.FC = () => {
             {/* Table Head */}
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-center w-12">
-                  <input
-                    type="checkbox"
-                    className="form-checkbox h-4 w-4 text-indigo-600 rounded"
-                    onChange={handleSelectAll}
-                    checked={isAllSelected}
-                    // Indeterminate state for partial selection is not handled here
-                  />
+                <th className="px-2 py-3 text-center w-10">{/** expand */}</th>
+                <th className="px-4  py-3 text-center w-12">
+                  <div className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox h-4 w-4 text-indigo-600 rounded"
+                      onChange={handleSelectAll}
+                      checked={isAllSelected}
+                      // Indeterminate state for partial selection is not handled here
+                    />
+                  </div>
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Order ID
@@ -387,17 +417,61 @@ const SalesOverallList: React.FC = () => {
               {!loading &&
                 !error &&
                 orders.length > 0 &&
-                orders.map((item) => (
-                  <OrderRow
-                    key={`${item.order_id}-${item.product_id}`}
-                    item={item}
-                    onView={handleView}
-                    onDownload={handleDownload}
-                    onCancel={handleCancel}
-                    onSelect={handleSelectOrder}
-                    isSelected={selectedOrders.has(item.order_id)}
-                  />
-                ))}
+                orders.map((item) => {
+                  const isExpanded = expanded.has(item.order_id);
+                  const toggleExpand = (id: string) => {
+                    setExpanded((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(id)) next.delete(id);
+                      else next.add(id);
+                      return next;
+                    });
+                  };
+                  return (
+                    <React.Fragment
+                      key={`row-${item.order_id}-${item.product_id}`}
+                    >
+                      <OrderRow
+                        item={item}
+                        expanded={isExpanded}
+                        onToggleExpand={toggleExpand}
+                        onView={handleView}
+                        onDownload={handleDownload}
+                        onCancel={handleCancel}
+                        onSelect={handleSelectOrder}
+                        isSelected={selectedOrders.has(item.order_id)}
+                      />
+                      {isExpanded && (
+                        <tr className="bg-gray-50">
+                          <td colSpan={7} className="px-6 py-4">
+                            <OrderDetails
+                              data={{
+                                numberOfProducts: item.quantity,
+                                customerName: item.customerName ?? "Unknown",
+                                sellerName: item.sellerName ?? "Unknown",
+                                amount:
+                                  Number(item.price ?? 0) *
+                                  Number(item.quantity ?? 1),
+                                deliveryStatus: item.order?.delivered_at
+                                  ? "Delivered"
+                                  : item.order?.cancelled_at
+                                  ? "Cancelled"
+                                  : "Pending",
+                                paymentMethod:
+                                  item.order?.payment_method ?? "Unknown",
+                                paymentStatus:
+                                  item.order?.paid_amount &&
+                                  Number(item.order.paid_amount) > 0
+                                    ? "Paid"
+                                    : "Unpaid",
+                              }}
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
             </tbody>
           </table>
         </div>
