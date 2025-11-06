@@ -1,4 +1,4 @@
-import { Children, useEffect, useState } from "react";
+import { Children, useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -30,7 +30,8 @@ import BrandsList from "./components/Products/BrandsList";
 import CategoryList from "./components/Products/CategoryList";
 import SalesOverallList from "./components/Sales/SalesOverallList";
 import SalesBySeller from "./components/Sales/SalesBySeller";
-import UnpaidOrders from "./components/Sales/UnpaidOrders";
+import UnpaidOrders from "./components/Sales/paidUnPaidOrders";
+import AdminSidebar from "./components/AdminSidebar";
 
 // Types
 type Product = {
@@ -88,31 +89,7 @@ const useToast = () => ({
 // Placeholder components - in Next.js these would be imported from separate files
 const SalesAnalytics = ({ userRole }: { userRole?: string }) => (
   <SalesOverallList />
-  // <Card>
-  //   <CardHeader>
-  //     <CardTitle>Revenue Analytics</CardTitle>
-  //     <CardDescription>Sales performance overview</CardDescription>
-  //   </CardHeader>
-  //   <CardContent>
-  //     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-  //       <div className="space-y-2">
-  //         <p className="text-sm font-medium">Monthly Revenue</p>
-  //         <p className="text-2xl font-bold">$12,450</p>
-  //         <p className="text-xs text-green-600">+23% from last month</p>
-  //       </div>
-  //       <div className="space-y-2">
-  //         <p className="text-sm font-medium">Total Orders</p>
-  //         <p className="text-2xl font-bold">156</p>
-  //         <p className="text-xs text-green-600">+8% from last month</p>
-  //       </div>
-  //       <div className="space-y-2">
-  //         <p className="text-sm font-medium">Active Sellers</p>
-  //         <p className="text-2xl font-bold">24</p>
-  //         <p className="text-xs text-green-600">+12% from last month</p>
-  //       </div>
-  //     </div>
-  //   </CardContent>
-  // </Card>
+
 );
 
 // ProductList and mock data moved to separate files for readability
@@ -156,13 +133,17 @@ const ProductForm = ({
 // mock data (products, sellers, stats) moved to ./mockData
 
 interface AdminDashboardProps {
-  activeTab: string;
+  activeTab?: string;
   activeSub?: string | null;
+  onNavigate?: (tab: string, sub?: string | null) => void;
+  withSidebar?: boolean; // If false, renders content only (use when parent already has a sidebar)
 }
 
 export default function AdminDashboard({
-  activeTab,
-  activeSub,
+  activeTab: propActiveTab,
+  activeSub: propActiveSub,
+  onNavigate,
+  withSidebar = true,
 }: AdminDashboardProps) {
   const {
     products: adminProducts,
@@ -187,6 +168,33 @@ export default function AdminDashboard({
   const [productsPage, setProductsPage] = useState<number>(1);
   const [sellerProductsPage, setSellerProductsPage] = useState<number>(1);
   const PAGE_SIZE = 10;
+
+  // Local fallback state if parent doesn't control routing
+  const [internalTab, setInternalTab] = useState<string>(
+    propActiveTab ?? "dashboard"
+  );
+  const [internalSub, setInternalSub] = useState<string | null>(
+    propActiveSub ?? null
+  );
+
+  useEffect(() => {
+    if (propActiveTab) setInternalTab(propActiveTab);
+  }, [propActiveTab]);
+  useEffect(() => {
+    if (propActiveSub !== undefined) setInternalSub(propActiveSub ?? null);
+  }, [propActiveSub]);
+
+  const activeTab = propActiveTab ?? internalTab;
+  const activeSub = propActiveSub ?? internalSub;
+
+  const handleNavigate = (tab: string, sub?: string | null) => {
+    if (onNavigate) {
+      onNavigate(tab, sub);
+    } else {
+      setInternalTab(tab);
+      setInternalSub(sub ?? null);
+    }
+  };
 
   const allCategories = Array.from(
     new Set(mockProducts.map((p: any) => p.category).filter(Boolean))
@@ -711,27 +719,56 @@ export default function AdminDashboard({
         return renderSales();
     }
   }
+  const content = useMemo(() => {
+    switch (activeTab) {
+      case "dashboard":
+        return renderDashboard();
+      case "sellers":
+        return renderSellers();
+      case "seller-requests":
+        return renderSellerRequests();
+      case "products":
+        return renderProducts();
+      case "seller-products":
+        return renderSellerProducts();
+      case "categories":
+        return renderCategories();
+      case "brands":
+        return renderBrands();
+      case "sales":
+        return renderSales();
+      case "settings":
+        return renderSettings();
+      default:
+        return renderDashboard();
+    }
+  }, [
+    activeTab,
+    productsError,
+    adminProducts,
+    productsPage,
+    sellerProductsPage,
+    productsTotalCount,
+    selectedSellerFilter,
+  ]);
 
-  switch (activeTab) {
-    case "dashboard":
-      return renderDashboard();
-    case "sellers":
-      return renderSellers();
-    case "seller-requests":
-      return renderSellerRequests();
-    case "products":
-      return renderProducts();
-    case "seller-products":
-      return renderSellerProducts();
-    case "categories":
-      return renderCategories();
-    case "brands":
-      return renderBrands();
-    case "sales":
-      return renderSales();
-    case "settings":
-      return renderSettings();
-    default:
-      return renderDashboard();
+  if (!withSidebar) {
+    // Render just the main content area; parent layout should provide its own sidebar
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+        {content}
+      </div>
+    );
   }
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      <AdminSidebar
+        activeTab={activeTab}
+        activeSub={activeSub}
+        onNavigate={handleNavigate}
+      />
+      <main className="flex-1 p-4 md:p-6 lg:p-8">{content}</main>
+    </div>
+  );
 }

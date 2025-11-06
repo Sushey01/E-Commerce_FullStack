@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import AdminDashboard from "./AdminDashboard";
 import SellerDashboard from "../seller/SellerDashboard";
+import AdminSidebar from "./components/AdminSidebar";
 
 // Real Supabase authentication hook
 import { useEffect, useState } from "react";
@@ -170,11 +171,11 @@ export default function DashboardLayout() {
       label: "Sales",
       id: "sales",
       permission: "canViewSystemAnalytics",
-      children:[
-        {label: "All Orders", id: "overall-orders"},
-        {label: "Sales by Seller", id: "sales-by-seller"},
-        {label: "Unpaid Orders", id:"unpaid-orders"},
-      ]
+      children: [
+        { label: "All Orders", id: "overall-orders" },
+        { label: "Sales by Seller", id: "sales-by-seller" },
+        { label: "Unpaid Orders", id: "unpaid-orders" },
+      ],
     },
     {
       icon: Settings,
@@ -223,7 +224,11 @@ export default function DashboardLayout() {
       return (
         <ProtectedRoute requiredPermission={currentNavItem.permission}>
           {user?.role === "admin" ? (
-            <AdminDashboard activeTab={activeTab} activeSub={activeSub} />
+            <AdminDashboard
+              activeTab={activeTab}
+              activeSub={activeSub}
+              withSidebar={false}
+            />
           ) : (
             <SellerDashboard activeTab={activeTab} />
           )}
@@ -232,7 +237,11 @@ export default function DashboardLayout() {
     }
 
     return user?.role === "admin" ? (
-      <AdminDashboard activeTab={activeTab} activeSub={activeSub} />
+      <AdminDashboard
+        activeTab={activeTab}
+        activeSub={activeSub}
+        withSidebar={false}
+      />
     ) : (
       <SellerDashboard activeTab={activeTab} />
     );
@@ -248,137 +257,125 @@ export default function DashboardLayout() {
         />
       )}
 
-      {/* Sidebar */}
-      {/* sidebar has a transparent color in the global css but i used gray-300 */}
+      {/* Sidebar (replaced with dark AdminSidebar) */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-300 border-r border-sidebar-border transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-sidebar-border">
-          <h1 className="text-xl font-bold text-sidebar-foreground">
-            {user?.role === "admin" ? "Admin Panel" : "Seller Dashboard"}
-          </h1>
+        {/* Close button for mobile */}
+        <div className="md:hidden flex items-center justify-end p-2">
           <Button
             variant="ghost"
             size="sm"
-            className="lg:hidden"
             onClick={() => setSidebarOpen(false)}
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
-
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          {filteredNavItems.map((item) => {
-            const hasChildren =
-              Array.isArray(item.children) && item.children.length > 0;
-            // Use separate expanded state so expand/collapse doesn't change activeTab
-            const isExpanded = !!expanded[item.id];
-            const isActiveParent = activeTab === item.id;
-
-            return (
-              <div key={item.id} className="space-y-1">
-                {/* Parent item */}
-                <Button
-                  variant={isActiveParent ? "secondary" : "ghost"}
-                  // variant={activeTab === item.id ? "secondary" : "ghost"}
-                  className="w-full justify-between relative"
-                  onClick={() => {
-                    if (hasChildren) {
-                      // toggle expand/collapse state
-                      setExpanded((prev) => ({
-                        ...prev,
-                        [item.id]: !prev[item.id],
-                      }));
-
-                      // set parent as active so its main view (All Products) is selectable
-                      setActiveTab(item.id);
-
-                      // Clear any selected sub so parent shows its 'All' view
-                      setActiveSub(null);
-
-                      // Close sidebar on mobile when selecting parent
-                      setSidebarOpen(false);
-                    } else {
-                      setActiveTab(item.id);
-                      setActiveSub(null);
-                      setSidebarOpen(false);
-                    }
-                  }}
-                >
-                  <div className="flex items-center">
-                    <item.icon className="mr-3 h-4 w-4" />
-                    {item.label}
-                  </div>
-
-                  {/* Show dropdown arrow if children exist */}
-                  {hasChildren && (
-                    <span className="ml-auto">{isExpanded ? "▾" : "▸"}</span>
-                  )}
-
-                  {/* Optional badge */}
-                  {item.badge && item.badge > 0 && (
-                    <Badge
-                      variant="pending"
-                      className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                    >
-                      {item.badge}
-                    </Badge>
-                  )}
-                </Button>
-
-                {/* Dropdown children */}
-                {hasChildren && isExpanded && (
-                  <div className="pl-8 space-y-1">
-                    {item.children?.map((child) => (
-                      <Button
-                        key={child.id}
-                        variant="ghost"
-                        className="w-full justify-start text-sm"
-                        onClick={() => {
-                          // Keep parent as activeTab and set activeSub to indicate the selected child
-                          setActiveTab(item.id);
-                          setActiveSub(child.id);
-                          setSidebarOpen(false);
-                        }}
-                      >
-                        {child.label}
-                      </Button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-8 h-8 bg-sidebar-accent rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium text-sidebar-accent-foreground">
-                {user?.name?.charAt(0).toUpperCase()}
-              </span>
+        {user?.role === "admin" ? (
+          <AdminSidebar
+            activeTab={activeTab}
+            activeSub={activeSub}
+            onNavigate={(tab, sub) => {
+              setActiveTab(tab);
+              setActiveSub(sub ?? null);
+              setSidebarOpen(false);
+            }}
+          />
+        ) : (
+          <div className="h-full bg-gray-300 border-r border-sidebar-border flex flex-col">
+            <div className="flex items-center justify-between h-16 px-6 border-b border-sidebar-border">
+              <h1 className="text-xl font-bold text-sidebar-foreground">
+                Seller Dashboard
+              </h1>
             </div>
-            <div>
-              <p className="text-sm font-medium text-sidebar-foreground">
-                {user?.name}
-              </p>
-              <p className="text-xs text-muted-foreground capitalize">
-                {user?.role?.replace("_", " ")}
-              </p>
+            <nav className="flex-1 px-4 py-6 space-y-2">
+              {filteredNavItems.map((item) => {
+                const hasChildren =
+                  Array.isArray(item.children) && item.children.length > 0;
+                const isExpanded = !!expanded[item.id];
+                const isActiveParent = activeTab === item.id;
+                return (
+                  <div key={item.id} className="space-y-1">
+                    <Button
+                      variant={isActiveParent ? "secondary" : "ghost"}
+                      className="w-full justify-between relative"
+                      onClick={() => {
+                        if (hasChildren) {
+                          setExpanded((prev) => ({
+                            ...prev,
+                            [item.id]: !prev[item.id],
+                          }));
+                          setActiveTab(item.id);
+                          setActiveSub(null);
+                          setSidebarOpen(false);
+                        } else {
+                          setActiveTab(item.id);
+                          setActiveSub(null);
+                          setSidebarOpen(false);
+                        }
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <item.icon className="mr-3 h-4 w-4" />
+                        {item.label}
+                      </div>
+                      {hasChildren && (
+                        <span className="ml-auto">
+                          {isExpanded ? "▾" : "▸"}
+                        </span>
+                      )}
+                    </Button>
+                    {hasChildren && isExpanded && (
+                      <div className="pl-8 space-y-1">
+                        {item.children?.map((child) => (
+                          <Button
+                            key={child.id}
+                            variant="ghost"
+                            className="w-full justify-start text-sm"
+                            onClick={() => {
+                              setActiveTab(item.id);
+                              setActiveSub(child.id);
+                              setSidebarOpen(false);
+                            }}
+                          >
+                            {child.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+            <div className="p-4 border-t border-sidebar-border">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-8 h-8 bg-sidebar-accent rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-sidebar-accent-foreground">
+                    {user?.name?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-sidebar-foreground">
+                    {user?.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground capitalize">
+                    {user?.role?.replace("_", " ")}
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full bg-transparent"
+                onClick={logout}
+              >
+                <LogOut className="mr-2 h-4 w-4" /> Sign Out
+              </Button>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full bg-transparent"
-            onClick={logout}
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </Button>
-        </div>
+        )}
       </div>
 
       {/* Main content */}
