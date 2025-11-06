@@ -15,6 +15,7 @@ import {
 import AdminDashboard from "./AdminDashboard";
 import SellerDashboard from "../seller/SellerDashboard";
 import AdminSidebar from "./components/AdminSidebar";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Real Supabase authentication hook
 import { useEffect, useState } from "react";
@@ -113,10 +114,23 @@ export default function DashboardLayout() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const params = useParams<{ tab?: string; sub?: string }>();
+  const navigate = useNavigate();
 
   //Track expanded dropdowns sepearately so expand/collapse doesn't change activeTab
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const canAccess = useCanAccess();
+
+  // Sync URL params -> UI state
+  useEffect(() => {
+    if (params?.tab) {
+      setActiveTab(params.tab);
+    }
+    if (params) {
+      // If sub is defined in params but possibly empty, coerce to null
+      setActiveSub(params.sub ?? null);
+    }
+  }, [params.tab, params.sub]);
 
   // Show loading screen while checking authentication
   if (loading) {
@@ -281,6 +295,10 @@ export default function DashboardLayout() {
               setActiveTab(tab);
               setActiveSub(sub ?? null);
               setSidebarOpen(false);
+              // Update URL to reflect current location
+              navigate(`/admin/${tab}${sub ? `/${sub}` : ""}`, {
+                replace: false,
+              });
             }}
           />
         ) : (

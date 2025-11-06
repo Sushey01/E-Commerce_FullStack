@@ -32,6 +32,7 @@ import SalesOverallList from "./components/Sales/SalesOverallList";
 import SalesBySeller from "./components/Sales/SalesBySeller";
 import UnpaidOrders from "./components/Sales/paidUnPaidOrders";
 import AdminSidebar from "./components/AdminSidebar";
+import AllSellers from "./components/Sellers/AllSellers";
 
 // Types
 type Product = {
@@ -89,7 +90,6 @@ const useToast = () => ({
 // Placeholder components - in Next.js these would be imported from separate files
 const SalesAnalytics = ({ userRole }: { userRole?: string }) => (
   <SalesOverallList />
-
 );
 
 // ProductList and mock data moved to separate files for readability
@@ -322,77 +322,13 @@ export default function AdminDashboard({
         <h3 className="text-lg font-semibold text-card-foreground">
           All Sellers
         </h3>
-        <Button className="border rounded-lg bg-blue-600 text-gray-200 hover:bg-blue-700"> New Seller</Button>
+        <Button className="border rounded-lg bg-blue-600 text-gray-200 hover:bg-blue-700">
+          {" "}
+          New Seller
+        </Button>
       </div>
 
-      <Card>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-border">
-                <tr>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Name
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Email
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Products
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Sales
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Status
-                  </th>
-                  <th className="text-left p-4 font-medium text-card-foreground">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockSellers.map((seller) => (
-                  <tr key={seller.id} className="border-b border-border">
-                    <td className="p-4 text-card-foreground">{seller.name}</td>
-                    <td className="p-4 text-muted-foreground">
-                      {seller.email}
-                    </td>
-                    <td className="p-4 text-card-foreground">
-                      {seller.products}
-                    </td>
-                    <td className="p-4 text-card-foreground">
-                      ${seller.sales}
-                    </td>
-                    <td className="p-4">
-                      <Badge
-                        variant={
-                          seller.status === "active" ? "default" : "inactive"
-                        }
-                      >
-                        {seller.status}
-                      </Badge>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      <AllSellers />
     </div>
   );
 
@@ -502,15 +438,7 @@ export default function AdminDashboard({
 
   const renderBrands = () => <BrandsList />;
 
-  const renderSales = () => (
-    // <div className="space-y-6">
-    //   <h3 className="text-lg font-semibold text-card-foreground">
-    //     Sales Analytics
-    //   </h3>
-    //   <SalesAnalytics userRole="admin" />
-    // </div>
-    <SalesOverallList />
-  );
+  const renderSales = () => <SalesOverallList />;
 
   const renderSettings = () => (
     <div className="space-y-6">
