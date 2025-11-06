@@ -110,10 +110,10 @@ export default function AdminSidebar({
 
   return (
     <aside className="flex flex-col w-64 h-screen sticky top-0 bg-[#0B0C2A] text-white border-r border-white/10">
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 py-6 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <BadgeDollarSign className="h-5 w-5 text-orange-400" />
-          <div className="text-sm font-semibold">Sowis eCommerce</div>
+          <BadgeDollarSign className="h-8 w-8 text-orange-400" />
+          <div className="text-lg font-semibold">Sowis eCommerce</div>
         </div>
         <div className="mt-3 relative">
           <input

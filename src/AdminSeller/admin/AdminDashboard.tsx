@@ -322,7 +322,7 @@ export default function AdminDashboard({
         <h3 className="text-lg font-semibold text-card-foreground">
           All Sellers
         </h3>
-        <Button>Add New Seller</Button>
+        <Button className="border rounded-lg bg-blue-600 text-gray-200 hover:bg-blue-700"> New Seller</Button>
       </div>
 
       <Card>
