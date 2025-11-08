@@ -33,6 +33,7 @@ import SalesBySeller from "./components/Sales/SalesBySeller";
 import UnpaidOrders from "./components/Sales/paidUnPaidOrders";
 import AdminSidebar from "./components/AdminSidebar";
 import AllSellers from "./components/Sellers/AllSellers";
+import PendingRequestSeller from "./components/Sellers/PendingRequestSeller";
 
 // Types
 type Product = {
@@ -167,6 +168,7 @@ export default function AdminDashboard({
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [productsPage, setProductsPage] = useState<number>(1);
   const [sellerProductsPage, setSellerProductsPage] = useState<number>(1);
+  const [filter, setFilter] = useState("Select");
   const PAGE_SIZE = 10;
 
   // Local fallback state if parent doesn't control routing
@@ -322,10 +324,19 @@ export default function AdminDashboard({
         <h3 className="text-lg font-semibold text-card-foreground">
           All Sellers
         </h3>
-        <Button className="border rounded-lg bg-blue-600 text-gray-200 hover:bg-blue-700">
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="border rounded-lg bg-white text-black hover:bg-white"
+        >
           {" "}
-          New Seller
-        </Button>
+          <option>Select</option>
+          <option>New Sellers</option>
+          <option>Highest Sellers</option>
+          <option>Lowest Sellers</option>
+          <option>Active Sellers</option>
+          <option>Inactive Sellers</option>
+        </select>
       </div>
 
       <AllSellers />
@@ -498,108 +509,11 @@ export default function AdminDashboard({
     </div>
   );
 
-  const renderSellerRequests = () => {
-    const pendingRequests = getSellerRequests();
-
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-card-foreground">
-            Pending Seller Requests
-          </h3>
-          <Badge variant="pending">{pendingRequests.length} pending</Badge>
-        </div>
-
-        {pendingRequests.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                No pending seller requests
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {pendingRequests.map((request) => (
-              <Card key={request.id}>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">{request.name}</CardTitle>
-                      <CardDescription>{request.email}</CardDescription>
-                    </div>
-                    <Badge variant="pending">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {request.requestDate}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">
-                        Business Name
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {request.businessName}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">
-                        Business Type
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {request.businessType}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">
-                        Phone
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {request.phone}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">
-                        Status
-                      </p>
-                      <Badge variant="pending">{request.status}</Badge>
-                    </div>
-                  </div>
-                  <div className="mb-4">
-                    <p className="text-sm font-medium text-card-foreground mb-2">
-                      Description
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {request.description}
-                    </p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={() => handleApproveRequest(request.id)}
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Approve
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => handleRejectRequest(request.id)}
-                    >
-                      <XCircle className="h-4 w-4 mr-2" />
-                      Reject
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
+  const renderSellerRequests = () => (
+    <div className="space-y-6">
+      <PendingRequestSeller />
+    </div>
+  );
 
   const handleApproveRequest = (requestId: string) => {
     approveSellerRequest(requestId);

@@ -63,7 +63,7 @@ export default function useSellers() {
                     email: user.email || "",
                     products: 0,
                     sales: 0,
-                    status: r.status || "active",
+                    status: r.status || "inactive",
                 };
             });
 

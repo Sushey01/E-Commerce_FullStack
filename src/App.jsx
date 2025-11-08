@@ -46,6 +46,7 @@ import RoleBasedRedirect from "./AdminSeller/admin/RoleBasedRedirect";
 import SellerForm from "./AdminSeller/seller/SellerForm";
 import HomePage from "./AdminSeller/app/Page";
 import SignupPage from "./components/SignupPage";
+import SellerVerificationForm from "./AdminSeller/seller/components/SellerVerificationForm";
 
 
 const App = () => {
@@ -58,6 +59,7 @@ const App = () => {
 
         {/* Seller Dashboard Route - Uses unified DashboardLayout */}
         <Route path="/seller/dashboard" element={<DashboardLayout />} />
+        <Route path="/seller/vform" element={<SellerVerificationForm />} />
 
         {/* Customer UI Routes - With Navbar and Footer */}
         <Route

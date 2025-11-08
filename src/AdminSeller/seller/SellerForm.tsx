@@ -135,7 +135,7 @@ const useSellerAuth = () => ({
               user_id: userId,
               company_name: formData.businessName,
               address: formData.businessAddress || null,
-              status: "active",
+              status: "inactive", // default to inactive until email verification
             };
             const attemptSeller = async () =>
               await supabase.from("sellers").insert(sellerRow).select();
@@ -167,7 +167,7 @@ const useSellerAuth = () => ({
             user_id: userId,
             company_name: formData.businessName,
             address: formData.businessAddress || null,
-            status: "active",
+            status: "inactive", // default to inactive until email verification
           };
           const attemptSeller = async () =>
             await supabase.from("sellers").insert(sellerRow).select();

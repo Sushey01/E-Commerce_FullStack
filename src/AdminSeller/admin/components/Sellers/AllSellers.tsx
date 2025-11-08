@@ -5,17 +5,43 @@ import { Badge } from "../../ui/badge";
 import { Eye, Edit, Trash2, MoreVertical } from "lucide-react";
 import useSellers from "../../hooks/useSellers";
 import Pagination from "../Pagination";
+import supabase from "../../../../supabase";
 // Using an inline dropdown like SalesOverallList for reliable rendering over tables
 
-const AllSellers = () => {
+interface AllSellersProps {
+  filter?: string;
+}
+
+const AllSellers: React.FC<AllSellersProps> = ({ filter }) => {
   const { sellers, loading, error, totalCount, fetchSellers } = useSellers();
   const [page, setPage] = useState<number>(1);
   const PAGE_SIZE = 10;
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSellers(page, PAGE_SIZE);
   }, [fetchSellers, page]);
+
+  const handleSetStatus = async (
+    sellerId: string,
+    status: "active" | "inactive"
+  ) => {
+    try {
+      setUpdatingId(sellerId);
+      const { error: updErr } = await supabase
+        .from("sellers")
+        .update({ status })
+        .eq("seller_id", sellerId);
+      if (updErr) throw updErr;
+      await fetchSellers(page, PAGE_SIZE);
+    } catch (e) {
+      console.error("Failed to update seller status:", e);
+    } finally {
+      setUpdatingId(null);
+      setOpenMenuId(null);
+    }
+  };
 
   return (
     <div>
@@ -141,16 +167,29 @@ const AllSellers = () => {
                                   <Edit className="h-4 w-4 text-blue-600" />
                                   Edit
                                 </button>
-                                <button
-                                  onClick={() => {
-                                    console.log("Delete", seller);
-                                    setOpenMenuId(null);
-                                  }}
-                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 flex items-center gap-2"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                  Delete
-                                </button>
+                                {seller.status === "active" ? (
+                                  <button
+                                    onClick={() =>
+                                      handleSetStatus(seller.id, "inactive")
+                                    }
+                                    disabled={updatingId === seller.id}
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 flex items-center gap-2 disabled:opacity-60"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                    Deactivate
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      handleSetStatus(seller.id, "active")
+                                    }
+                                    disabled={updatingId === seller.id}
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-green-600 flex items-center gap-2 disabled:opacity-60"
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                    Activate
+                                  </button>
+                                )}
                               </div>
                             </div>
                           )}

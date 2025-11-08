@@ -21,6 +21,7 @@ import {
   SalesTable,
 } from "./components/SalesManager";
 import supabase from "../../supabase";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Local product type for dashboard tables (matches ProductList expectations)
 type DashboardProduct = {
@@ -46,6 +47,7 @@ type DashboardProduct = {
 // Real auth hook using Supabase
 const useAuth = () => {
   const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
@@ -70,10 +72,16 @@ const useAuth = () => {
       try {
         const { data: sellerRow } = await supabase
           .from("sellers")
-          .select("seller_id")
+          .select("seller_id, status")
           .eq("user_id", authUser.id)
           .single();
         sellerId = sellerRow?.seller_id;
+        if (isMounted) {
+          // include status in user object later
+        }
+        if (isMounted && sellerRow?.status) {
+          // no-op; handled below when setting user
+        }
       } catch {}
 
       if (isMounted) {
@@ -82,6 +90,19 @@ const useAuth = () => {
           seller_id: sellerId,
           name: profile?.full_name || authUser.email,
           email: authUser.email,
+          email_confirmed_at: (authUser as any)?.email_confirmed_at || null,
+          seller_status: await (async () => {
+            try {
+              const { data: s } = await supabase
+                .from("sellers")
+                .select("status")
+                .eq("user_id", authUser.id)
+                .single();
+              return s?.status;
+            } catch {
+              return undefined;
+            }
+          })(),
           ...profile,
         });
       }
@@ -378,6 +399,7 @@ interface SellerDashboardProps {
 
 export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { products, getProductsBySeller, loadProducts } = useProducts();
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>();
@@ -653,52 +675,137 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
     </div>
   );
 
+  const isVerifiedSeller = user?.seller_status === "active";
+  const emailConfirmed = !!user?.email_confirmed_at; // Supabase user metadata may include this
+  const [hasVerificationDocs, setHasVerificationDocs] =
+    useState<boolean>(false);
+  const [verificationStatus, setVerificationStatus] = useState<string | null>(
+    null
+  );
+
+  // Load verification docs presence for current seller (existing sellers must reverify if missing)
+  useEffect(() => {
+    const loadDocs = async () => {
+      if (!sellerId) {
+        setHasVerificationDocs(false);
+        setVerificationStatus(null);
+        return;
+      }
+      try {
+        const { data } = await supabase
+          .from("seller_verification_request")
+          .select(
+            "status, government_id_url, business_license_no, business_full_address, submitted_at"
+          )
+          .eq("seller_id", sellerId)
+          .order("submitted_at", { ascending: false })
+          .limit(1);
+        const ver = data && data[0];
+        setVerificationStatus(ver?.status || null);
+        const ok = !!(
+          ver &&
+          (ver.business_license_no || "").trim() &&
+          (ver.government_id_url || "").trim() &&
+          (ver.business_full_address || "").trim()
+        );
+        setHasVerificationDocs(ok);
+      } catch {
+        setHasVerificationDocs(false);
+        setVerificationStatus(null);
+      }
+    };
+    loadDocs();
+  }, [sellerId]);
+
   const renderProducts = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-card-foreground">
           My Products
         </h3>
-        <Button onClick={() => setShowProductForm(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Product
-        </Button>
+        {verificationStatus === "approved" ? (
+          <Button onClick={() => setShowProductForm(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Product
+          </Button>
+        ) : (
+          <div className="flex flex-col items-end">
+            <Button
+              disabled
+              variant="outline"
+              className="opacity-60 cursor-not-allowed"
+            >
+              Add Product
+            </Button>
+            <p className="text-xs text-red-600 mt-1 max-w-[260px] text-right">
+              {verificationStatus === "pending"
+                ? "Verification pending admin approval."
+                : verificationStatus === "rejected"
+                ? "Verification rejected. Please resubmit your form."
+                : "Submit seller verification form to start listing products."}
+            </p>
+          </div>
+        )}
       </div>
 
-      {(showProductForm || editingProduct) && (
-        <ProductForm
-          product={editingProduct}
-          onClose={() => {
-            setShowProductForm(false);
-            setEditingProduct(undefined);
+      {verificationStatus === "approved" &&
+        (showProductForm || editingProduct) && (
+          <ProductForm
+            product={editingProduct}
+            onClose={() => {
+              setShowProductForm(false);
+              setEditingProduct(undefined);
+            }}
+            onSuccess={() => {
+              setShowProductForm(false);
+              setEditingProduct(undefined);
+              loadProducts(sellerId); // Refresh products list for this seller
+            }}
+          />
+        )}
+      {verificationStatus === "approved" ? (
+        <ProductList
+          products={sellerProducts as any}
+          showSellerColumn={false}
+          onEdit={(product: any) => {
+            // Normalize variant for ProductForm (expects object)
+            let parsedVariant: any = {};
+            try {
+              parsedVariant =
+                typeof product?.variant === "string" && product?.variant
+                  ? JSON.parse(product.variant)
+                  : product?.variant || {};
+            } catch {
+              parsedVariant = {};
+            }
+            setEditingProduct({ ...product, variant: parsedVariant });
           }}
-          onSuccess={() => {
-            setShowProductForm(false);
-            setEditingProduct(undefined);
-            loadProducts(sellerId); // Refresh products list for this seller
-          }}
+          onView={(product) => console.log("View product:", product)}
+          onDelete={handleDeleteProduct}
         />
+      ) : (
+        <Card>
+          <CardContent className="p-6 text-center space-y-3">
+            <p className="text-sm text-muted-foreground">
+              {!emailConfirmed
+                ? "Email verification pending. Please check your inbox to verify your account."
+                : !isVerifiedSeller
+                ? "Seller verification required. Complete the form to start listing products."
+                : "Verification documents required (License No, PAN/Tax ID, Govt ID). Complete the form to proceed."}
+            </p>
+            <div className="flex justify-center gap-3">
+              {verificationStatus !== "approved" && (
+                <Button
+                  onClick={() => navigate("/seller/vform")}
+                  className="text-xs bg-blue-600 hover:bg-blue-700"
+                >
+                  Complete Verification
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       )}
-
-      <ProductList
-        products={sellerProducts as any}
-        showSellerColumn={false}
-        onEdit={(product: any) => {
-          // Normalize variant for ProductForm (expects object)
-          let parsedVariant: any = {};
-          try {
-            parsedVariant =
-              typeof product?.variant === "string" && product?.variant
-                ? JSON.parse(product.variant)
-                : product?.variant || {};
-          } catch {
-            parsedVariant = {};
-          }
-          setEditingProduct({ ...product, variant: parsedVariant });
-        }}
-        onView={(product) => console.log("View product:", product)}
-        onDelete={handleDeleteProduct}
-      />
     </div>
   );
 
@@ -731,9 +838,21 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
 
   const renderProfile = () => (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-card-foreground">
-        Profile Settings
-      </h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-card-foreground">
+          Profile Settings
+        </h3>
+        {verificationStatus === "approved" ? (
+          <Badge variant="default">Verified</Badge>
+        ) : (
+          <button
+            onClick={() => navigate("/seller/vform")}
+            className="border rounded-lg p-2 px-3 bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Seller-Verification-Form
+          </button>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
