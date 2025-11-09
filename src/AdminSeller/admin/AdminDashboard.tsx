@@ -8,9 +8,7 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import {
-  Plus,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import supabase from "../../supabase";
 import ProductList from "./components/Products/ProductList";
 import Pagination from "./components/Pagination";

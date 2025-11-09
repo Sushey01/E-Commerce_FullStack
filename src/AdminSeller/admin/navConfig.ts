@@ -64,6 +64,19 @@ export const getAdminNavItems = (): NavItemConfig[] => [
       { id: "coupons", label: "Coupons" },
     ],
   },
+    {
+    id: "reports",
+    label: "Reports",
+    permission: "canViewSystemAnalytics",
+    children: [
+      { id: "total-earning-report", label: "Total Earnings" },
+      { id: "report-by-sellers-product", label: "Reports by Sellers product" },
+      { id: "products-stock", label: "Products Stock " },
+      { id: "user-searches", label: "User Searches" },
+      { id: "commission-history", label: "Commission History" },
+      { id: "wallet-recharge-history", label: "Wallet Recharge History" },
+    ],
+  },
   { id: "settings", label: "Settings", permission: "canAccessSystemSettings" },
 ];
 

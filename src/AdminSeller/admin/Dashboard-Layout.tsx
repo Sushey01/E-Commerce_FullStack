@@ -429,7 +429,7 @@ export default function DashboardLayout() {
         </div>
 
         {/* Page content */}
-        <main className="p-6">{renderTabContent()}</main>
+        <main className="p-2">{renderTabContent()}</main>
       </div>
     </div>
   );
