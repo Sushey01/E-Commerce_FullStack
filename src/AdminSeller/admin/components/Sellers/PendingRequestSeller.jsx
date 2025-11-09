@@ -21,8 +21,10 @@ const STATUS_VARIANT_MAP = {
 // Helper component: generates a signed URL if value is a storage path (non-http)
 const DynamicSignedLink = ({ pathOrUrl }) => {
   const [url, setUrl] = useState(null);
+  const [failed, setFailed] = useState(false);
   useEffect(() => {
     const run = async () => {
+      setFailed(false);
       if (!pathOrUrl) return;
       // If already a full URL (legacy rows) just use it
       if (/^https?:\/\//i.test(pathOrUrl)) {
@@ -30,30 +32,53 @@ const DynamicSignedLink = ({ pathOrUrl }) => {
         return;
       }
       try {
+        // Try signed URL first (works for private buckets)
         const { data, error } = await supabase.storage
           .from("sellers_documents")
           .createSignedUrl(pathOrUrl, 60 * 30); // 30 min
-        if (error) {
+        if (error || !data?.signedUrl) {
           console.error("Signed URL generation failed", {
-            message: error.message,
+            message: error?.message,
             pathOrUrl,
           });
+          // Fallback to public URL (works if bucket/object is public)
+          const pub = supabase.storage
+            .from("sellers_documents")
+            .getPublicUrl(pathOrUrl);
+          if (pub?.data?.publicUrl) {
+            setUrl(pub.data.publicUrl);
+            return;
+          }
+          setFailed(true);
           setUrl(null);
         } else {
-          setUrl(data?.signedUrl || null);
+          setUrl(data.signedUrl);
         }
       } catch (e) {
         console.error("Signed URL unexpected error", e);
+        // Try public url as last resort
+        try {
+          const pub = supabase.storage
+            .from("sellers_documents")
+            .getPublicUrl(pathOrUrl);
+          if (pub?.data?.publicUrl) {
+            setUrl(pub.data.publicUrl);
+            return;
+          }
+        } catch {}
+        setFailed(true);
         setUrl(null);
       }
     };
     run();
   }, [pathOrUrl]);
   if (!pathOrUrl) return <span className="text-sm">—</span>;
-  if (!url)
+  if (!url && !failed)
     return (
       <span className="text-xs text-muted-foreground">Generating link…</span>
     );
+  if (!url && failed)
+    return <span className="text-xs text-muted-foreground">Unavailable</span>;
   return (
     <a
       href={url}

@@ -12,12 +12,16 @@ import {
   ChevronDown,
   ShoppingCart,
   BadgeDollarSign,
+  LogOut,
 } from "lucide-react";
 
 type SidebarProps = {
   activeTab?: string;
   activeSub?: string | null;
   onNavigate?: (tab: string, sub?: string | null) => void;
+  onLogout?: () => void;
+  userName?: string;
+  userRole?: string;
 };
 
 type Item = {
@@ -31,6 +35,9 @@ export default function AdminSidebar({
   activeTab,
   activeSub,
   onNavigate,
+  onLogout,
+  userName,
+  userRole,
 }: SidebarProps) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
@@ -68,6 +75,17 @@ export default function AdminSidebar({
         key: "seller-requests",
         label: "Seller Requests",
         icon: <Users className="h-4 w-4" />,
+      },
+      {
+        key: "marketing",
+        label: "Marketing",
+        icon: <Store className="h-4 w-4" />,
+        children: [
+          { key: "flash-deals", label: "Flash Deals" },
+          { key: "dynamic-pop-up", label: "Dynamic Pop-up" },
+          { key: "coupons", label: "Coupons" },
+          { key: "promotions", label: "Promotions" },
+        ],
       },
       {
         key: "settings",
@@ -124,7 +142,6 @@ export default function AdminSidebar({
           />
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/60" />
         </div>
-        
       </div>
 
       <nav className="flex-1 overflow-y-auto py-3">
@@ -185,8 +202,33 @@ export default function AdminSidebar({
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-white/10 text-xs text-white/60">
-        © {new Date().getFullYear()} Admin
+      <div className="p-4 border-t border-white/10">
+        {/* User / Logout section */}
+        {userName && (
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-sm font-semibold">
+              {userName.charAt(0).toUpperCase()}
+            </div>
+            <div className="leading-tight">
+              <div className="text-sm font-medium text-white">{userName}</div>
+              {userRole && (
+                <div className="text-xs text-white/60 capitalize">
+                  {userRole.replace("_", " ")}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onLogout}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 text-sm text-white transition-colors"
+        >
+          <LogOut className="h-4 w-4" /> <span>Sign Out</span>
+        </button>
+        <div className="mt-4 text-xs text-white/50">
+          © {new Date().getFullYear()} Admin
+        </div>
       </div>
     </aside>
   );

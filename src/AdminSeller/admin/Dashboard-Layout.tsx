@@ -300,6 +300,9 @@ export default function DashboardLayout() {
                 replace: false,
               });
             }}
+            onLogout={logout}
+            userName={user.name}
+            userRole={user.role}
           />
         ) : (
           <div className="h-full bg-gray-300 border-r border-sidebar-border flex flex-col">
@@ -386,7 +389,7 @@ export default function DashboardLayout() {
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full bg-transparent"
+                className="w-full bg-white justify-center"
                 onClick={logout}
               >
                 <LogOut className="mr-2 h-4 w-4" /> Sign Out

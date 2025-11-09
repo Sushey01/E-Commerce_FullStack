@@ -34,6 +34,7 @@ import UnpaidOrders from "./components/Sales/paidUnPaidOrders";
 import AdminSidebar from "./components/AdminSidebar";
 import AllSellers from "./components/Sellers/AllSellers";
 import PendingRequestSeller from "./components/Sellers/PendingRequestSeller";
+import FlashDeals from "./components/Marketing/FlashDeals";
 
 // Types
 type Product = {
@@ -451,6 +452,8 @@ export default function AdminDashboard({
 
   const renderSales = () => <SalesOverallList />;
 
+  const renderMarketing = () => <FlashDeals />;
+
   const renderSettings = () => (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-card-foreground">
@@ -581,6 +584,8 @@ export default function AdminDashboard({
         return renderSales();
       case "settings":
         return renderSettings();
+      case "marketing":
+        return renderMarketing();
       default:
         return renderDashboard();
     }

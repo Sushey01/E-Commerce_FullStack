@@ -11,48 +11,73 @@ import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { Clock, CheckCircle, XCircle } from "lucide-react";
 
-// Helper component: generate a signed URL if value is a storage path
+// Helper component: generate a signed URL if value is a storage path, with public fallback
 const DynamicSignedLink: React.FC<{ pathOrUrl?: string | null }> = ({
   pathOrUrl,
 }) => {
   const [url, setUrl] = useState<string | null>(null);
+  const [failed, setFailed] = useState<boolean>(false);
 
   useEffect(() => {
     const run = async () => {
       if (!pathOrUrl) return;
+      // Legacy full URL
       if (/^https?:\/\//i.test(pathOrUrl)) {
         setUrl(pathOrUrl);
         return;
       }
       try {
+        // Prefer signed URL (private bucket)
         const { data, error } = await supabase.storage
           .from("sellers_documents")
-          .createSignedUrl(pathOrUrl, 60 * 30); // 30 min
-        if (error) {
-          console.error("Signed URL generation failed", {
-            message: error.message,
-            pathOrUrl,
-          });
-          setUrl(null);
+          .createSignedUrl(pathOrUrl, 60 * 30);
+        if (error || !data?.signedUrl) {
+          // Fallback to public URL (if object/bucket is public)
+          const { data: pub } = supabase.storage
+            .from("sellers_documents")
+            .getPublicUrl(pathOrUrl) as any;
+          if (pub?.publicUrl) {
+            setUrl(pub.publicUrl);
+          } else {
+            setFailed(true);
+            setUrl(null);
+          }
         } else {
-          setUrl(data?.signedUrl || null);
+          setUrl(data.signedUrl);
         }
       } catch (e) {
-        console.error("Signed URL unexpected error", e);
-        setUrl(null);
+        // Unexpected error: try public URL as last resort
+        try {
+          const { data: pub } = supabase.storage
+            .from("sellers_documents")
+            .getPublicUrl(pathOrUrl) as any;
+          if (pub?.publicUrl) {
+            setUrl(pub.publicUrl);
+          } else {
+            setFailed(true);
+            setUrl(null);
+          }
+        } catch {
+          setFailed(true);
+          setUrl(null);
+        }
       }
     };
     run();
   }, [pathOrUrl]);
 
   if (!pathOrUrl) return <span className="text-sm">—</span>;
-  if (!url)
+  if (!url && !failed)
     return (
       <span className="text-xs text-muted-foreground">Generating link…</span>
     );
+  if (failed && !url)
+    return (
+      <span className="text-xs text-muted-foreground">Link unavailable</span>
+    );
   return (
     <a
-      href={url}
+      href={url!}
       target="_blank"
       rel="noreferrer"
       className="text-blue-600 text-sm hover:underline"
@@ -105,7 +130,6 @@ const PendingRequestSeller: React.FC = () => {
           "id, seller_id, submitted_at, status, reviewed_at, reviewer_id, notes, government_id_url, business_license_no, business_full_address"
         )
         .order("submitted_at", { ascending: false });
-
       if (statusFilter !== "all") {
         query = query.eq("status", statusFilter);
       }
