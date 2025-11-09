@@ -1,18 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  LayoutDashboard,
-  Package,
-  Tags,
-  Store,
-  BarChart3,
-  Users,
-  Settings,
   Search,
   ChevronRight,
   ChevronDown,
-  ShoppingCart,
-  BadgeDollarSign,
   LogOut,
+  BadgeDollarSign,
+  LayoutDashboard,
+  Store,
+  Users,
+  Package,
+  BarChart3,
+  Settings,
 } from "lucide-react";
 
 type SidebarProps = {
@@ -22,12 +20,14 @@ type SidebarProps = {
   onLogout?: () => void;
   userName?: string;
   userRole?: string;
+  items: Item[];
 };
 
 type Item = {
   key: string;
   label: string;
   icon?: React.ReactNode;
+  badge?: number;
   children?: { key: string; label: string }[];
 };
 
@@ -38,73 +38,32 @@ export default function AdminSidebar({
   onLogout,
   userName,
   userRole,
+  items,
 }: SidebarProps) {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
 
-  const items: Item[] = useMemo(
-    () => [
-      {
-        key: "dashboard",
-        label: "Dashboard",
-        icon: <LayoutDashboard className="h-4 w-4" />,
-      },
-      {
-        key: "products",
-        label: "Products",
-        icon: <Package className="h-4 w-4" />,
-        children: [
-          { key: "all-products", label: "All Products" },
-          { key: "seller-products", label: "Seller Products" },
-          { key: "categories", label: "Categories" },
-          { key: "brands", label: "Brands" },
-        ],
-      },
-      {
-        key: "sales",
-        label: "Sales",
-        icon: <BarChart3 className="h-4 w-4" />,
-        children: [
-          { key: "overall-orders", label: "Overall Orders" },
-          { key: "sales-by-seller", label: "Sales by Seller" },
-          { key: "unpaid-orders", label: "Paid/Unpaid Orders" },
-        ],
-      },
-      { key: "sellers", label: "Sellers", icon: <Store className="h-4 w-4" /> },
-      {
-        key: "seller-requests",
-        label: "Seller Requests",
-        icon: <Users className="h-4 w-4" />,
-      },
-      {
-        key: "marketing",
-        label: "Marketing",
-        icon: <Store className="h-4 w-4" />,
-        children: [
-          { key: "flash-deals", label: "Flash Deals" },
-          { key: "dynamic-pop-up", label: "Dynamic Pop-up" },
-          { key: "coupons", label: "Coupons" },
-          { key: "promotions", label: "Promotions" },
-        ],
-      },
-      {
-        key: "settings",
-        label: "Settings",
-        icon: <Settings className="h-4 w-4" />,
-      },
-    ],
-    []
-  );
-
-  // Ensure groups containing the active sub are opened by default
-  useMemo(() => {
-    const next = { ...open };
-    items.forEach((it) => {
-      if (it.children && activeTab === it.key) next[it.key] = true;
-      if (it.children && activeSub) next[it.key] = true;
+  // Ensure only the active parent group opens by default; avoid opening all when any sub is active
+  useEffect(() => {
+    setOpen((prev) => {
+      const next: Record<string, boolean> = { ...prev };
+      items.forEach((it) => {
+        if (it.children) {
+          next[it.key] = it.key === activeTab ? true : next[it.key] || false;
+        }
+      });
+      return next;
     });
-    setOpen((prev) => ({ ...prev, ...next }));
-  }, [activeTab, activeSub]);
+  }, [activeTab, items]);
+
+  const iconMap: Record<string, React.ReactNode> = {
+    dashboard: <LayoutDashboard className="h-4 w-4" />,
+    sellers: <Store className="h-4 w-4" />,
+    "seller-requests": <Users className="h-4 w-4" />,
+    products: <Package className="h-4 w-4" />,
+    sales: <BarChart3 className="h-4 w-4" />,
+    settings: <Settings className="h-4 w-4" />,
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -157,13 +116,25 @@ export default function AdminSidebar({
                   }`}
                   onClick={() =>
                     isGroup
-                      ? setOpen((p) => ({ ...p, [item.key]: !p[item.key] }))
+                      ? setOpen((p) => {
+                          const currentlyOpen = !!p[item.key];
+                          // single-open behavior: close others
+                          return { [item.key]: !currentlyOpen } as Record<
+                            string,
+                            boolean
+                          >;
+                        })
                       : handleClick(item.key)
                   }
                 >
                   <span className="flex items-center gap-2">
-                    {item.icon}
+                    {item.icon || iconMap[item.key]}
                     <span className="text-sm">{item.label}</span>
+                    {typeof item.badge === "number" && item.badge > 0 && (
+                      <span className="ml-2 inline-flex items-center justify-center text-[10px] leading-none px-1.5 py-0.5 rounded-full bg-orange-500 text-white">
+                        {item.badge}
+                      </span>
+                    )}
                   </span>
                   {isGroup &&
                     (open[item.key] ? (

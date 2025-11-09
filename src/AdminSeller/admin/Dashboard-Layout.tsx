@@ -15,6 +15,11 @@ import {
 import AdminDashboard from "./AdminDashboard";
 import SellerDashboard from "../seller/SellerDashboard";
 import AdminSidebar from "./components/AdminSidebar";
+import {
+  getAdminNavItems,
+  getSellerNavItems,
+  NavItemConfig,
+} from "./navConfig";
 import { useNavigate, useParams } from "react-router-dom";
 
 // Real Supabase authentication hook
@@ -120,6 +125,13 @@ export default function DashboardLayout() {
   //Track expanded dropdowns sepearately so expand/collapse doesn't change activeTab
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const canAccess = useCanAccess();
+  // Icon map for seller sidebar (non-admin) using ids from navConfig
+  const sellerIconMap: Record<string, React.ReactNode> = {
+    dashboard: <LayoutDashboard className="mr-3 h-4 w-4" />,
+    products: <Package className="mr-3 h-4 w-4" />,
+    sales: <BarChart3 className="mr-3 h-4 w-4" />,
+    profile: <Settings className="mr-3 h-4 w-4" />,
+  };
 
   // Sync URL params -> UI state
   useEffect(() => {
@@ -153,79 +165,19 @@ export default function DashboardLayout() {
   const pendingRequestsCount =
     user?.role === "admin" ? getSellerRequests().length : 0;
 
-  const adminNavItems: NavItem[] = [
-    { icon: LayoutDashboard, label: "Dashboard", id: "dashboard" },
-    {
-      icon: Users,
-      label: "Sellers",
-      id: "sellers",
-      permission: "canViewAllSellers",
-    },
-    {
-      icon: UserCheck,
-      label: "Seller Requests",
-      id: "seller-requests",
-      permission: "canViewAllSellers",
-      badge: pendingRequestsCount,
-    },
-    {
-      icon: Package,
-      label: "Products",
-      id: "products",
-      permission: "canManageAllProducts",
-      children: [
-        { label: "All Products", id: "all-products" },
-        { label: "Seller Products", id: "seller-products" },
-        { label: "Categories", id: "categories" },
-        { label: "Brands", id: "brands" },
-      ],
-    },
-    {
-      icon: BarChart3,
-      label: "Sales",
-      id: "sales",
-      permission: "canViewSystemAnalytics",
-      children: [
-        { label: "All Orders", id: "overall-orders" },
-        { label: "Sales by Seller", id: "sales-by-seller" },
-        { label: "Unpaid Orders", id: "unpaid-orders" },
-      ],
-    },
-    {
-      icon: Settings,
-      label: "Settings",
-      id: "settings",
-      permission: "canAccessSystemSettings",
-    },
-  ];
-
-  const sellerNavItems: NavItem[] = [
-    { icon: LayoutDashboard, label: "Dashboard", id: "dashboard" },
-    {
-      icon: Package,
-      label: "My Products",
-      id: "products",
-      permission: "canManageOwnProducts",
-    },
-    {
-      icon: BarChart3,
-      label: "My Sales",
-      id: "sales",
-      permission: "canViewOwnSales",
-    },
-    {
-      icon: Settings,
-      label: "Profile",
-      id: "profile",
-      permission: "canEditProfile",
-    },
-  ];
-
-  const navItems = user?.role === "admin" ? adminNavItems : sellerNavItems;
+  // Build nav items from shared config; inject dynamic badges where needed
+  const baseNav: NavItemConfig[] =
+    user?.role === "admin" ? getAdminNavItems() : getSellerNavItems();
+  const navItems = baseNav.map((item) =>
+    item.id === "seller-requests"
+      ? ({ ...item, badge: pendingRequestsCount } as any)
+      : item
+  );
 
   // Filter navigation items based on user permissions
   const filteredNavItems = navItems.filter((item) => {
     if (!item.permission) return true;
+    // @ts-expect-error index signature for permission keys
     return canAccess[item.permission];
   });
 
@@ -291,11 +243,21 @@ export default function DashboardLayout() {
           <AdminSidebar
             activeTab={activeTab}
             activeSub={activeSub}
+            items={navItems.map((n: NavItemConfig) => ({
+              key: n.id,
+              label: n.label,
+              icon: n.icon,
+              children:
+                n.children?.map((c: { id: string; label: string }) => ({
+                  key: c.id,
+                  label: c.label,
+                })) || undefined,
+              badge: (n as any).badge,
+            }))}
             onNavigate={(tab, sub) => {
               setActiveTab(tab);
               setActiveSub(sub ?? null);
               setSidebarOpen(false);
-              // Update URL to reflect current location
               navigate(`/admin/${tab}${sub ? `/${sub}` : ""}`, {
                 replace: false,
               });
@@ -339,7 +301,7 @@ export default function DashboardLayout() {
                       }}
                     >
                       <div className="flex items-center">
-                        <item.icon className="mr-3 h-4 w-4" />
+                        {sellerIconMap[item.id] || null}
                         {item.label}
                       </div>
                       {hasChildren && (
@@ -350,20 +312,22 @@ export default function DashboardLayout() {
                     </Button>
                     {hasChildren && isExpanded && (
                       <div className="pl-8 space-y-1">
-                        {item.children?.map((child) => (
-                          <Button
-                            key={child.id}
-                            variant="ghost"
-                            className="w-full justify-start text-sm"
-                            onClick={() => {
-                              setActiveTab(item.id);
-                              setActiveSub(child.id);
-                              setSidebarOpen(false);
-                            }}
-                          >
-                            {child.label}
-                          </Button>
-                        ))}
+                        {item.children?.map(
+                          (child: { id: string; label: string }) => (
+                            <Button
+                              key={child.id}
+                              variant="ghost"
+                              className="w-full justify-start text-sm"
+                              onClick={() => {
+                                setActiveTab(item.id);
+                                setActiveSub(child.id);
+                                setSidebarOpen(false);
+                              }}
+                            >
+                              {child.label}
+                            </Button>
+                          )
+                        )}
                       </div>
                     )}
                   </div>
@@ -414,7 +378,8 @@ export default function DashboardLayout() {
 
           <div className="flex items-center space-x-4">
             <h2 className="text-lg font-semibold text-card-foreground">
-              {filteredNavItems.find((item) => item.id === activeTab)?.label}
+              {filteredNavItems.find((item) => item.id === activeTab)?.label ||
+                "Dashboard"}
             </h2>
             {user?.role === "admin" &&
               pendingRequestsCount > 0 &&

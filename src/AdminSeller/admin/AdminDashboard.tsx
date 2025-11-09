@@ -32,9 +32,10 @@ import SalesOverallList from "./components/Sales/SalesOverallList";
 import SalesBySeller from "./components/Sales/SalesBySeller";
 import UnpaidOrders from "./components/Sales/paidUnPaidOrders";
 import AdminSidebar from "./components/AdminSidebar";
+import { getAdminNavItems } from "./navConfig";
 import AllSellers from "./components/Sellers/AllSellers";
-import PendingRequestSeller from "./components/Sellers/PendingRequestSeller";
 import FlashDeals from "./components/Marketing/FlashDeals";
+import PendingRequestSeller from "./components/Sellers/PendingRequestSeller";
 
 // Types
 type Product = {
@@ -535,35 +536,6 @@ export default function AdminDashboard({
     });
   };
 
-  // If the Products parent is active but a child is selected, render the child's view
-  if (activeTab === "products" && activeSub) {
-    switch (activeSub) {
-      case "seller-products":
-        return renderSellerProducts();
-      case "categories":
-        return renderCategories();
-      case "brands":
-        return renderBrands();
-      case "all-products":
-        return renderProducts();
-      default:
-        return renderProducts();
-    }
-  }
-
-  // Handle Sales children when Sales parent is active
-  if (activeTab === "sales" && activeSub) {
-    switch (activeSub) {
-      case "overall-orders":
-        return <SalesOverallList />;
-      case "sales-by-seller":
-        return <SalesBySeller />;
-      case "unpaid-orders":
-        return <UnpaidOrders />;
-      default:
-        return renderSales();
-    }
-  }
   const content = useMemo(() => {
     switch (activeTab) {
       case "dashboard":
@@ -573,7 +545,18 @@ export default function AdminDashboard({
       case "seller-requests":
         return renderSellerRequests();
       case "products":
-        return renderProducts();
+        // If a sub-tab under products is active, render that view
+        switch (activeSub) {
+          case "seller-products":
+            return renderSellerProducts();
+          case "categories":
+            return renderCategories();
+          case "brands":
+            return renderBrands();
+          case "all-products":
+          default:
+            return renderProducts();
+        }
       case "seller-products":
         return renderSellerProducts();
       case "categories":
@@ -581,7 +564,17 @@ export default function AdminDashboard({
       case "brands":
         return renderBrands();
       case "sales":
-        return renderSales();
+        // Sales sub-routes
+        switch (activeSub) {
+          case "overall-orders":
+            return <SalesOverallList />;
+          case "sales-by-seller":
+            return <SalesBySeller />;
+          case "unpaid-orders":
+            return <UnpaidOrders />;
+          default:
+            return renderSales();
+        }
       case "settings":
         return renderSettings();
       case "marketing":
@@ -591,6 +584,7 @@ export default function AdminDashboard({
     }
   }, [
     activeTab,
+    activeSub,
     productsError,
     adminProducts,
     productsPage,
@@ -613,6 +607,14 @@ export default function AdminDashboard({
       <AdminSidebar
         activeTab={activeTab}
         activeSub={activeSub}
+        items={getAdminNavItems().map((n) => ({
+          key: n.id,
+          label: n.label,
+          children: n.children?.map((c) => ({ key: c.id, label: c.label })),
+          // Optional: show pending badge if this view is used standalone
+          badge:
+            n.id === "seller-requests" ? getSellerRequests().length : undefined,
+        }))}
         onNavigate={handleNavigate}
       />
       <main className="flex-1 p-4 md:p-6 lg:p-8">{content}</main>
