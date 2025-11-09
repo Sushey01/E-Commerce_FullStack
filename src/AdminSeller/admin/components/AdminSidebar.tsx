@@ -11,6 +11,8 @@ import {
   Package,
   BarChart3,
   Settings,
+  Megaphone,
+  Tag,
 } from "lucide-react";
 
 type SidebarProps = {
@@ -59,10 +61,10 @@ export default function AdminSidebar({
   const iconMap: Record<string, React.ReactNode> = {
     dashboard: <LayoutDashboard className="h-4 w-4" />,
     sellers: <Store className="h-4 w-4" />,
-    "seller-requests": <Users className="h-4 w-4" />,
     products: <Package className="h-4 w-4" />,
     sales: <BarChart3 className="h-4 w-4" />,
     settings: <Settings className="h-4 w-4" />,
+    marketing: <Megaphone className="h-4 w-4" />,
   };
 
   const filtered = useMemo(() => {

@@ -9,17 +9,7 @@ import {
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import {
-  Users,
-  Package,
-  DollarSign,
-  TrendingUp,
-  Eye,
-  Edit,
-  Trash2,
   Plus,
-  CheckCircle,
-  XCircle,
-  Clock,
 } from "lucide-react";
 import supabase from "../../supabase";
 import ProductList from "./components/Products/ProductList";
@@ -35,7 +25,10 @@ import AdminSidebar from "./components/AdminSidebar";
 import { getAdminNavItems } from "./navConfig";
 import AllSellers from "./components/Sellers/AllSellers";
 import FlashDeals from "./components/Marketing/FlashDeals";
+
 import PendingRequestSeller from "./components/Sellers/PendingRequestSeller";
+import DynamicPopUp from "./components/Marketing/DynamicPopUp";
+import Coupons from "./components/Marketing/Coupons";
 
 // Types
 type Product = {
@@ -454,6 +447,9 @@ export default function AdminDashboard({
   const renderSales = () => <SalesOverallList />;
 
   const renderMarketing = () => <FlashDeals />;
+  const renderFlashDeals = () => <FlashDeals />;
+  const renderDynamicPopup = () => <DynamicPopUp />;
+  const renderCoupons = () => <Coupons />;
 
   const renderSettings = () => (
     <div className="space-y-6">
@@ -541,9 +537,14 @@ export default function AdminDashboard({
       case "dashboard":
         return renderDashboard();
       case "sellers":
-        return renderSellers();
-      case "seller-requests":
-        return renderSellerRequests();
+        // Sub-routing inside sellers parent
+        switch (activeSub) {
+          case "seller-requests":
+            return renderSellerRequests();
+          case "all-sellers":
+          default:
+            return renderSellers();
+        }
       case "products":
         // If a sub-tab under products is active, render that view
         switch (activeSub) {
@@ -578,7 +579,17 @@ export default function AdminDashboard({
       case "settings":
         return renderSettings();
       case "marketing":
-        return renderMarketing();
+        // marketing parent; route by sub if present
+        switch (activeSub) {
+          case "flash-deals":
+            return renderFlashDeals();
+          case "dynamic-popup":
+            return renderDynamicPopup();
+          case "coupons":
+            return renderCoupons();
+          default:
+            return renderMarketing();
+        }
       default:
         return renderDashboard();
     }
@@ -612,8 +623,7 @@ export default function AdminDashboard({
           label: n.label,
           children: n.children?.map((c) => ({ key: c.id, label: c.label })),
           // Optional: show pending badge if this view is used standalone
-          badge:
-            n.id === "seller-requests" ? getSellerRequests().length : undefined,
+          badge: n.id === "sellers" ? getSellerRequests().length : undefined,
         }))}
         onNavigate={handleNavigate}
       />

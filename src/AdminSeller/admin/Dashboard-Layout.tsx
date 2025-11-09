@@ -136,7 +136,13 @@ export default function DashboardLayout() {
   // Sync URL params -> UI state
   useEffect(() => {
     if (params?.tab) {
-      setActiveTab(params.tab);
+      // Backward compatibility: if old route '/admin/seller-requests' is hit, remap
+      if (params.tab === "seller-requests") {
+        setActiveTab("sellers");
+        setActiveSub("seller-requests");
+      } else {
+        setActiveTab(params.tab);
+      }
     }
     if (params) {
       // If sub is defined in params but possibly empty, coerce to null
@@ -144,35 +150,31 @@ export default function DashboardLayout() {
     }
   }, [params.tab, params.sub]);
 
-  // Show loading screen while checking authentication
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    window.location.href = "/loginPage";
-    return null;
-  }
+  // Ensure consistent hook order across renders: avoid early returns that skip later hooks.
+  // Handle redirect side-effect when not authenticated once loading completes.
+  useEffect(() => {
+    if (!loading && !user) {
+      window.location.href = "/loginPage";
+    }
+  }, [loading, user]);
 
   const pendingRequestsCount =
     user?.role === "admin" ? getSellerRequests().length : 0;
 
+  // Flash deals badge removed until flash_deals table actually exists.
+  // const [flashDealsCount, setFlashDealsCount] = useState<number>(0);
+
   // Build nav items from shared config; inject dynamic badges where needed
   const baseNav: NavItemConfig[] =
     user?.role === "admin" ? getAdminNavItems() : getSellerNavItems();
-  const navItems = baseNav.map((item) =>
-    item.id === "seller-requests"
-      ? ({ ...item, badge: pendingRequestsCount } as any)
-      : item
-  );
+  const navItems = baseNav.map((item) => {
+    if (item.id === "sellers") {
+      // Attach pending requests badge to sellers parent
+      return { ...item, badge: pendingRequestsCount } as any;
+    }
+    // Marketing badge disabled (no flash_deals table yet)
+    return item;
+  });
 
   // Filter navigation items based on user permissions
   const filteredNavItems = navItems.filter((item) => {
@@ -212,6 +214,23 @@ export default function DashboardLayout() {
       <SellerDashboard activeTab={activeTab} />
     );
   };
+
+  // Loading state UI (rendered without aborting remaining hooks)
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user is still null after loading, show nothing (redirect effect fired)
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -378,12 +397,22 @@ export default function DashboardLayout() {
 
           <div className="flex items-center space-x-4">
             <h2 className="text-lg font-semibold text-card-foreground">
-              {filteredNavItems.find((item) => item.id === activeTab)?.label ||
-                "Dashboard"}
+              {(() => {
+                const parent = filteredNavItems.find(
+                  (item) => item.id === activeTab
+                );
+                if (parent?.children && activeSub) {
+                  const child = parent.children.find(
+                    (c: { id: string }) => c.id === activeSub
+                  );
+                  return child?.label || parent.label;
+                }
+                return parent?.label || "Dashboard";
+              })()}
             </h2>
             {user?.role === "admin" &&
               pendingRequestsCount > 0 &&
-              activeTab !== "seller-requests" && (
+              !(activeTab === "sellers" && activeSub === "seller-requests") && (
                 <Badge variant="pending" className="text-xs">
                   {pendingRequestsCount} pending request
                   {pendingRequestsCount !== 1 ? "s" : ""}

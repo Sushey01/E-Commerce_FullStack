@@ -6,6 +6,7 @@ import {
   Settings,
   Users,
   Store,
+  Megaphone,
 } from "lucide-react";
 
 export type NavChild = {
@@ -23,8 +24,15 @@ export type NavItemConfig = {
 
 export const getAdminNavItems = (): NavItemConfig[] => [
   { id: "dashboard", label: "Dashboard" },
-  { id: "sellers", label: "Sellers", permission: "canViewAllSellers" },
-  { id: "seller-requests", label: "Seller Requests", permission: "canViewAllSellers" },
+  {
+    id: "sellers",
+    label: "Sellers",
+    permission: "canViewAllSellers",
+    children: [
+      { id: "all-sellers", label: "All Sellers" },
+      { id: "seller-requests", label: "Seller Requests" },
+    ],
+  },
   {
     id: "products",
     label: "Products",
@@ -44,6 +52,16 @@ export const getAdminNavItems = (): NavItemConfig[] => [
       { id: "overall-orders", label: "Overall Orders" },
       { id: "sales-by-seller", label: "Sales by Seller" },
       { id: "unpaid-orders", label: "Unpaid Orders" },
+    ],
+  },
+  {
+    id: "marketing",
+    label: "Marketing",
+    // visible to all admins (no specific permission check yet)
+    children: [
+      { id: "flash-deals", label: "Flash Deals" },
+      { id: "dynamic-popup", label: "Dynamic Pop-ups" },
+      { id: "coupons", label: "Coupons" },
     ],
   },
   { id: "settings", label: "Settings", permission: "canAccessSystemSettings" },
