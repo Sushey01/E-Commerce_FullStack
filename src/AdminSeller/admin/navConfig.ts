@@ -64,16 +64,16 @@ export const getAdminNavItems = (): NavItemConfig[] => [
       { id: "coupons", label: "Coupons" },
     ],
   },
-    {
+  {
     id: "reports",
     label: "Reports",
     permission: "canViewSystemAnalytics",
     children: [
-      { id: "total-earning-report", label: "Total Earnings" },
-      { id: "report-by-sellers-product", label: "Reports by Sellers product" },
-      { id: "products-stock", label: "Products Stock " },
-      { id: "user-searches", label: "User Searches" },
+      { id: "total-earnings", label: "Total Earnings" },
+      { id: "reports-by-seller", label: "Reports by Seller" },
+      { id: "product-stock", label: "Product Stock" },
       { id: "commission-history", label: "Commission History" },
+      { id: "user-searches", label: "User Searches" },
       { id: "wallet-recharge-history", label: "Wallet Recharge History" },
     ],
   },

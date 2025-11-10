@@ -65,6 +65,7 @@ export default function AdminSidebar({
     sales: <BarChart3 className="h-4 w-4" />,
     settings: <Settings className="h-4 w-4" />,
     marketing: <Megaphone className="h-4 w-4" />,
+    reports: <BarChart3 className="h-4 w-4" />,
   };
 
   const filtered = useMemo(() => {

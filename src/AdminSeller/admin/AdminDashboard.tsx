@@ -27,6 +27,13 @@ import FlashDeals from "./components/Marketing/FlashDeals";
 import PendingRequestSeller from "./components/Sellers/PendingRequestSeller";
 import DynamicPopUp from "./components/Marketing/DynamicPopUp";
 import Coupons from "./components/Marketing/Coupons";
+import TotalEarnings from "./components/Reports/TotalEarnings";
+import ReportsBySeller from "./components/Reports/ReportsBySeller";
+import ProductStock from "./components/Reports/ProductStock";
+import CommissionHistory from "./components/Reports/CommissionHistory";
+import UserSearches from "./components/Reports/UserSearches";
+import WalletRechargeHistory from "./components/Reports/WalletRechargeHistory";
+import AdminSetting from "./components/Settings/AdminSetting";
 
 // Types
 type Product = {
@@ -449,63 +456,15 @@ export default function AdminDashboard({
   const renderDynamicPopup = () => <DynamicPopUp />;
   const renderCoupons = () => <Coupons />;
 
-  const renderSettings = () => (
-    <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-card-foreground">
-        System Settings
-      </h3>
+  // Reports renderers
+  const renderTotalEarnings = () => <TotalEarnings />;
+  const renderReportsBySeller = () => <ReportsBySeller />;
+  const renderProductStock = () => <ProductStock />;
+  const renderCommissionHistory = () => <CommissionHistory />;
+  const renderUserSearches = () => <UserSearches />;
+  const renderWalletRechargeHistory = () => <WalletRechargeHistory />;
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>General Settings</CardTitle>
-            <CardDescription>Configure system preferences</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-card-foreground">Email Notifications</span>
-              <Button variant="outline" size="sm">
-                Configure
-              </Button>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-card-foreground">Payment Settings</span>
-              <Button variant="outline" size="sm">
-                Configure
-              </Button>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-card-foreground">Security Settings</span>
-              <Button variant="outline" size="sm">
-                Configure
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>System Information</CardTitle>
-            <CardDescription>Current system status</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-card-foreground">Version</span>
-              <span className="text-muted-foreground">v1.0.0</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-card-foreground">Last Updated</span>
-              <span className="text-muted-foreground">2 days ago</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-card-foreground">System Status</span>
-              <Badge variant="default">Healthy</Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
+  const renderSettings = () => <AdminSetting />;
 
   const renderSellerRequests = () => (
     <div className="space-y-6">
@@ -513,22 +472,6 @@ export default function AdminDashboard({
     </div>
   );
 
-  const handleApproveRequest = (requestId: string) => {
-    approveSellerRequest(requestId);
-    toast({
-      title: "Request Approved",
-      description: "Seller request has been approved successfully.",
-    });
-  };
-
-  const handleRejectRequest = (requestId: string) => {
-    rejectSellerRequest(requestId);
-    toast({
-      title: "Request Rejected",
-      description: "Seller request has been rejected.",
-      variant: "destructive",
-    });
-  };
 
   const content = useMemo(() => {
     switch (activeTab) {
@@ -587,6 +530,23 @@ export default function AdminDashboard({
             return renderCoupons();
           default:
             return renderMarketing();
+        }
+      case "reports":
+        switch (activeSub) {
+          case "total-earnings":
+            return renderTotalEarnings();
+          case "reports-by-seller":
+            return renderReportsBySeller();
+          case "product-stock":
+            return renderProductStock();
+          case "commission-history":
+            return renderCommissionHistory();
+          case "user-searches":
+            return renderUserSearches();
+          case "wallet-recharge-history":
+            return renderWalletRechargeHistory();
+          default:
+            return renderTotalEarnings();
         }
       default:
         return renderDashboard();
