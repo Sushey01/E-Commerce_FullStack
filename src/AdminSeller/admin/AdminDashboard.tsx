@@ -34,6 +34,7 @@ import CommissionHistory from "./components/Reports/CommissionHistory";
 import UserSearches from "./components/Reports/UserSearches";
 import WalletRechargeHistory from "./components/Reports/WalletRechargeHistory";
 import AdminSetting from "./components/Settings/AdminSetting";
+import TotalEarningMapping from "./components/Reports/TotalEarningMapping";
 
 // Types
 type Product = {
@@ -457,7 +458,7 @@ export default function AdminDashboard({
   const renderCoupons = () => <Coupons />;
 
   // Reports renderers
-  const renderTotalEarnings = () => <TotalEarnings />;
+  const renderTotalEarnings = () => <TotalEarningMapping />;
   const renderReportsBySeller = () => <ReportsBySeller />;
   const renderProductStock = () => <ProductStock />;
   const renderCommissionHistory = () => <CommissionHistory />;
@@ -471,7 +472,6 @@ export default function AdminDashboard({
       <PendingRequestSeller />
     </div>
   );
-
 
   const content = useMemo(() => {
     switch (activeTab) {
