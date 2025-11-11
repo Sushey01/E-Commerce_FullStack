@@ -1,26 +1,160 @@
-import React from "react";
-import { Plus } from "lucide-react"; // Using lucide-react for the expand/collapse icon
+import React, { useState, useEffect } from "react";
+import { Plus } from "lucide-react";
+import supabase from "../../../../supabase";
+import Pagination from "../Pagination";
 
 // Define the data type for the table rows
 interface WalletTransactionItem {
-  id: number;
-  customerName: string;
+  id: string;
+  user_id: string;
+  customer_name: string;
   amount: number;
+  transaction_type?: string;
+  created_at?: string;
 }
 
-// Mock data to render the table (matching your design structure)
-const transactionData: WalletTransactionItem[] = [
-  { id: 1, customerName: "Paul K. Jensen", amount: 99.0 },
-  { id: 2, customerName: "Paul K. Jensen", amount: 25.0 },
-  { id: 3, customerName: "Paul K. Jensen", amount: 50.0 },
-  { id: 4, customerName: "Paul K. Jensen", amount: 80.0 },
-  { id: 5, customerName: "Paul K. Jensen", amount: 35.0 },
-  { id: 6, customerName: "Paul K. Jensen", amount: 12.15 },
-];
+interface User {
+  id: string;
+  full_name: string;
+  email?: string;
+}
 
 const WalletRechargeHistory = () => {
-  // NOTE: You would typically use state here to manage which rows are expanded,
-  // similar to the ReportsBySeller component.
+  const [transactionData, setTransactionData] = useState<
+    WalletTransactionItem[]
+  >([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const itemsPerPage = 10;
+
+  // Fetch users
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id, full_name, email")
+          .order("full_name", { ascending: true });
+
+        if (error) throw error;
+        setUsers(data || []);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  // Fetch wallet transactions with pagination
+  const fetchTransactions = async (
+    page: number,
+    userFilter: string = "",
+    dateStart: string = "",
+    dateEnd: string = ""
+  ) => {
+    setLoading(true);
+    console.log(
+      "💳 [WalletRechargeHistory] Fetching transactions - Page:",
+      page,
+      "User:",
+      userFilter
+    );
+
+    try {
+      const from = (page - 1) * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+
+      let query = supabase
+        .from("wallet_transactions")
+        .select(
+          `
+          id,
+          user_id,
+          amount,
+          transaction_type,
+          created_at,
+          users(id, full_name)
+        `,
+          { count: "exact" }
+        )
+        .eq("transaction_type", "recharge")
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+      if (userFilter) {
+        query = query.eq("user_id", userFilter);
+      }
+
+      if (dateStart) {
+        query = query.gte("created_at", dateStart);
+      }
+
+      if (dateEnd) {
+        query = query.lte("created_at", dateEnd);
+      }
+
+      const { data, error, count } = await query;
+
+      console.log("💳 [WalletRechargeHistory] Response:", {
+        dataCount: data?.length,
+        totalCount: count,
+        error: error?.message,
+        sample: data?.[0],
+      });
+
+      if (error) {
+        console.error(
+          "❌ [WalletRechargeHistory] Error fetching wallet transactions:",
+          error
+        );
+        setTransactionData([]);
+        setTotalCount(0);
+      } else {
+        const processedData: WalletTransactionItem[] = (data || []).map(
+          (item: any) => ({
+            id: item.id,
+            user_id: item.user_id,
+            customer_name: item.users?.full_name || "Unknown User",
+            amount: item.amount || 0,
+            transaction_type: item.transaction_type,
+            created_at: item.created_at,
+          })
+        );
+
+        setTransactionData(processedData);
+        setTotalCount(count || 0);
+      }
+    } catch (err) {
+      console.error(
+        "❌ [WalletRechargeHistory] Error fetching transactions:",
+        err
+      );
+      setTransactionData([]);
+      setTotalCount(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions(currentPage, selectedUser, startDate, endDate);
+  }, [currentPage]);
+
+  const handleFilter = () => {
+    setCurrentPage(1);
+    fetchTransactions(1, selectedUser, startDate, endDate);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   return (
     // Outer container matching the card design
@@ -39,82 +173,114 @@ const WalletRechargeHistory = () => {
         {/* User Dropdown Input */}
         <select
           className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-          defaultValue=""
+          value={selectedUser}
+          onChange={(e) => setSelectedUser(e.target.value)}
           style={{ width: "150px" }}
         >
-          <option value="" disabled>
-            Choose User
-          </option>
-          <option value="user1">Paul K. Jensen</option>
-          <option value="user2">Other User</option>
+          <option value="">All Users</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.full_name || user.email || "Unknown"}
+            </option>
+          ))}
         </select>
 
-        {/* Date Range Input (Mocked) */}
+        {/* Date Range Inputs */}
         <input
-          type="text"
-          placeholder="Daterange"
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+          style={{ width: "150px" }}
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
           className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
           style={{ width: "150px" }}
         />
 
         {/* Filter Button */}
-        <button className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition h-10">
+        <button
+          onClick={handleFilter}
+          className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition h-10"
+        >
           Filter
         </button>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="text-center py-8">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      )}
+
       {/* Report Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr className="border-b border-gray-200">
-              {/* Invisible/small column for the + icon */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[5%]"></th>
+      {!loading && (
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[5%]"></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[5%]">
+                    #
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
+                    Customer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {transactionData.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
+                      No wallet transactions found
+                    </td>
+                  </tr>
+                ) : (
+                  transactionData.map((item, index) => (
+                    <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500 cursor-pointer">
+                        <Plus className="h-4 w-4" />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {(currentPage - 1) * itemsPerPage + index + 1}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {item.customer_name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${item.amount.toFixed(2)}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
-              {/* # Column */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[5%]">
-                #
-              </th>
-
-              {/* Customer Column */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
-                Customer
-              </th>
-
-              {/* Amount Column */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
-                Amount
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {transactionData.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                {/* + Icon (Collapsible Indicator) */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500 cursor-pointer">
-                  <Plus className="h-4 w-4" />
-                </td>
-
-                {/* # (ID) */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.id}
-                </td>
-
-                {/* Customer */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.customerName}
-                </td>
-
-                {/* Amount */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {/* Format to two decimal places and add currency symbol */}$
-                  {item.amount.toFixed(3)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          {/* Pagination */}
+          {totalCount > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              pageSize={itemsPerPage}
+              totalCount={totalCount}
+              onPageChange={handlePageChange}
+              label="transactions"
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };
