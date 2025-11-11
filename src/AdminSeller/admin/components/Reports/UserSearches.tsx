@@ -1,74 +1,22 @@
 import React, { useState, useEffect } from "react";
-import supabase from "../../../../supabase";
 import Pagination from "../Pagination";
-
-// Define the data type for the table rows
-interface UserSearchItem {
-  id: string;
-  search_query: string;
-  search_count: number;
-  created_at?: string;
-}
+import { useUserSearches } from "../../hooks/useUserSearches";
 
 const UserSearches = () => {
-  const [userSearchData, setUserSearchData] = useState<UserSearchItem[]>([]);
-  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 10;
 
-  // Fetch user search data with pagination
-  const fetchUserSearches = async (page: number) => {
-    setLoading(true);
-    console.log("🔍 [UserSearches] Fetching searches - Page:", page);
-
-    try {
-      const from = (page - 1) * itemsPerPage;
-      const to = from + itemsPerPage - 1;
-
-      // Try to fetch from user_searches table if it exists
-      const { data, error, count } = await supabase
-        .from("user_searches")
-        .select("id, search_query, search_count, created_at", {
-          count: "exact",
-        })
-        .order("search_count", { ascending: false })
-        .range(from, to);
-
-      console.log("🔍 [UserSearches] Response:", {
-        dataCount: data?.length,
-        totalCount: count,
-        error: error?.message,
-        sample: data?.[0],
-      });
-
-      if (error) {
-        console.error("❌ [UserSearches] Error fetching user searches:", error);
-        // If table doesn't exist, show empty state
-        setUserSearchData([]);
-        setTotalCount(0);
-      } else {
-        setUserSearchData(data || []);
-        setTotalCount(count || 0);
-      }
-    } catch (err) {
-      console.error("❌ [UserSearches] Error fetching user searches:", err);
-      setUserSearchData([]);
-      setTotalCount(0);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { searches, loading, error, totalCount, fetchSearches } =
+    useUserSearches(itemsPerPage);
 
   useEffect(() => {
-    fetchUserSearches(currentPage);
+    fetchSearches(currentPage);
   }, [currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
   return (
     // Outer container matching the card design
     <div className="rounded-xl bg-white p-6 shadow-lg w-full max-w-7xl mx-auto">
@@ -104,23 +52,23 @@ const UserSearches = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {userSearchData.length === 0 ? (
+                {searches.length === 0 ? (
                   <tr>
                     <td
                       colSpan={3}
                       className="px-6 py-8 text-center text-gray-500"
                     >
-                      No search data found
+                      No user searches found
                     </td>
                   </tr>
                 ) : (
-                  userSearchData.map((item, index) => (
+                  searches.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </td>
                       <td className="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900">
-                        {item.search_query || "-"}
+                        {item.query || "-"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900">
                         {(item.search_count || 0).toLocaleString()}

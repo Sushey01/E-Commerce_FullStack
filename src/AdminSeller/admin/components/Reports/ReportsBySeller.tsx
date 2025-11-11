@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Minus } from "lucide-react";
-import supabase from "../../../../supabase";
 import Pagination from "../Pagination";
+import { useReportsBySeller } from "../../hooks/useReportsBySeller";
 
 // Define the data type for the table rows
 interface SellerReportItem {
@@ -14,151 +14,22 @@ interface SellerReportItem {
 }
 
 const ReportsBySeller = () => {
-  const [sellerData, setSellerData] = useState<SellerReportItem[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<string>("all"); // Changed default to "all"
-  const [loading, setLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 10;
+
+  const {
+    sellers,
+    loading,
+    error,
+    totalCount,
+    uniqueStatuses,
+    fetchSellerReports,
+  } = useReportsBySeller(itemsPerPage);
 
   const toggleExpansion = (id: string) => {
     setExpandedId((prevId) => (prevId === id ? null : id));
-  };
-
-  // Fetch seller reports with pagination
-  const fetchSellerReports = async (
-    page: number,
-    status: string = "approved"
-  ) => {
-    setLoading(true);
-    console.log(
-      "🏪 [ReportsBySeller] Fetching sellers - Page:",
-      page,
-      "Status:",
-      status
-    );
-
-    try {
-      const from = (page - 1) * itemsPerPage;
-      const to = from + itemsPerPage - 1;
-
-      // First, check what's in the sellers table at all
-      const { data: allSellers, count: totalSellers } = await supabase
-        .from("sellers")
-        .select("seller_id, user_id, company_name, status", { count: "exact" });
-
-      console.log("🏪 [ReportsBySeller] Total sellers in DB:", totalSellers);
-      console.log("🏪 [ReportsBySeller] All sellers:", allSellers);
-      console.log("🏪 [ReportsBySeller] Unique status values:", [
-        ...new Set(allSellers?.map((s) => s.status)),
-      ]);
-
-      // Fetch sellers WITHOUT the foreign key join that's causing the error
-      // Correct fields: seller_id, user_id, company_name, status (NOT verification_status or seller_name)
-      let query = supabase
-        .from("sellers")
-        .select("seller_id, user_id, company_name, status", { count: "exact" })
-        .order("company_name", { ascending: true })
-        .range(from, to);
-
-      // Only filter if status is provided
-      if (status && status !== "all") {
-        query = query.eq("status", status);
-      }
-
-      const { data: sellers, error, count } = await query;
-
-      if (error) throw error;
-
-      console.log("🏪 [ReportsBySeller] Sellers fetched:", sellers?.length);
-
-      // Get user names from users table
-      const userIds = sellers?.map((s) => s.user_id).filter(Boolean) || [];
-      let userNamesMap: Record<string, string> = {};
-
-      if (userIds.length > 0) {
-        const { data: users } = await supabase
-          .from("users")
-          .select("id, full_name, email")
-          .in("id", userIds);
-
-        users?.forEach((u) => {
-          userNamesMap[u.id] = u.full_name || u.email || "Unknown";
-        });
-      }
-
-      // For each seller, fetch order data from order_items using seller_product_id
-      const processedData: SellerReportItem[] = await Promise.all(
-        (sellers || []).map(async (seller: any) => {
-          console.log(
-            `🏪 [ReportsBySeller] Processing seller: ${seller.seller_id} - ${seller.company_name}`
-          );
-
-          // Step 1: Get all seller_product_ids for this seller
-          const { data: sellerProducts } = await supabase
-            .from("seller_products")
-            .select("seller_product_id")
-            .eq("seller_id", seller.seller_id);
-
-          const sellerProductIds =
-            sellerProducts?.map((sp) => sp.seller_product_id) || [];
-          console.log(`  📦 Seller has ${sellerProductIds.length} products`);
-
-          let orderAmount = 0;
-          let productSaleCount = 0;
-
-          // Step 2: If seller has products, fetch order_items
-          if (sellerProductIds.length > 0) {
-            const { data: orderItems } = await supabase
-              .from("order_items")
-              .select("id, quantity, price, seller_product_id")
-              .in("seller_product_id", sellerProductIds);
-
-            console.log(`  🛒 Found ${orderItems?.length || 0} order items`);
-
-            // Calculate total amount (quantity * price for each item)
-            orderAmount =
-              orderItems?.reduce((sum, item) => {
-                const itemTotal = Number(item.quantity) * Number(item.price);
-                return sum + itemTotal;
-              }, 0) || 0;
-
-            productSaleCount = orderItems?.length || 0;
-
-            console.log(
-              `  💰 Total: $${orderAmount.toFixed(
-                2
-              )}, Sales: ${productSaleCount}`
-            );
-          }
-
-          return {
-            id: seller.seller_id,
-            seller_name: userNamesMap[seller.user_id] || "Unknown",
-            shop_name: seller.company_name || "N/A",
-            order_amount: orderAmount,
-            product_sale_count: productSaleCount,
-            verification_status: seller.status,
-          };
-        })
-      );
-
-      console.log("🏪 [ReportsBySeller] Response:", {
-        dataCount: processedData.length,
-        totalCount: count,
-        sample: processedData[0],
-      });
-
-      setSellerData(processedData);
-      setTotalCount(count || 0);
-    } catch (err) {
-      console.error("❌ [ReportsBySeller] Error fetching seller reports:", err);
-      setSellerData([]);
-      setTotalCount(0);
-    } finally {
-      setLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -173,8 +44,6 @@ const ReportsBySeller = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   return (
     // Outer container matching the card design
@@ -236,7 +105,7 @@ const ReportsBySeller = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sellerData.length === 0 ? (
+                {sellers.length === 0 ? (
                   <tr>
                     <td
                       colSpan={3}
@@ -246,7 +115,7 @@ const ReportsBySeller = () => {
                     </td>
                   </tr>
                 ) : (
-                  sellerData.map((item) => (
+                  sellers.map((item) => (
                     <React.Fragment key={item.id}>
                       <tr
                         className="hover:bg-gray-50 cursor-pointer"
