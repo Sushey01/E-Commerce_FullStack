@@ -36,6 +36,7 @@ import WalletRechargeHistory from "./components/Reports/WalletRechargeHistory";
 import AdminSetting from "./components/Settings/AdminSetting";
 import TotalEarningMapping from "./components/Reports/TotalEarningMapping";
 import MegaDeals from "./components/Marketing/MegaDeals";
+import NewsLetter from "./components/Marketing/NewsLetter";
 
 // Types
 type Product = {
@@ -456,6 +457,7 @@ export default function AdminDashboard({
   const renderMarketing = () => <FlashDeals />;
   const renderMegaDeals = () => <MegaDeals />;
   const renderFlashDeals = () => <FlashDeals />;
+  const renderNewsLetter = () => <NewsLetter />;
   const renderDynamicPopup = () => <DynamicPopUp />;
   const renderCoupons = () => <Coupons />;
 
@@ -530,6 +532,8 @@ export default function AdminDashboard({
             return renderFlashDeals();
           case "dynamic-popup":
             return renderDynamicPopup();
+          case "news-letter":
+            return renderNewsLetter();
           case "coupons":
             return renderCoupons();
           default:
@@ -569,7 +573,7 @@ export default function AdminDashboard({
   if (!withSidebar) {
     // Render just the main content area; parent layout should provide its own sidebar
     return (
-      <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+      <div className="min-h-screen bg-background p-4  ">
         {content}
       </div>
     );

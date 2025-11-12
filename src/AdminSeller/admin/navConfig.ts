@@ -61,6 +61,7 @@ export const getAdminNavItems = (): NavItemConfig[] => [
     children: [
       { id: "mega-deals", label: "Mega Deals" },
       { id: "flash-deals", label: "Flash Deals" },
+      { id: "news-letter", label: "News Letter" },
       { id: "dynamic-popup", label: "Dynamic Pop-ups" },
       { id: "coupons", label: "Coupons" },
     ],

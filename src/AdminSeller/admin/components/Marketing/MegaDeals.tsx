@@ -247,19 +247,19 @@ const MegaDeals: React.FC = () => {
 
   // --- LIST VIEW ---
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8 font-sans bg-gray-50 min-h-screen">
+    <div className="space-y-6 p-4 sm:p-6 md:p-4 font-sans bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center py-2">
-        <h1 className="text-3xl font-bold text-gray-800">All Mega Deals</h1>
+        <h1 className="text-xl font-bold text-gray-800">All Mega Deals</h1>
         <button
           onClick={() => setViewMode("create")}
-          className="hover:bg-purple-600 bg-purple-500 border rounded-full px-6 py-2 text-white font-medium transition duration-150 shadow-lg shadow-purple-300 transform hover:scale-[1.02]"
+          className="hover:bg-purple-600 text-sm bg-purple-500 border rounded-full px-4 py-2 text-white font-medium transition duration-150 shadow-lg shadow-purple-300 transform hover:scale-[1.02]"
         >
           Create New Mega Deal
         </button>
       </div>
 
       <div className="bg-white border rounded-xl flex flex-col md:flex-row justify-between items-center p-4 shadow-md">
-        <h2 className="text-xl font-medium text-gray-800 mb-2 md:mb-0">
+        <h2 className="text-sm font-medium text-gray-800 mb-2 md:mb-0">
           Mega Deals ({megaDeals.length})
         </h2>
         <input
