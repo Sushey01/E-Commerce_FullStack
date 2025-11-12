@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Plus, Minus, Pencil, Trash2, MoreVertical } from "lucide-react";
-import NewFlashDealForm from "./NewFlashDealForm"; // ✅ Import your existing form component
 import Pagination from "../Pagination";
+import NewMegaDealForm from "./NewMegaDealForm";
 
 // ===================================================================
 // 1. DATA AND INTERFACES
 // ===================================================================
 
-interface FlashDealItem {
+interface MegaDealItem {
   id: number;
   title: string;
   bannerUrl: string;
@@ -17,11 +17,11 @@ interface FlashDealItem {
   featured: boolean;
   pageLink: string;
 }
-
-const initialFlashDealsData: FlashDealItem[] = [
+    
+const initialMegaDealsData: MegaDealItem[] = [
   {
     id: 1,
-    title: "Flash Sale",
+    title: "Mega Sale",
     bannerUrl: "Banner for Flash Sale",
     startDate: "01-11-2023 00:00:00",
     endDate: "06-01-2024 23:59:59",
@@ -32,7 +32,7 @@ const initialFlashDealsData: FlashDealItem[] = [
   },
   {
     id: 2,
-    title: "Flash Deal",
+    title: "Mega Deal",
     bannerUrl: "Banner for Flash Deal",
     startDate: "27-04-2022 00:00:00",
     endDate: "27-04-2025 23:59:59",
@@ -138,9 +138,9 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
 // 3. MAIN COMPONENT (FlashDeals)
 // ===================================================================
 
-const FlashDeals: React.FC = () => {
-  const [flashDeals, setFlashDeals] = useState<FlashDealItem[]>(
-    initialFlashDealsData
+const MegaDeals: React.FC = () => {
+  const [megaDeals, setMegaDeals] = useState<MegaDealItem[]>(
+    initialMegaDealsData
   );
   const [viewMode, setViewMode] = useState<"list" | "create">("list");
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -149,7 +149,7 @@ const FlashDeals: React.FC = () => {
   // --- Data Manipulation Handlers ---
   const handleStatusToggle = useCallback(
     (id: number, key: "status" | "featured") => {
-      setFlashDeals((prevDeals) =>
+      setMegaDeals((prevDeals) =>
         prevDeals.map((deal) =>
           deal.id === id ? { ...deal, [key]: !deal[key] } : deal
         )
@@ -160,9 +160,9 @@ const FlashDeals: React.FC = () => {
 
   const handleAddNewDeal = (formData: any) => {
     const newId =
-      flashDeals.length > 0 ? Math.max(...flashDeals.map((d) => d.id)) + 1 : 1;
+      megaDeals.length > 0 ? Math.max(...megaDeals.map((d) => d.id)) + 1 : 1;
 
-    const newDeal: FlashDealItem = {
+    const newDeal: MegaDealItem = {
       id: newId,
       title: formData.title,
       bannerUrl: `Banner for ${formData.title}`,
@@ -173,7 +173,7 @@ const FlashDeals: React.FC = () => {
       pageLink: `#deal-${newId}`,
     };
 
-    setFlashDeals((prevDeals) => [...prevDeals, newDeal]);
+    setMegaDeals((prevDeals) => [...prevDeals, newDeal]);
     setViewMode("list");
   };
 
@@ -183,7 +183,7 @@ const FlashDeals: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    setFlashDeals((prevDeals) => prevDeals.filter((deal) => deal.id !== id));
+    setMegaDeals((prevDeals) => prevDeals.filter((deal) => deal.id !== id));
     setOpenMenuId(null);
     console.log(`Deleted deal: ${id}`);
   };
@@ -232,7 +232,7 @@ const FlashDeals: React.FC = () => {
 
   if (viewMode === "create") {
     return (
-      <NewFlashDealForm
+      <NewMegaDealForm
         onCancel={() => setViewMode("list")}
         onSubmit={handleAddNewDeal}
       />
@@ -243,18 +243,18 @@ const FlashDeals: React.FC = () => {
   return (
     <div className="space-y-6 p-4 sm:p-6 lg:p-8 font-sans bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center py-2">
-        <h1 className="text-3xl font-bold text-gray-800">All Flash Deals</h1>
+        <h1 className="text-3xl font-bold text-gray-800">All Mega Deals</h1>
         <button
           onClick={() => setViewMode("create")}
           className="hover:bg-purple-600 bg-purple-500 border rounded-full px-6 py-2 text-white font-medium transition duration-150 shadow-lg shadow-purple-300 transform hover:scale-[1.02]"
         >
-          Create New Flash Deal
+          Create New Mega Deal
         </button>
       </div>
 
       <div className="bg-white border rounded-xl flex flex-col md:flex-row justify-between items-center p-4 shadow-md">
         <h2 className="text-xl font-medium text-gray-800 mb-2 md:mb-0">
-          Flash Deals ({flashDeals.length})
+          Mega Deals ({megaDeals.length})
         </h2>
         <input
           type="text"
@@ -280,7 +280,7 @@ const FlashDeals: React.FC = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {flashDeals.map((item) => (
+            {megaDeals.map((item) => (
               <React.Fragment key={item.id}>
                 <tr className="hover:bg-purple-50/50 transition  duration-100">
                   <td className="px-6 py-6 text-sm text-gray-500 flex items-center gap-2">
@@ -396,4 +396,4 @@ const FlashDeals: React.FC = () => {
   );
 };
 
-export default FlashDeals;
+export default MegaDeals;

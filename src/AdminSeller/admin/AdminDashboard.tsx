@@ -35,6 +35,7 @@ import UserSearches from "./components/Reports/UserSearches";
 import WalletRechargeHistory from "./components/Reports/WalletRechargeHistory";
 import AdminSetting from "./components/Settings/AdminSetting";
 import TotalEarningMapping from "./components/Reports/TotalEarningMapping";
+import MegaDeals from "./components/Marketing/MegaDeals";
 
 // Types
 type Product = {
@@ -453,6 +454,7 @@ export default function AdminDashboard({
   const renderSales = () => <SalesOverallList />;
 
   const renderMarketing = () => <FlashDeals />;
+  const renderMegaDeals = () => <MegaDeals />;
   const renderFlashDeals = () => <FlashDeals />;
   const renderDynamicPopup = () => <DynamicPopUp />;
   const renderCoupons = () => <Coupons />;
@@ -522,6 +524,8 @@ export default function AdminDashboard({
       case "marketing":
         // marketing parent; route by sub if present
         switch (activeSub) {
+          case "mega-deals":
+            return renderMegaDeals();
           case "flash-deals":
             return renderFlashDeals();
           case "dynamic-popup":

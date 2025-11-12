@@ -59,6 +59,7 @@ export const getAdminNavItems = (): NavItemConfig[] => [
     label: "Marketing",
     // visible to all admins (no specific permission check yet)
     children: [
+      { id: "mega-deals", label: "Mega Deals" },
       { id: "flash-deals", label: "Flash Deals" },
       { id: "dynamic-popup", label: "Dynamic Pop-ups" },
       { id: "coupons", label: "Coupons" },
