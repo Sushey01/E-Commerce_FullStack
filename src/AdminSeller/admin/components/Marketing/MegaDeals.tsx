@@ -17,7 +17,7 @@ interface MegaDealItem {
   featured: boolean;
   pageLink: string;
 }
-    
+
 const initialMegaDealsData: MegaDealItem[] = [
   {
     id: 1,
@@ -139,12 +139,13 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
 // ===================================================================
 
 const MegaDeals: React.FC = () => {
-  const [megaDeals, setMegaDeals] = useState<MegaDealItem[]>(
-    initialMegaDealsData
-  );
+  const [megaDeals, setMegaDeals] =
+    useState<MegaDealItem[]>(initialMegaDealsData);
   const [viewMode, setViewMode] = useState<"list" | "create">("list");
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // --- Data Manipulation Handlers ---
   const handleStatusToggle = useCallback(
@@ -230,6 +231,11 @@ const MegaDeals: React.FC = () => {
   const getPlaceholderImage = (id: number) =>
     `https://picsum.photos/seed/${id}/60/40`;
 
+  // Pagination logic
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedDeals = megaDeals.slice(startIndex, endIndex);
+
   if (viewMode === "create") {
     return (
       <NewMegaDealForm
@@ -280,7 +286,7 @@ const MegaDeals: React.FC = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {megaDeals.map((item) => (
+            {paginatedDeals.map((item) => (
               <React.Fragment key={item.id}>
                 <tr className="hover:bg-purple-50/50 transition  duration-100">
                   <td className="px-6 py-6 text-sm text-gray-500 flex items-center gap-2">
@@ -389,9 +395,17 @@ const MegaDeals: React.FC = () => {
         </table>
       </div>
 
-      <div className="pt-4">
-        <Pagination />
-      </div>
+      {megaDeals.length > 0 && (
+        <div className="pt-4">
+          <Pagination
+            currentPage={currentPage}
+            pageSize={itemsPerPage}
+            totalCount={megaDeals.length}
+            onPageChange={setCurrentPage}
+            label="mega deals"
+          />
+        </div>
+      )}
     </div>
   );
 };
