@@ -47,6 +47,8 @@ import SellerForm from "./AdminSeller/seller/SellerForm";
 import HomePage from "./AdminSeller/app/Page";
 import SignupPage from "./components/SignupPage";
 import SellerVerificationForm from "./AdminSeller/seller/components/SellerVerificationForm";
+import SubscribeForNewsLetter from "./AdminSeller/admin/components/Marketing/SubscribeForNewsLetter";
+import LiveOrderPopups from "./AdminSeller/admin/components/Marketing/LiveOrderPopups";
 
 
 const App = () => {
@@ -67,6 +69,10 @@ const App = () => {
           element={
             <main className="max-w-[1400px] mx-auto w-full">
               <Navbar />
+
+              {/* GLOBAL POPUPS */}
+              <SubscribeForNewsLetter />
+              <LiveOrderPopups />
 
               <Routes>
                 {/* Homepage */}

@@ -1,17 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SubscribeForNewsLetter = () => {
   // State to manage the visibility of the modal
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+useEffect(() => {
+  const lastShown = localStorage.getItem("newsletterLastShown");
+  const now = Date.now();
+  const oneHour = 60 * 60 * 1000; // 1 hour in ms
+
+  if (!lastShown || now - parseInt(lastShown) > oneHour) {
+    setTimeout(() => setIsOpen(true), 3000); // show after 3s
+  }
+}, []);
+
 
   // Function to close the modal
   const closeModal = () => {
     setIsOpen(false);
+    localStorage.setItem("newsletterLastShown", Date.now().toString())
   };
 
   if (!isOpen) {
     return null; // Don't render anything if the modal is closed
-  }
+    }
 
   // Tailwind CSS classes are used extensively for styling
   return (
