@@ -64,7 +64,7 @@ const LiveOrderPopups = () => {
   if (!currentOrder) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 bg-white shadow-lg rounded-lg p-4 flex items-center gap-4 animate-slideIn">
+    <div className="fixed bottom-4 w-[300px] left-4 z-50 bg-blue-100 shadow-lg rounded-lg p-4 flex items-center gap-4 animate-slideIn">
       {currentOrder.productImage && (
         <img
           src={currentOrder.productImage}

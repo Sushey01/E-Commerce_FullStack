@@ -49,6 +49,8 @@ import SignupPage from "./components/SignupPage";
 import SellerVerificationForm from "./AdminSeller/seller/components/SellerVerificationForm";
 import SubscribeForNewsLetter from "./AdminSeller/admin/components/Marketing/SubscribeForNewsLetter";
 import LiveOrderPopups from "./AdminSeller/admin/components/Marketing/LiveOrderPopups";
+import CookiesPopUp from "./AdminSeller/admin/components/Marketing/CookiesPopUp";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 
 const App = () => {
@@ -73,6 +75,7 @@ const App = () => {
               {/* GLOBAL POPUPS */}
               <SubscribeForNewsLetter />
               <LiveOrderPopups />
+              <CookiesPopUp />
 
               <Routes>
                 {/* Homepage */}
@@ -122,6 +125,7 @@ const App = () => {
                 <Route path="payment" element={<CheckoutPayment />} />
                 <Route path="invoice" element={<Invoice />} />
                 <Route path="success" element={<OrderSuccessDetail />} />
+                <Route path="cookie-policy" element={<PrivacyPolicy />} />
 
                 {/* Product Detail */}
                 <Route path="/products/:id" element={<ProductDetail />} />

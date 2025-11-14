@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+// @ts-ignore
+import NewsLetterImage from "../../../../assets/images/newsletter.webp"
 
 const SubscribeForNewsLetter = () => {
   // State to manage the visibility of the modal
@@ -34,7 +36,7 @@ useEffect(() => {
         {/* Close Button (Top right, similar to the orange 'x' in the image) */}
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 z-10 p-2 text-white bg-red-500 hover:bg-red-600 rounded-full transition duration-150 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          className="absolute top-0 right-0 z-10 p-2 text-white bg-red-500 hover:bg-red-600 rounded-full transition duration-150 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           aria-label="Close Pop-up"
         >
           {/* Simple 'X' icon */}
@@ -55,14 +57,14 @@ useEffect(() => {
         </button>
 
         {/* 1. Top Image/Banner Section (Blue background with white dotted lines) */}
-        <div className="relative h-64 bg-blue-500 overflow-hidden">
+        <div className="relative h-60 bg-blue-500 overflow-hidden">
           {/* This section represents the stylized blue background with figures/doodles */}
           {/* In a real scenario, this would be an actual image or a complex background design */}
-          <div className="absolute inset-0 bg-blue-500 p-4 flex items-center justify-center">
+          <div className="absolute inset-0 bg-blue-500 p-0 flex items-center justify-center">
             {/* Placeholder for the image/design. You would replace this with an <img> tag */}
-            <p className="text-white text-lg font-semibold text-center">
-              [Placeholder for Blue Banner Image/Design]
-            </p>
+            {/* <p className="text-white text-lg font-semibold text-center"> */}
+              <img src={NewsLetterImage} alt="newsletter"/>
+            {/* </p> */}
           </div>
         </div>
 
