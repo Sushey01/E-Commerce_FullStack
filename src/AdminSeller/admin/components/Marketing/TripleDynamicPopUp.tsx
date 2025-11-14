@@ -20,6 +20,28 @@ const TripleDynamicPopUp: React.FC<TripleDynamicPopUpProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [bottomOffset, setBottomOffset] = useState("bottom-5");
 
+  // Check localStorage for each individual banner on mount
+  useEffect(() => {
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000;
+
+    // Check each banner's localStorage
+    const alertLastClosed = localStorage.getItem("alertBannerLastClosed");
+    const seasonalLastClosed = localStorage.getItem("seasonalBannerLastClosed");
+    const gadgetLastClosed = localStorage.getItem("gadgetBannerLastClosed");
+
+    // Only show each banner if it hasn't been closed in the last hour
+    if (alertLastClosed && now - parseInt(alertLastClosed) < oneHour) {
+      setIsAlertVisible(false);
+    }
+    if (seasonalLastClosed && now - parseInt(seasonalLastClosed) < oneHour) {
+      setIsSeasonalVisible(false);
+    }
+    if (gadgetLastClosed && now - parseInt(gadgetLastClosed) < oneHour) {
+      setIsGadgetVisible(false);
+    }
+  }, []);
+
   useEffect(() => {
     // Always use parent's isOpen prop
     if (externalIsOpen !== undefined) {
@@ -79,17 +101,41 @@ const TripleDynamicPopUp: React.FC<TripleDynamicPopUpProps> = ({
     >
       {/* 1. Top Alert Box (PromoteCustomAlertWebsite) */}
       {isAlertVisible && (
-        <PromoteCustomAlertWebsite onClose={() => setIsAlertVisible(false)} />
+        <PromoteCustomAlertWebsite
+          onClose={() => {
+            setIsAlertVisible(false);
+            localStorage.setItem(
+              "alertBannerLastClosed",
+              Date.now().toString()
+            );
+          }}
+        />
       )}
 
       {/* 2. Middle Banner (SeasonalPromotionBanner) */}
       {isSeasonalVisible && (
-        <SeasonalPromotionBanner onClose={() => setIsSeasonalVisible(false)} />
+        <SeasonalPromotionBanner
+          onClose={() => {
+            setIsSeasonalVisible(false);
+            localStorage.setItem(
+              "seasonalBannerLastClosed",
+              Date.now().toString()
+            );
+          }}
+        />
       )}
 
       {/* 3. Bottom Banner (NewGadgetAlertPromotion) */}
       {isGadgetVisible && (
-        <NewGadgetAlertPromotion onClose={() => setIsGadgetVisible(false)} />
+        <NewGadgetAlertPromotion
+          onClose={() => {
+            setIsGadgetVisible(false);
+            localStorage.setItem(
+              "gadgetBannerLastClosed",
+              Date.now().toString()
+            );
+          }}
+        />
       )}
     </div>
   );
