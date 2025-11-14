@@ -1,17 +1,71 @@
-import React from 'react'
+import React, { useEffect } from "react";
+
+// Extend Window interface for Google Analytics
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag: (...args: any[]) => void;
+  }
+}
 
 interface CookiesProps {
-    clicked: boolean;
+  clicked: boolean;
 }
 
 const CookiesPopUp = () => {
-    const [clicked, setClicked] = React.useState(false);
+  const [clicked, setClicked] = React.useState(false);
+  const [isOrderPopupVisible, setIsOrderPopupVisible] = React.useState(false);
 
-    function handleClick(){
-        setClicked(true);
+  useEffect(() => {
+    const consent = localStorage.getItem("cookiesAccepted");
+    if (consent === "true") {
+      setClicked(true);
+      loadGoogleAnalytics(); // auto-load if previously accepted
     }
+
+    // Check if order popup might be visible by checking DOM periodically
+    const checkOrderPopup = () => {
+      const orderPopup = document.querySelector('[class*="animate-slideIn"]');
+      setIsOrderPopupVisible(!!orderPopup);
+    };
+
+    const interval = setInterval(checkOrderPopup, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  function handleClick() {
+    localStorage.setItem("cookiesAccepted", "true");
+    loadGoogleAnalytics();
+    setClicked(true);
+  }
+
+  function loadGoogleAnalytics() {
+    const script = document.createElement("script");
+    script.src =
+      "https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID";
+    script.async = true;
+
+    script.onload = () => {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments as any);
+      };
+      window.gtag("js", new Date());
+      window.gtag("config", "G-XXXXXXXXXX");
+    };
+
+    document.head.appendChild(script);
+  }
+
+  if (clicked) return null;
+
+  // Position above order popup if it's visible
+  const bottomClass = isOrderPopupVisible ? "bottom-[100px]" : "bottom-2";
+
   return (
-    <div className="flex-col p-3 px-6 fixed lg:w-[310px] left-3 bottom-2 border rounded-none  bg-white w-full md:w-1/3 flex justify-between items-center gap-4 z-50 ">
+    <div
+      className={`flex-col p-3 px-6 fixed lg:w-[320px] left-3 ${bottomClass} border rounded-none bg-white w-full md:w-1/3 flex justify-between items-center gap-4 z-50 transition-all duration-300`}
+    >
       <h1 className="text-gray-700 text-start font-inter text-sm">
         We use cookie for better user experience, check our policy
         <span>
@@ -21,14 +75,14 @@ const CookiesPopUp = () => {
         </span>
       </h1>
       <button
-      type='submit'
-      value={clicked}
-      onClick={()=>{handleClick}}
-      className="bg-blue-600 w-full font-inter  text-white p-2 px-4 border text-sm rounded-none text-center">
+        type="button"
+        onClick={handleClick}
+        className="bg-blue-600 w-full font-inter  text-white p-2 px-4 border text-sm rounded-none text-center"
+      >
         Ok, I Understood
       </button>
     </div>
   );
-}
+};
 
-export default CookiesPopUp
+export default CookiesPopUp;
