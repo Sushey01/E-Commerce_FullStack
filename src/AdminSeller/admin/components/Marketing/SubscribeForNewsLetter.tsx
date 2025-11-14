@@ -1,31 +1,38 @@
 import React, { useEffect, useState } from "react";
 // @ts-ignore
-import NewsLetterImage from "../../../../assets/images/newsletter.webp"
+import NewsLetterImage from "../../../../assets/images/newsletter.webp";
 
-const SubscribeForNewsLetter = () => {
+interface SubscribeForNewsLetterProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+const SubscribeForNewsLetter: React.FC<SubscribeForNewsLetterProps> = ({
+  isOpen: externalIsOpen,
+  onClose: externalOnClose,
+}) => {
   // State to manage the visibility of the modal
   const [isOpen, setIsOpen] = useState(false);
 
-useEffect(() => {
-  const lastShown = localStorage.getItem("newsletterLastShown");
-  const now = Date.now();
-  const oneHour = 60 * 60 * 1000; // 1 hour in ms
-
-  if (!lastShown || now - parseInt(lastShown) > oneHour) {
-    setTimeout(() => setIsOpen(true), 3000); // show after 3s
-  }
-}, []);
-
+  useEffect(() => {
+    // Always use parent's isOpen prop
+    if (externalIsOpen !== undefined) {
+      setIsOpen(externalIsOpen);
+    }
+  }, [externalIsOpen]);
 
   // Function to close the modal
   const closeModal = () => {
     setIsOpen(false);
-    localStorage.setItem("newsletterLastShown", Date.now().toString())
+    // Parent (ShowStepWisePopUp) handles localStorage
+    if (externalOnClose) {
+      externalOnClose();
+    }
   };
 
   if (!isOpen) {
     return null; // Don't render anything if the modal is closed
-    }
+  }
 
   // Tailwind CSS classes are used extensively for styling
   return (
@@ -63,7 +70,7 @@ useEffect(() => {
           <div className="absolute inset-0 bg-blue-500 p-0 flex items-center justify-center">
             {/* Placeholder for the image/design. You would replace this with an <img> tag */}
             {/* <p className="text-white text-lg font-semibold text-center"> */}
-              <img src={NewsLetterImage} alt="newsletter"/>
+            <img src={NewsLetterImage} alt="newsletter" />
             {/* </p> */}
           </div>
         </div>
@@ -103,5 +110,3 @@ useEffect(() => {
 };
 
 export default SubscribeForNewsLetter;
-
-

@@ -47,11 +47,11 @@ import SellerForm from "./AdminSeller/seller/SellerForm";
 import HomePage from "./AdminSeller/app/Page";
 import SignupPage from "./components/SignupPage";
 import SellerVerificationForm from "./AdminSeller/seller/components/SellerVerificationForm";
-import SubscribeForNewsLetter from "./AdminSeller/admin/components/Marketing/SubscribeForNewsLetter";
+import ShowStepWisePopUp from "./AdminSeller/admin/components/Marketing/ShowStepWisePopUp";
 import LiveOrderPopups from "./AdminSeller/admin/components/Marketing/LiveOrderPopups";
 import CookiesPopUp from "./AdminSeller/admin/components/Marketing/CookiesPopUp";
 import PrivacyPolicy from "./components/PrivacyPolicy";
-
+import TripleDynamicPopUp from "./AdminSeller/admin/components/Marketing/TripleDynamicPopUp";
 
 const App = () => {
   return (
@@ -73,9 +73,10 @@ const App = () => {
               <Navbar />
 
               {/* GLOBAL POPUPS */}
-              <SubscribeForNewsLetter />
+              <ShowStepWisePopUp />
               <LiveOrderPopups />
               <CookiesPopUp />
+              <TripleDynamicPopUp />
 
               <Routes>
                 {/* Homepage */}
@@ -95,7 +96,6 @@ const App = () => {
                     </>
                   }
                 />
-
 
                 {/* Cart, Profile, Wishlist */}
                 <Route path="/cart" element={<CartPage />} />

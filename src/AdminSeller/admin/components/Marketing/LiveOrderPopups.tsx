@@ -81,7 +81,7 @@ const LiveOrderPopups = () => {
       </div>
       <button
         onClick={handleClose}
-        className="text-gray-400 top-2 fixed right-2 hover:text-gray-600 transition-colors"
+        className="text-gray-400 top-1 fixed right-2 hover:text-gray-600 transition-colors"
         aria-label="Close notification"
       >
         <svg
