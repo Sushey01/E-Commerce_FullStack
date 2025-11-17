@@ -1,12 +1,14 @@
 // vite.config.js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base:'/',
-    server: {
-    host: true
-  }
-
-})
+  base: "/",
+  server: {
+    host: true,
+  },
+  build: {
+    chunkSizeWarningLimit: 1000, // 1MB limit to suppress warning
+  },
+});
