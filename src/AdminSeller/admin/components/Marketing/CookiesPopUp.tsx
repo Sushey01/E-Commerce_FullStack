@@ -41,8 +41,7 @@ const CookiesPopUp = () => {
 
   function loadGoogleAnalytics() {
     const script = document.createElement("script");
-    script.src =
-      "https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID";
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-79RWGSTM8R";
     script.async = true;
 
     script.onload = () => {
@@ -51,7 +50,7 @@ const CookiesPopUp = () => {
         window.dataLayer.push(arguments as any);
       };
       window.gtag("js", new Date());
-      window.gtag("config", "G-XXXXXXXXXX");
+      window.gtag("config", "G-79RWGSTM8R");
     };
 
     document.head.appendChild(script);

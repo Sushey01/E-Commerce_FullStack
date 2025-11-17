@@ -1,5 +1,8 @@
 // NewGadgetAlertPromotion.tsx
 import React from "react";
+// @ts-ignore
+import Iphone from "../../../../../assets/images/iphone.webp";
+
 
 interface NewGadgetAlertPromotionProps {
   onClose?: () => void;
@@ -13,7 +16,7 @@ const NewGadgetAlertPromotion: React.FC<NewGadgetAlertPromotionProps> = ({
       {/* Image Section (Headphones & Gamepad) */}
       <div className="flex-shrink-0 w-1/3 mr-3">
         <img
-          src="https://via.placeholder.com/100x100/AFEEEE/000000?text=Gadgets"
+          src={Iphone}
           alt="New Gadget Fare"
           className="w-full h-auto object-cover rounded"
         />

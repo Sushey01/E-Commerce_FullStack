@@ -1,5 +1,7 @@
 // SeasonalPromotionBanner.tsx
 import React from "react";
+// @ts-ignore
+import HeadPhone from "../../../../../assets/images/headphone.png";
 
 // You would typically pass an onClose/onDismiss prop if the user can close this banner
 interface SeasonalPromotionBannerProps {
@@ -15,7 +17,7 @@ const SeasonalPromotionBanner: React.FC<SeasonalPromotionBannerProps> = ({
       <div className="relative h-48 bg-yellow-200">
         {/* Placeholder Image of the person and clothes */}
         <img
-          src="https://via.placeholder.com/300x192/FFD700/000000?text=Seasonal+Clothing"
+          src={HeadPhone}
           alt="Huge Winter Sale"
           className="w-full h-full object-cover"
         />
