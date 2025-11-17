@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import supabase from "../supabase";
 import CategorySectionCard from "./CategorySectionCard";
 import { useNavigate } from "react-router-dom";
@@ -18,17 +20,7 @@ const CategorySliderDynamic = () => {
         .order("created_at", { ascending: true });
 
       if (!error && data) {
-        // Only top-level categories (main categories)
-        const mainCategories = data.filter((c) =>
-          [
-            "Electronics",
-            "Fashion",
-            "Home & Garden",
-            "Beauty & Health",
-            "Books & Media",
-          ].includes(c.name)
-        );
-        setCategories(mainCategories);
+        setCategories(data);
       }
       setLoading(false);
     };
@@ -40,7 +32,7 @@ const CategorySliderDynamic = () => {
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     autoplay: true,
     pauseOnHover: true,
