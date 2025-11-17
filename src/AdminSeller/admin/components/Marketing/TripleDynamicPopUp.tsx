@@ -3,21 +3,12 @@ import NewGadgetAlertPromotion from "./promotionbanner/NewGadgetAlertPromotion";
 import PromoteCustomAlertWebsite from "./promotionbanner/PromoteCustomAlertWebsite";
 import SeasonalPromotionBanner from "./promotionbanner/SeasonalPromotionBanner";
 
-interface TripleDynamicPopUpProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-}
-
-// Define the component
-const TripleDynamicPopUp: React.FC<TripleDynamicPopUpProps> = ({
-  isOpen: externalIsOpen,
-  onClose: externalOnClose,
-}) => {
+// Component works independently - no props needed
+const TripleDynamicPopUp: React.FC = () => {
   // State to manage the visibility of the three individual banners
   const [isAlertVisible, setIsAlertVisible] = useState(true);
   const [isSeasonalVisible, setIsSeasonalVisible] = useState(true);
   const [isGadgetVisible, setIsGadgetVisible] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
   const [bottomOffset, setBottomOffset] = useState("bottom-5");
 
   // Check localStorage for each individual banner on mount
@@ -42,13 +33,6 @@ const TripleDynamicPopUp: React.FC<TripleDynamicPopUpProps> = ({
     }
   }, []);
 
-  useEffect(() => {
-    // Always use parent's isOpen prop
-    if (externalIsOpen !== undefined) {
-      setIsOpen(externalIsOpen);
-    }
-  }, [externalIsOpen]);
-
   // Check for cookies and order popups to adjust position
   useEffect(() => {
     const checkBottomPopups = () => {
@@ -72,23 +56,8 @@ const TripleDynamicPopUp: React.FC<TripleDynamicPopUpProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  // Handle when all individual banners are closed
-  const handleAllClosed = () => {
-    setIsOpen(false);
-    // Parent (ShowStepWisePopUp) handles localStorage
-    if (externalOnClose) {
-      externalOnClose();
-    }
-  };
-
-  // Check if all banners are dismissed
-  useEffect(() => {
-    if (!isAlertVisible && !isSeasonalVisible && !isGadgetVisible) {
-      handleAllClosed();
-    }
-  }, [isAlertVisible, isSeasonalVisible, isGadgetVisible]);
-
-  if (!isOpen) {
+  // If all banners are dismissed, don't render the container
+  if (!isAlertVisible && !isSeasonalVisible && !isGadgetVisible) {
     return null;
   }
 
