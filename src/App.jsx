@@ -33,7 +33,6 @@ import OrderCartPaymentProcess from "./order/OrderCartPaymentProcess";
 import CheckoutPayment from "./order/CheckoutPayment";
 import Invoice from "./components/Invoice";
 import OrderSuccessDetail from "./order/OrderSuccessDetail";
-import CategorySlider from "./category/CategorySlider";
 import SubCategories from "./category/SubCategories";
 import CategorySliderDynamic from "./category/CategorySliderDynamic";
 // import SubcategoryPage from "./category/SubCategoryPage";

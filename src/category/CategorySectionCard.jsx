@@ -2,37 +2,31 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 
 const CategorySectionCard = ({ title, items, image }) => {
-  // You would typically add a click handler here
-  // const navigate = useNavigate();
-  // const handleCardClick = () => {
-  //   navigate(`/category/${title.toLowerCase()}`);
-  // };
-
   return (
-    <div
-      // onClick={handleCardClick} // Uncomment if using useNavigate
-      // Reduced shadow, slightly smaller scale for a more contained feel
-      className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 ease-in-out cursor-pointer overflow-hidden transform hover:scale-[1.01]"
-    >
-      {/* Image Section - Reduced Height */}
-      <div className="w-full **h-28** md:h-36 overflow-hidden">
-        <img
-          src={image}
-          alt={title}
-          // The image remains object-cover for full impact
-          className="w-full h-full object-cover rounded-t-lg transition-transform duration-300 group-hover:scale-110"
-        />
+    <div className="group flex flex-col items-center cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 mb-5">
+      {/* Circular Image Container */}
+      <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-3">
+        {/* Circular Border with Gradient on Hover */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-[3px]">
+          <div className="w-full h-full rounded-full bg-white"></div>
+        </div>
+
+        {/* Circular Image */}
+        <div className="relative w-full h-full rounded-full overflow-hidden shadow-lg group-hover:shadow-2xl transition-shadow duration-300 border-4 border-gray-100 group-hover:border-white">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+        </div>
       </div>
 
-      {/* Text Section - Reduced Padding */}
-      <div className="**p-3** md:p-4 flex flex-col gap-1">
-        {/* Title: Smaller font size for the compact card */}
-        <p className="**text-lg** md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-1">
+      {/* Text Section */}
+      <div className="text-center px-2">
+        <p className="text-sm md:text-base lg:text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-1 mb-1">
           {title}
         </p>
-
-        {/* Item count/description: Smaller text, limited lines */}
-        <p className="text-sm text-gray-500 line-clamp-1">{items}</p>
+        <p className="text-xs md:text-sm text-gray-500 line-clamp-1">{items}</p>
       </div>
     </div>
   );

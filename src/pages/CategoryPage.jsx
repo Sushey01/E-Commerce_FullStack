@@ -1,14 +1,12 @@
-import React from 'react'
-import CategorySlider from '../category/CategorySlider'
-import CategorySliderDynamic from '../category/CategorySliderDynamic'
+import React from "react";
+import CategorySliderDynamic from "../category/CategorySliderDynamic";
 
 const CategoryPage = () => {
   return (
-    <div className='overflow-hidden mb-6' >
-      <CategorySlider/>
-      {/* <CategorySliderDynamic /> */}
+    <div className="overflow-hidden mb-6">
+      <CategorySliderDynamic />
     </div>
-  )
-}
+  );
+};
 
-export default CategoryPage
+export default CategoryPage;
