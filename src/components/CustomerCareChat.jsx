@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 
 const CustomerCareChat = ({ onClose }) => {
   return (
-    <div className="relative bottom-14 w-72 right-5 font-sans border border-gray-300 rounded-lg bg-white overflow-hidden">
+    <div className="relative bottom-14 w-72 transition left-1/2 translate(30%, 50%) lg:right-5 font-sans border border-gray-300 rounded-lg bg-white overflow-hidden">
       {/* Header */}
       <div className="bg-purple-700 text-white px-4 py-2 flex items-center gap-2.5">
         <img src={botIcon} alt="Bot" className="w-10 h-10 animate-float" />

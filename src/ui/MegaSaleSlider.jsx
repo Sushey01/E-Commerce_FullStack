@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import MegaSaleHome from "../components/MegaSaleHome"; // adjust path if needed
@@ -15,8 +15,8 @@ const MegaSaleSlider = () => {
     dots: false,
     arrows: false,
     infinite: true,
-    autoplay:true,
-    autoplaySpeed:3000,
+    autoplay: true,
+    autoplaySpeed: 3000,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -24,28 +24,30 @@ const MegaSaleSlider = () => {
   };
 
   return (
-   <div className="relative w-full mx-auto">
+    <div className="relative w-full h-full mx-auto">
       {/* Slider */}
-      <Slider ref={sliderRef} {...settings}>
-        {megaProducts.map((product, index) => (
-          <div key={product.id}>
-            <MegaSaleHome
-              bannerText={product.bannerText}
-              title={product.title}
-              description={product.description}
-              label={product.label}
-              image={product.image}
-              currentSlide={index + 1}
-              totalSlide={megaProducts.length}
-              onPrev={() => sliderRef.current.slickPrev()}
-              onNext={() => sliderRef.current.slickNext()}
-            />
-          </div>
-        ))}
-      </Slider>
+      <div className="h-full overflow-hidden rounded-lg">
+        <Slider ref={sliderRef} {...settings}>
+          {megaProducts.map((product, index) => (
+            <div key={product.id} className="h-full">
+              <MegaSaleHome
+                bannerText={product.bannerText}
+                title={product.title}
+                description={product.description}
+                label={product.label}
+                image={product.image}
+                currentSlide={index + 1}
+                totalSlide={megaProducts.length}
+                onPrev={() => sliderRef.current.slickPrev()}
+                onNext={() => sliderRef.current.slickNext()}
+              />
+            </div>
+          ))}
+        </Slider>
+      </div>
 
-      {/* Custom Dots */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Custom Dots - Inside slider at bottom */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {megaProducts.map((_, index) => (
           <button
             key={index}
@@ -53,6 +55,7 @@ const MegaSaleSlider = () => {
             className={`h-2 rounded-full transition-all duration-300 ${
               activeSlide === index ? "w-9 bg-orange-500" : "w-4 bg-orange-300"
             }`}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>

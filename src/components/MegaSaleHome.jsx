@@ -1,10 +1,20 @@
 import React from "react";
 import Watch from "../assets/images/megawatch.webp";
 
-const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, title, description, label, image }) => {
+const MegaSaleHome = ({
+  onPrev,
+  onNext,
+  currentSlide,
+  totalSlide,
+  bannerText,
+  title,
+  description,
+  label,
+  image,
+}) => {
   return (
-    <div className=" w-full p-3 lg:p-11 h-full lg:h-[100vh] content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg  ">
-      <div className=" block md:hidden p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
+    <div className="w-full p-3 lg:p-11 h-full content-center bg-[#dcd9d9] border-none rounded-none lg:border lg:rounded-lg">
+      <div className="block md:hidden p-2 md:p-3 border-1 border-[#E43100] rounded-2xl mb-4 bg-[#FFDFD7]">
         <p className="text-[#E43100]  font-normal text-center aria-hidden:true  md:text-start text-sm md:text-base">
           {bannerText}
         </p>
@@ -100,14 +110,13 @@ const MegaSaleHome = ({ onPrev, onNext, currentSlide, totalSlide, bannerText, ti
             </div>
           </div>
         </div>
-      <div className="flex items-center justify-center md:h-[250px] h-[180px]  lg:h-[500px]">
-  <img
-    src={image}
-    alt={title}
-    className="object-contain w-full h-full"
-  />
-</div>
-
+        <div className="flex items-center justify-center md:h-[250px] h-[180px]  lg:h-[500px]">
+          <img
+            src={image}
+            alt={title}
+            className="object-contain w-full h-full"
+          />
+        </div>
       </div>
     </div>
   );
