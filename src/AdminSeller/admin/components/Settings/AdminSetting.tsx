@@ -12,9 +12,17 @@ import { Badge } from "../../ui/badge";
 const AdminSetting: React.FC = () => {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-card-foreground">
-        System Settings
-      </h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold  text-card-foreground">
+          System Settings
+        </h3>
+
+        <button 
+        onClick={(e)=>console.log('clicked to download')}
+        type="submit" className="rounded-3xl text-white text-sm bg-purple-500 p-2">
+          Export CSV
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>

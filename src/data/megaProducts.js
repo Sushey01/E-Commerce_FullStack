@@ -1,7 +1,8 @@
 import HeadPhone from "../assets/images/headphone.png";
 import MegaWatch from "../assets/images/megawatch.webp";
-import Laptop from "../assets/images/laptop.webp";
+import Laptop from "../assets/images/laptop.png";
 import Camera from "../assets/images/camera.png";
+import Speaker from "../assets/images/speaker.png"
 
 const megaProducts = [
   {
@@ -47,7 +48,7 @@ const megaProducts = [
     description: "Portable speaker with deep bass, long battery life, and sleek design.",
     label: "Shop Now",
     price: 5000,
-    image: Laptop,
+    image: Speaker,
     category: "Audio",
     rating: 4.4,
     reviews: 78,

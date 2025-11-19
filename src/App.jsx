@@ -26,7 +26,6 @@ import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
 import CustomerCareChat from "./components/CustomerCareChat";
 import HoverAddCartWishShare from "./components/HoverAddCartWishShare";
-import MonthlySalePageRedux from "./pages/MonthlySalePageRedux";
 import OrderPage from "./order/OrderPage";
 import OrderContactForm from "./order/OrderContactForm";
 import OrderCartPaymentProcess from "./order/OrderCartPaymentProcess";
@@ -53,6 +52,8 @@ import TripleDynamicPopUp from "./AdminSeller/admin/components/Marketing/TripleD
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import ReactGA from "react-ga4";
 import usePageTracking from "./GA_Hook/usePageTracking";
+
+
 
 const App = () => {
   // Initialize Google Analytics once when app mounts

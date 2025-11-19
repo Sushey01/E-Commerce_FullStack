@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   UserCheck,
+  User,
 } from "lucide-react";
 import AdminDashboard from "./AdminDashboard";
 import SellerDashboard from "../seller/SellerDashboard";
@@ -425,6 +426,7 @@ export default function DashboardLayout() {
             <span className="text-sm font-medium text-card-foreground">
               {user?.name}
             </span>
+            <span className="rounded-full border p-2 bg-gray-300"> <User /></span>
           </div>
         </div>
 

@@ -39,12 +39,28 @@ const NewMegaDealForm: React.FC<NewMegaDealFormProps> = ({
     setFormData((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Mock submission logic: we just pass the form data up
-    console.log("New Flash Deal Submitted:", formData);
-    onSubmit(formData);
-  };
+ const handleSubmit = (e: React.FormEvent) => {
+   e.preventDefault();
+
+   const dealId = Date.now();
+
+   const newDeal = {
+     id: dealId,
+     title: formData.title,
+     startDate: formData.startDate,
+     endDate: formData.endDate,
+     status: formData.status,
+     featured: formData.featured,
+
+     // Create a preview URL from the file for customer UI
+     image: formData.bannerFile
+       ? URL.createObjectURL(formData.bannerFile)
+       : "https://via.placeholder.com/600x400",
+   };
+
+   onSubmit(newDeal);
+ };
+
 
   // Status/Featured Toggle component used in the form
   const ToggleSwitch: React.FC<{
