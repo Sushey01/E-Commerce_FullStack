@@ -12,7 +12,21 @@ import { Input } from "../admin/ui/input";
 import { Label } from "../admin/ui/label";
 import { Textarea } from "../admin/ui/textarea";
 
-import { Package, DollarSign, TrendingUp, Plus } from "lucide-react";
+import {
+  Package,
+  DollarSign,
+  TrendingUp,
+  Plus,
+  ShoppingCart,
+  Eye,
+  Star,
+  ArrowUp,
+  ArrowDown,
+  Package2,
+  Users,
+  CreditCard,
+  Activity,
+} from "lucide-react";
 import ProductForm from "./components/Product-Form";
 import ProductList from "./components/ProductList";
 import {
@@ -568,112 +582,460 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
     }
   };
 
-  const renderDashboard = () => (
-    <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+  const renderDashboard = () => {
+    // Calculate growth percentages (mock data for demo)
+    const productsGrowth = 12.5;
+    const salesGrowth = 8.3;
+    const revenueGrowth = 15.2;
+    const ordersGrowth = 5.7;
+
+    return (
+      <div className="space-y-6">
+        {/* Welcome Section */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">
+                Welcome back, {user?.name || "Seller"}! 👋
+              </h1>
+              <p className="text-blue-100 text-lg">
+                Here's what's happening with your store today
+              </p>
+            </div>
+            <div className="hidden md:block">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="text-sm text-blue-100">Total Earnings</div>
+                <div className="text-3xl font-bold mt-1">
+                  ₹{totalRevenue.toFixed(2)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Grid with Modern Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Products Card */}
+          <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-blue-100/50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-blue-500 rounded-xl">
+                  <Package2 className="h-6 w-6 text-white" />
+                </div>
+                <Badge
+                  variant="default"
+                  className="bg-blue-100 text-blue-700 border-blue-200"
+                >
+                  <ArrowUp className="h-3 w-3 mr-1" />
+                  {productsGrowth}%
+                </Badge>
+              </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  My Products
+                <p className="text-sm font-medium text-gray-600 mb-1">
+                  Total Products
                 </p>
-                <p className="text-2xl font-bold text-card-foreground">
+                <p className="text-3xl font-bold text-gray-900">
                   {totalProducts}
                 </p>
-                <p className="text-xs text-muted-foreground">Products listed</p>
+                <p className="text-xs text-gray-500 mt-2">Active listings</p>
               </div>
-              <Package className="h-8 w-8 text-blue-600" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          {/* Sales Card */}
+          <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-green-50 to-green-100/50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-green-500 rounded-xl">
+                  <ShoppingCart className="h-6 w-6 text-white" />
+                </div>
+                <Badge
+                  variant="default"
+                  className="bg-green-100 text-green-700 border-green-200"
+                >
+                  <ArrowUp className="h-3 w-3 mr-1" />
+                  {salesGrowth}%
+                </Badge>
+              </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-gray-600 mb-1">
                   Total Sales
                 </p>
-                <p className="text-2xl font-bold text-card-foreground">
-                  {totalSales}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Completed orders
-                </p>
+                <p className="text-3xl font-bold text-gray-900">{totalSales}</p>
+                <p className="text-xs text-gray-500 mt-2">Completed orders</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
+          {/* Revenue Card */}
+          <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-purple-50 to-purple-100/50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-purple-500 rounded-xl">
+                  <DollarSign className="h-6 w-6 text-white" />
+                </div>
+                <Badge
+                  variant="default"
+                  className="bg-purple-100 text-purple-700 border-purple-200"
+                >
+                  <ArrowUp className="h-3 w-3 mr-1" />
+                  {revenueGrowth}%
+                </Badge>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">
+                  Total Revenue
+                </p>
+                <p className="text-3xl font-bold text-gray-900">
+                  ₹{totalRevenue.toFixed(2)}
+                </p>
+                <p className="text-xs text-gray-500 mt-2">Total earnings</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Orders Card */}
+          <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-orange-50 to-orange-100/50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-orange-500 rounded-xl">
+                  <Activity className="h-6 w-6 text-white" />
+                </div>
+                <Badge
+                  variant="default"
+                  className="bg-orange-100 text-orange-700 border-orange-200"
+                >
+                  <ArrowUp className="h-3 w-3 mr-1" />
+                  {ordersGrowth}%
+                </Badge>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">
+                  Pending Orders
+                </p>
+                <p className="text-3xl font-bold text-gray-900">
+                  {orders.length - deliveredOrders.length}
+                </p>
+                <p className="text-xs text-gray-500 mt-2">Needs attention</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Chart Section - Sales Overview with Modern Bar Chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2 border-none shadow-lg">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">Sales Analytics</CardTitle>
+                  <CardDescription>
+                    Monthly revenue breakdown and trends
+                  </CardDescription>
+                </div>
+                <div className="flex gap-2">
+                  <Badge
+                    variant="default"
+                    className="bg-green-100 text-green-700"
+                  >
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    Active
+                  </Badge>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Modern Vertical Bar Chart */}
+              <div className="space-y-6">
+                {/* Chart Area */}
+                <div className="flex items-end justify-between gap-3 h-64 pb-8 border-b border-gray-200">
+                  {[
+                    {
+                      month: "Jan",
+                      value:
+                        deliveredOrders.length > 0
+                          ? deliveredOrders.length * 1200
+                          : 5400,
+                    },
+                    {
+                      month: "Feb",
+                      value:
+                        deliveredOrders.length > 0
+                          ? deliveredOrders.length * 1400
+                          : 6800,
+                    },
+                    {
+                      month: "Mar",
+                      value: totalRevenue > 0 ? totalRevenue * 0.3 : 8200,
+                    },
+                    {
+                      month: "Apr",
+                      value: totalRevenue > 0 ? totalRevenue * 0.25 : 7100,
+                    },
+                    {
+                      month: "May",
+                      value:
+                        deliveredOrders.length > 0
+                          ? deliveredOrders.length * 1600
+                          : 9500,
+                    },
+                    {
+                      month: "Jun",
+                      value: totalRevenue > 0 ? totalRevenue * 0.4 : 11200,
+                    },
+                    {
+                      month: "Jul",
+                      value: totalRevenue > 0 ? totalRevenue * 0.5 : 10800,
+                    },
+                    {
+                      month: "Aug",
+                      value:
+                        deliveredOrders.length > 0
+                          ? deliveredOrders.length * 1800
+                          : 12400,
+                    },
+                    {
+                      month: "Sep",
+                      value: totalRevenue > 0 ? totalRevenue * 0.6 : 13600,
+                    },
+                    {
+                      month: "Oct",
+                      value: totalRevenue > 0 ? totalRevenue * 0.7 : 14200,
+                    },
+                    {
+                      month: "Nov",
+                      value: totalRevenue > 0 ? totalRevenue * 0.85 : 15800,
+                    },
+                    { month: "Dec", value: totalRevenue || 16500 },
+                  ].map((item, index) => {
+                    const maxValue = 20000;
+                    const heightPercent = (item.value / maxValue) * 100;
+                    const isCurrentMonth = index === 11; // December (current)
+
+                    return (
+                      <div
+                        key={item.month}
+                        className="flex-1 flex flex-col items-center gap-2 group"
+                      >
+                        {/* Value Label on Hover */}
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                          ₹{item.value.toFixed(0)}
+                        </div>
+
+                        {/* Bar */}
+                        <div
+                          className="w-full flex items-end justify-center"
+                          style={{ height: "200px" }}
+                        >
+                          <div
+                            className={`w-full rounded-t-lg transition-all duration-500 hover:opacity-80 cursor-pointer relative ${
+                              isCurrentMonth
+                                ? "bg-gradient-to-t from-blue-500 via-blue-400 to-blue-300 shadow-lg shadow-blue-500/50"
+                                : "bg-gradient-to-t from-gray-300 via-gray-200 to-gray-100"
+                            }`}
+                            style={{ height: `${heightPercent}%` }}
+                          >
+                            {/* Animated shimmer effect for current month */}
+                            {isCurrentMonth && (
+                              <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/30 to-transparent animate-pulse rounded-t-lg"></div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Month Label */}
+                        <span
+                          className={`text-xs font-medium ${
+                            isCurrentMonth
+                              ? "text-blue-600 font-bold"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {item.month}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Legend and Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                    <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                    <div>
+                      <p className="text-xs text-gray-600">Current Month</p>
+                      <p className="text-sm font-bold text-gray-900">
+                        ₹{totalRevenue.toFixed(0)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                    <TrendingUp className="w-4 h-4 text-green-600" />
+                    <div>
+                      <p className="text-xs text-gray-600">Growth</p>
+                      <p className="text-sm font-bold text-green-600">+23.5%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                    <DollarSign className="w-4 h-4 text-purple-600" />
+                    <div>
+                      <p className="text-xs text-gray-600">Avg Order</p>
+                      <p className="text-sm font-bold text-gray-900">
+                        ₹
+                        {orders.length > 0
+                          ? (totalRevenue / orders.length).toFixed(0)
+                          : "0"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+                    <Activity className="w-4 h-4 text-orange-600" />
+                    <div>
+                      <p className="text-xs text-gray-600">Total Orders</p>
+                      <p className="text-sm font-bold text-gray-900">
+                        {orders.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Top Products */}
+          <Card className="border-none shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl">Top Products</CardTitle>
+              <CardDescription>Best performing items</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {sellerProducts.slice(0, 5).map((product, index) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm text-gray-900 truncate">
+                        {product.title}
+                      </p>
+                      <p className="text-xs text-gray-500">₹{product.price}</p>
+                    </div>
+                    <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                  </div>
+                ))}
+                {sellerProducts.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Package className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p className="text-sm">No products yet</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Activity & Alerts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border-none shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl">Recent Sales</CardTitle>
+              <CardDescription>Your latest transactions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RecentSalesList
+                orders={orders}
+                orderProducts={orderProducts}
+                loading={loading}
+                maxItems={5}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <span className="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                Low Stock Alert
+              </CardTitle>
+              <CardDescription>
+                Products running low on inventory
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {sellerProducts
+                  .filter((product) => product.outofstock)
+                  .map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-red-100 rounded-lg">
+                          <Package className="h-4 w-4 text-red-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm text-gray-900">
+                            {product.title}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            ₹{product.price}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge
+                        variant="outOfStock"
+                        className="bg-red-100 text-red-700 border-red-200"
+                      >
+                        Out of Stock
+                      </Badge>
+                    </div>
+                  ))}
+                {sellerProducts.filter((p) => p.outofstock).length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <TrendingUp className="h-12 w-12 mx-auto mb-2 text-green-300" />
+                    <p className="text-sm font-medium">
+                      All products in stock!
+                    </p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <Card className="border-none shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Revenue
+                <h3 className="text-xl font-bold mb-2">
+                  Ready to grow your business?
+                </h3>
+                <p className="text-blue-100">
+                  Add new products, manage inventory, or view detailed analytics
                 </p>
-                <p className="text-2xl font-bold text-card-foreground">
-                  Rs {totalRevenue.toFixed(2)}
-                </p>
-                <p className="text-xs text-muted-foreground">Total earned</p>
               </div>
-              <DollarSign className="h-8 w-8 text-purple-600" />
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="bg-white text-blue-600 hover:bg-blue-50"
+                  onClick={() => setShowProductForm(true)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Product
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>Your latest transactions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RecentSalesList
-              orders={orders}
-              orderProducts={orderProducts}
-              loading={loading}
-              maxItems={3}
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Low Stock Alert</CardTitle>
-            <CardDescription>Products running low on inventory</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {sellerProducts
-                .filter((product) => product.outofstock)
-                .map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex items-center justify-between"
-                  >
-                    <div>
-                      <p className="font-medium text-card-foreground">
-                        {product.title}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        ${product.price}
-                      </p>
-                    </div>
-                    <Badge variant="outOfStock">Out of stock</Badge>
-                  </div>
-                ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const isVerifiedSeller = user?.seller_status === "active";
   const emailConfirmed = !!user?.email_confirmed_at; // Supabase user metadata may include this

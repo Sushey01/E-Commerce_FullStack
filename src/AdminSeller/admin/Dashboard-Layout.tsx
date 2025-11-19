@@ -16,6 +16,7 @@ import {
 import AdminDashboard from "./AdminDashboard";
 import SellerDashboard from "../seller/SellerDashboard";
 import AdminSidebar from "./components/AdminSidebar";
+import SellerSidebar from "../seller/components/SellerSidebar";
 import {
   getAdminNavItems,
   getSellerNavItems,
@@ -120,6 +121,7 @@ export default function DashboardLayout() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const params = useParams<{ tab?: string; sub?: string }>();
   const navigate = useNavigate();
 
@@ -243,11 +245,19 @@ export default function DashboardLayout() {
         />
       )}
 
+      {/* Desktop overlay when sidebar is not collapsed - click outside to collapse */}
+      {!sidebarCollapsed && (
+        <div
+          className="hidden lg:block fixed inset-0 z-30"
+          onClick={() => setSidebarCollapsed(true)}
+        />
+      )}
+
       {/* Sidebar (replaced with dark AdminSidebar) */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } ${sidebarCollapsed ? "w-20" : "w-64"}`}
       >
         {/* Close button for mobile */}
         <div className="md:hidden flex items-center justify-end p-2">
@@ -263,6 +273,8 @@ export default function DashboardLayout() {
           <AdminSidebar
             activeTab={activeTab}
             activeSub={activeSub}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
             items={navItems.map((n: NavItemConfig) => ({
               key: n.id,
               label: n.label,
@@ -287,114 +299,62 @@ export default function DashboardLayout() {
             userRole={user.role}
           />
         ) : (
-          <div className="h-full bg-gray-300 border-r border-sidebar-border flex flex-col">
-            <div className="flex items-center justify-between h-16 px-6 border-b border-sidebar-border">
-              <h1 className="text-xl font-bold text-sidebar-foreground">
-                Seller Dashboard
-              </h1>
-            </div>
-            <nav className="flex-1 px-4 py-6 space-y-2">
-              {filteredNavItems.map((item) => {
-                const hasChildren =
-                  Array.isArray(item.children) && item.children.length > 0;
-                const isExpanded = !!expanded[item.id];
-                const isActiveParent = activeTab === item.id;
-                return (
-                  <div key={item.id} className="space-y-1">
-                    <Button
-                      variant={isActiveParent ? "secondary" : "ghost"}
-                      className="w-full justify-between relative"
-                      onClick={() => {
-                        if (hasChildren) {
-                          setExpanded((prev) => ({
-                            ...prev,
-                            [item.id]: !prev[item.id],
-                          }));
-                          setActiveTab(item.id);
-                          setActiveSub(null);
-                          setSidebarOpen(false);
-                        } else {
-                          setActiveTab(item.id);
-                          setActiveSub(null);
-                          setSidebarOpen(false);
-                        }
-                      }}
-                    >
-                      <div className="flex items-center">
-                        {sellerIconMap[item.id] || null}
-                        {item.label}
-                      </div>
-                      {hasChildren && (
-                        <span className="ml-auto">
-                          {isExpanded ? "▾" : "▸"}
-                        </span>
-                      )}
-                    </Button>
-                    {hasChildren && isExpanded && (
-                      <div className="pl-8 space-y-1">
-                        {item.children?.map(
-                          (child: { id: string; label: string }) => (
-                            <Button
-                              key={child.id}
-                              variant="ghost"
-                              className="w-full justify-start text-sm"
-                              onClick={() => {
-                                setActiveTab(item.id);
-                                setActiveSub(child.id);
-                                setSidebarOpen(false);
-                              }}
-                            >
-                              {child.label}
-                            </Button>
-                          )
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
-            <div className="p-4 border-t border-sidebar-border">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-sidebar-accent rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-sidebar-accent-foreground">
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-sidebar-foreground">
-                    {user?.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground capitalize">
-                    {user?.role?.replace("_", " ")}
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full bg-white justify-center"
-                onClick={logout}
-              >
-                <LogOut className="mr-2 h-4 w-4" /> Sign Out
-              </Button>
-            </div>
-          </div>
+          <SellerSidebar
+            activeTab={activeTab}
+            activeSub={activeSub}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            items={navItems.map((n: NavItemConfig) => ({
+              key: n.id,
+              label: n.label,
+              icon: n.icon,
+              children:
+                n.children?.map((c: { id: string; label: string }) => ({
+                  key: c.id,
+                  label: c.label,
+                })) || undefined,
+              badge: (n as any).badge,
+            }))}
+            onNavigate={(tab, sub) => {
+              setActiveTab(tab);
+              setActiveSub(sub ?? null);
+              setSidebarOpen(false);
+            }}
+            onLogout={logout}
+            userName={user.name}
+            userRole={user.role}
+          />
         )}
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div
+        className={`transition-all duration-300 ${
+          sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"
+        }`}
+      >
         {/* Top bar */}
         <div className="h-16 bg-white md:bg-gray-50 border-b border-border flex items-center justify-between px-6 shadow-sm">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden bg-gray-100 hover:bg-gray-200 border border-gray-300 shadow-sm"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="h-4 w-4 text-gray-700" />
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Mobile hamburger */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden bg-gray-100 hover:bg-gray-200 border border-gray-300 shadow-sm"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-4 w-4 text-gray-700" />
+            </Button>
+            {/* Desktop collapse toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hidden lg:flex bg-gray-100 hover:bg-gray-200 border border-gray-300 shadow-sm"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            >
+              <Menu className="h-4 w-4 text-gray-700" />
+            </Button>
+          </div>
 
           <div className="flex items-center space-x-4">
             <h2 className="text-lg font-semibold text-card-foreground">
@@ -426,7 +386,10 @@ export default function DashboardLayout() {
             <span className="text-sm font-medium text-card-foreground">
               {user?.name}
             </span>
-            <span className="rounded-full border p-2 bg-gray-300"> <User /></span>
+            <span className="rounded-full border p-2 bg-gray-300">
+              {" "}
+              <User />
+            </span>
           </div>
         </div>
 

@@ -4,15 +4,11 @@ import {
   ChevronRight,
   ChevronDown,
   LogOut,
-  BadgeDollarSign,
-  LayoutDashboard,
   Store,
-  Users,
+  LayoutDashboard,
   Package,
   BarChart3,
   Settings,
-  Megaphone,
-  Tag,
 } from "lucide-react";
 
 type SidebarProps = {
@@ -35,7 +31,7 @@ type Item = {
   children?: { key: string; label: string }[];
 };
 
-export default function AdminSidebar({
+export default function SellerSidebar({
   activeTab,
   activeSub,
   onNavigate,
@@ -49,7 +45,7 @@ export default function AdminSidebar({
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
 
-  // Ensure only the active parent group opens by default; avoid opening all when any sub is active
+  // Ensure only the active parent group opens by default
   useEffect(() => {
     setOpen((prev) => {
       const next: Record<string, boolean> = { ...prev };
@@ -64,12 +60,9 @@ export default function AdminSidebar({
 
   const iconMap: Record<string, React.ReactNode> = {
     dashboard: <LayoutDashboard className="h-5 w-5" />,
-    sellers: <Store className="h-5 w-5" />,
     products: <Package className="h-5 w-5" />,
     sales: <BarChart3 className="h-5 w-5" />,
-    settings: <Settings className="h-5 w-5" />,
-    marketing: <Megaphone className="h-5 w-5" />,
-    reports: <BarChart3 className="h-5 w-5" />,
+    profile: <Settings className="h-5 w-5" />,
   };
 
   const filtered = useMemo(() => {
@@ -105,11 +98,11 @@ export default function AdminSidebar({
           }`}
         >
           <div className="relative">
-            <BadgeDollarSign className="h-10 w-10 text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]" />
+            <Store className="h-10 w-10 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
           </div>
           {!collapsed && (
-            <div className="text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-              Sowis eCommerce
+            <div className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+              Seller Dashboard
             </div>
           )}
         </div>
@@ -119,7 +112,7 @@ export default function AdminSidebar({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search in menu"
-              className="w-full pl-9 pr-3 py-2 rounded-md bg-white/10 text-white placeholder-white/60 outline-none focus:ring-2 focus:ring-orange-400/60"
+              className="w-full pl-9 pr-3 py-2 rounded-md bg-white/10 text-white placeholder-white/60 outline-none focus:ring-2 focus:ring-blue-400/60"
             />
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/60" />
           </div>
@@ -140,14 +133,13 @@ export default function AdminSidebar({
                     collapsed ? "px-0 py-3" : "px-4 py-3"
                   } rounded-xl transition-all duration-200 ${
                     isActive && !isGroup
-                      ? "bg-gradient-to-r from-orange-500/20 to-orange-600/20 shadow-lg shadow-orange-500/20 border border-orange-500/30"
+                      ? "bg-gradient-to-r from-blue-500/20 to-blue-600/20 shadow-lg shadow-blue-500/20 border border-blue-500/30"
                       : "hover:bg-white/10 hover:scale-[1.02]"
                   } relative group`}
                   onClick={() =>
                     isGroup
                       ? setOpen((p) => {
                           const currentlyOpen = !!p[item.key];
-                          // single-open behavior: close others
                           return { [item.key]: !currentlyOpen } as Record<
                             string,
                             boolean
@@ -164,7 +156,7 @@ export default function AdminSidebar({
                     <span
                       className={`${
                         isActive && !isGroup
-                          ? "text-orange-400 scale-110"
+                          ? "text-blue-400 scale-110"
                           : "text-white/80"
                       } transition-all duration-200`}
                     >
@@ -182,7 +174,7 @@ export default function AdminSidebar({
                           {item.label}
                         </span>
                         {typeof item.badge === "number" && item.badge > 0 && (
-                          <span className="ml-auto inline-flex items-center justify-center text-[10px] font-semibold leading-none px-2 py-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 animate-pulse">
+                          <span className="ml-auto inline-flex items-center justify-center text-[10px] font-semibold leading-none px-2 py-1 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 animate-pulse">
                             {item.badge}
                           </span>
                         )}
@@ -196,13 +188,13 @@ export default function AdminSidebar({
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-900 rotate-45 border-l border-b border-white/10"></div>
                         {item.label}
                         {typeof item.badge === "number" && item.badge > 0 && (
-                          <span className="ml-2 text-orange-400 font-semibold">
+                          <span className="ml-2 text-blue-400 font-semibold">
                             ({item.badge})
                           </span>
                         )}
                       </div>
                       {typeof item.badge === "number" && item.badge > 0 && (
-                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-[#0B0C2A] animate-pulse"></span>
+                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-[#0B0C2A] animate-pulse"></span>
                       )}
                     </>
                   )}
@@ -249,7 +241,7 @@ export default function AdminSidebar({
           {/* User / Logout section */}
           {userName && (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-200">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-sm font-bold text-white shadow-lg">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-sm font-bold text-white shadow-lg">
                 {userName.charAt(0).toUpperCase()}
               </div>
               <div className="leading-tight flex-1">
@@ -257,7 +249,7 @@ export default function AdminSidebar({
                   {userName}
                 </div>
                 {userRole && (
-                  <div className="text-xs text-orange-400/80 capitalize font-medium">
+                  <div className="text-xs text-blue-400/80 capitalize font-medium">
                     {userRole.replace("_", " ")}
                   </div>
                 )}
@@ -273,7 +265,7 @@ export default function AdminSidebar({
             <span>Sign Out</span>
           </button>
           <div className="text-xs text-white/40 text-center">
-            © {new Date().getFullYear()} Admin
+            © {new Date().getFullYear()} Seller
           </div>
         </div>
       )}
