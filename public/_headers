@@ -1,0 +1,9 @@
+# Netlify Headers File
+# --------------------
+# This file tells Netlify to serve JavaScript files with the correct MIME type.
+# Without this, browsers may reject your bundled JS with an error like:
+# "Failed to load module script: Expected a JavaScript module but server responded with application/octet-stream."
+# The rule below ensures all .js files are served as application/javascript.
+
+/*.js
+  Content-Type: application/javascript

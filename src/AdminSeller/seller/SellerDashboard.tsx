@@ -746,9 +746,9 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
             </CardHeader>
             <CardContent>
               {/* Modern Vertical Bar Chart */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Chart Area */}
-                <div className="flex items-end justify-between gap-3 h-64 pb-8 border-b border-gray-200">
+                <div className="flex items-end justify-between gap-2 h-48 pb-6 border-b border-gray-200 overflow-x-auto">
                   {[
                     {
                       month: "Jan",
@@ -815,17 +815,17 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                     return (
                       <div
                         key={item.month}
-                        className="flex-1 flex flex-col items-center gap-2 group"
+                        className="flex-1 min-w-[40px] flex flex-col items-center gap-2 group"
                       >
                         {/* Value Label on Hover */}
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-semibold text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded whitespace-nowrap">
                           ₹{item.value.toFixed(0)}
                         </div>
 
                         {/* Bar */}
                         <div
                           className="w-full flex items-end justify-center"
-                          style={{ height: "200px" }}
+                          style={{ height: "140px" }}
                         >
                           <div
                             className={`w-full rounded-t-lg transition-all duration-500 hover:opacity-80 cursor-pointer relative ${
@@ -844,7 +844,7 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
 
                         {/* Month Label */}
                         <span
-                          className={`text-xs font-medium ${
+                          className={`text-[10px] font-medium ${
                             isCurrentMonth
                               ? "text-blue-600 font-bold"
                               : "text-gray-600"
@@ -858,28 +858,28 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                 </div>
 
                 {/* Legend and Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                    <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="flex items-center gap-2 p-2.5 bg-blue-50 rounded-lg">
+                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
                     <div>
-                      <p className="text-xs text-gray-600">Current Month</p>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-[10px] text-gray-600">Current Month</p>
+                      <p className="text-xs font-bold text-gray-900">
                         ₹{totalRevenue.toFixed(0)}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
+                  <div className="flex items-center gap-2 p-2.5 bg-green-50 rounded-lg">
+                    <TrendingUp className="w-3.5 h-3.5 text-green-600" />
                     <div>
-                      <p className="text-xs text-gray-600">Growth</p>
-                      <p className="text-sm font-bold text-green-600">+23.5%</p>
+                      <p className="text-[10px] text-gray-600">Growth</p>
+                      <p className="text-xs font-bold text-green-600">+23.5%</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-                    <DollarSign className="w-4 h-4 text-purple-600" />
+                  <div className="flex items-center gap-2 p-2.5 bg-purple-50 rounded-lg">
+                    <DollarSign className="w-3.5 h-3.5 text-purple-600" />
                     <div>
-                      <p className="text-xs text-gray-600">Avg Order</p>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-[10px] text-gray-600">Avg Order</p>
+                      <p className="text-xs font-bold text-gray-900">
                         ₹
                         {orders.length > 0
                           ? (totalRevenue / orders.length).toFixed(0)
@@ -887,11 +887,11 @@ export default function SellerDashboard({ activeTab }: SellerDashboardProps) {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                    <Activity className="w-4 h-4 text-orange-600" />
+                  <div className="flex items-center gap-2 p-2.5 bg-orange-50 rounded-lg">
+                    <Activity className="w-3.5 h-3.5 text-orange-600" />
                     <div>
-                      <p className="text-xs text-gray-600">Total Orders</p>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-[10px] text-gray-600">Total Orders</p>
+                      <p className="text-xs font-bold text-gray-900">
                         {orders.length}
                       </p>
                     </div>

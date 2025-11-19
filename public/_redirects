@@ -1,0 +1,9 @@
+# Netlify Redirects File
+# ----------------------
+# This file tells Netlify how to handle routing for your app.
+# React (and other SPAs) use client-side routing, so refreshing on /about or /products/123
+# would normally cause a 404 because Netlify looks for a physical file at that path.
+# The rule below forces Netlify to serve index.html for ALL routes,
+# allowing React Router to take over and render the correct page.
+
+/*    /index.html   200
