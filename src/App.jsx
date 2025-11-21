@@ -52,6 +52,9 @@ import TripleDynamicPopUp from "./AdminSeller/admin/components/Marketing/TripleD
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import ReactGA from "react-ga4";
 import usePageTracking from "./GA_Hook/usePageTracking";
+import KhaltiPaymentForm from "./payments/khalti/KhaltiPaymentForm";
+import KhaltiButton from "./payments/khalti/KhaltiButton";
+import KhaltiTestPage from "./payments/khalti/KhaltiTestPage";
 
 
 
@@ -135,6 +138,8 @@ const AppContent = () => {
               <Route path="/messages" element={<CustomerCareChat />} />
               <Route path="order" element={<OrderPage />} />
               <Route path="payment" element={<CheckoutPayment />} />
+              {/* <Route path="/khalti-test" element={<KhaltiTestPage />} /> */}
+
               <Route path="invoice" element={<Invoice />} />
               <Route path="success" element={<OrderSuccessDetail />} />
               <Route path="cookie-policy" element={<PrivacyPolicy />} />
@@ -161,7 +166,7 @@ const AppContent = () => {
         }
       />
     </Routes>
- );
+  );
 };
 
 export default App;

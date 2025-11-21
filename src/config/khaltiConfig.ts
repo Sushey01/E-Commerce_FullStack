@@ -1,14 +1,17 @@
-import axios from 'axios';
+// ../config/khaltiConfig.ts
+import axios from "axios";
 
-export const KHALTI_CONFIG ={
-    baseUrl: "https://khalti.com/api/v2/", // Sandbox environment URL
-    secretKey: import.meta.env.VITE_KHALTI_SECRET_KEY ?? "", 
+// -------------------- Khalti configuration --------------------
+export const KHALTI_CONFIG = {
+  baseUrl: "https://dev.khalti.com/api/v2/epayment/initiate/", // no trailing slash!
+  secretKey: import.meta.env.VITE_KHALTI_SECRET_KEY ?? "", // from .env
 } as const;
 
+// -------------------- Pre-configured Axios client --------------------
 export const KhaltiClient = axios.create({
-    baseURL: KHALTI_CONFIG.baseUrl,
-    headers: {
-        Authorization: `key ${KHALTI_CONFIG.secretKey}`,
-        "Content-Type": "application/json",
-    }
-})
+  baseURL: KHALTI_CONFIG.baseUrl,
+  headers: {
+    Authorization: `Key ${KHALTI_CONFIG.secretKey}`,
+    "Content-Type": "application/json",
+  },
+});

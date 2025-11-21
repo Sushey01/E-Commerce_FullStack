@@ -7,6 +7,7 @@ import Esewa from "../assets/images/esewa.png";
 import Credit from "../assets/images/credit.png";
 import Cod from "../assets/images/cod.png";
 import Khalti from "../assets/images/khalti.avif";
+import { useKhalti } from "../hooks/useKhalti";
 
 const CheckoutPayment = () => {
 
