@@ -17,6 +17,7 @@ import AdminDashboard from "./AdminDashboard";
 import SellerDashboard from "../seller/SellerDashboard";
 import AdminSidebar from "./components/AdminSidebar";
 import SellerSidebar from "../seller/components/SellerSidebar";
+import AddNewCatBrand from "./ui/addnewcatbrand";
 import {
   getAdminNavItems,
   getSellerNavItems,
@@ -199,6 +200,7 @@ export default function DashboardLayout() {
               activeTab={activeTab}
               activeSub={activeSub}
               withSidebar={false}
+              user={user}
             />
           ) : (
             <SellerDashboard activeTab={activeTab} />
@@ -212,6 +214,7 @@ export default function DashboardLayout() {
         activeTab={activeTab}
         activeSub={activeSub}
         withSidebar={false}
+        user={user}
       />
     ) : (
       <SellerDashboard activeTab={activeTab} />
@@ -274,7 +277,10 @@ export default function DashboardLayout() {
             activeTab={activeTab}
             activeSub={activeSub}
             collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            onToggleCollapse={() => {
+              console.log("Toggle sidebar:", !sidebarCollapsed);
+              setSidebarCollapsed(!sidebarCollapsed);
+            }}
             items={navItems.map((n: NavItemConfig) => ({
               key: n.id,
               label: n.label,
@@ -371,6 +377,9 @@ export default function DashboardLayout() {
                 return parent?.label || "Dashboard";
               })()}
             </h2>
+            {user?.role === "admin" && activeTab === "dashboard" && (
+              <AddNewCatBrand />
+            )}
             {user?.role === "admin" &&
               pendingRequestsCount > 0 &&
               !(activeTab === "sellers" && activeSub === "seller-requests") && (

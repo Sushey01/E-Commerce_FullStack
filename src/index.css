@@ -46,5 +46,6 @@
 
 /* Remove spinner arrows in Firefox */
 .no-spinner {
+  appearance: textfield;
   -moz-appearance: textfield;
 }

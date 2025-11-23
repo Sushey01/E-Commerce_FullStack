@@ -44,9 +44,12 @@ const TotalEarningMapping = () => {
   const [payoutFilter, setPayoutFilter] = useState<TimeFilter>("all");
 
   // Helper function to filter data based on time period
-  const filterDataByTime = (data: BarDatum[], filter: TimeFilter): BarDatum[] => {
+  const filterDataByTime = (
+    data: BarDatum[],
+    filter: TimeFilter
+  ): BarDatum[] => {
     if (filter === "all") return data;
-    
+
     const now = new Date();
     const today = now.getDate();
     const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
@@ -132,7 +135,7 @@ const TotalEarningMapping = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         {data.map((item) => (
           <TotalEarnings
             key={item.id}
@@ -176,6 +179,7 @@ const TotalEarningMapping = () => {
             currentFilter={categoryFilter}
             onFilterChange={setCategoryFilter}
           />
+
           <ChartCard
             title="Top Brands"
             subtitle="Distribution by product count"
@@ -203,25 +207,20 @@ const TotalEarningMapping = () => {
         <div className="md:col-span-2 lg:col-span-4 flex flex-wrap gap-4 mt-4">
           <LineChartCard
             title="Sales Trend"
-            data={monthlyBars.map((m) => ({
-              name: m.name,
-              value: m.value,
-            }))}
+            data={monthlyBars.map((m) => ({ name: m.name, value: m.value }))}
             maxDomainY={Math.max(1, ...monthlyBars.map((m) => m.value))}
             lineColor="#2563eb"
           />
+
           <LineChartCard
             title="Payout Trend"
-            data={payoutBars.map((p) => ({
-              name: p.name,
-              value: p.value,
-            }))}
+            data={payoutBars.map((p) => ({ name: p.name, value: p.value }))}
             maxDomainY={Math.max(1, ...payoutBars.map((p) => p.value))}
             lineColor="#e11d48"
           />
         </div>
       </div>
-        {/* <DownloadReport /> */}
+      {/* <DownloadReport /> */}
     </>
   );
 };

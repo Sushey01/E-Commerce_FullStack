@@ -3,6 +3,7 @@ import {
   Search,
   ChevronRight,
   ChevronDown,
+  ChevronLeft,
   LogOut,
   BadgeDollarSign,
   LayoutDashboard,
@@ -99,18 +100,34 @@ export default function AdminSidebar({
       }`}
     >
       <div className="p-4 py-6 border-b border-white/10">
-        <div
-          className={`flex items-center gap-3 ${
-            collapsed ? "justify-center" : ""
-          }`}
-        >
-          <div className="relative">
-            <BadgeDollarSign className="h-10 w-10 text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]" />
-          </div>
-          {!collapsed && (
-            <div className="text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-              Sowis eCommerce
+        <div className="flex items-center justify-between">
+          <div
+            className={`flex items-center gap-3 ${
+              collapsed ? "justify-center" : ""
+            }`}
+          >
+            <div className="relative">
+              <BadgeDollarSign className="h-10 w-10 text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]" />
             </div>
+            {!collapsed && (
+              <div className="text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
+                Sowis eCommerce
+              </div>
+            )}
+          </div>
+          {/* Toggle button - always visible */}
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors duration-200"
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-5 w-5 text-orange-400" />
+              ) : (
+                <ChevronLeft className="h-5 w-5 text-orange-400" />
+              )}
+            </button>
           )}
         </div>
         {!collapsed && (
