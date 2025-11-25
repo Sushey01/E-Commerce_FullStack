@@ -54,6 +54,7 @@ import ReactGA from "react-ga4";
 import usePageTracking from "./GA_Hook/usePageTracking";
 import KhaltiTestPage from "./payments/khalti/KhaltiTestPage";
 import Success from "./payments/khalti/Success";
+import TopWelcomeBannerMavbar from "./pages/TopWelcomeBannerMavbar";
 
 
 
@@ -90,6 +91,7 @@ const AppContent = () => {
         path="/*"
         element={
           <main className="max-w-[1400px] mx-auto w-full">
+            <TopWelcomeBannerMavbar />
             <Navbar />
 
             {/* GLOBAL POPUPS */}
