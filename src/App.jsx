@@ -55,6 +55,7 @@ import usePageTracking from "./GA_Hook/usePageTracking";
 import KhaltiTestPage from "./payments/khalti/KhaltiTestPage";
 import Success from "./payments/khalti/Success";
 import TopWelcomeBannerMavbar from "./pages/TopWelcomeBannerMavbar";
+import BrandShowCase from "./pages/BrandShowCase";
 
 
 
@@ -110,6 +111,7 @@ const AppContent = () => {
                       <HeroSection />
                       {/* <CategoryPage /> */}
                       <CategorySliderDynamic />
+                      <BrandShowCase />
                       <DynamicPageSlider />
                       <BlackFridaySales />
                       <NewProduct />
