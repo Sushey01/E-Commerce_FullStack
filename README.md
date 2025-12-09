@@ -525,32 +525,92 @@ store/
 
 ### Vercel Deployment (Recommended)
 
-1. **Connect your repository to Vercel**
+#### Step 1: Prepare Your Repository
 
+1. Ensure all changes are committed and pushed to GitHub
    ```bash
-   vercel
+   git add .
+   git commit -m "Prepare for Vercel deployment"
+   git push origin admintest
    ```
 
-2. **Configure environment variables** in Vercel dashboard
+#### Step 2: Deploy to Vercel
 
-3. **Deploy**
-   ```bash
-   vercel --prod
-   ```
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Click **"Add New Project"**
+3. Import your GitHub repository: `Sushey01/E-Commerce_FullStack`
+4. Select the `client` directory as the root directory
+5. Vercel will auto-detect Vite settings
+
+#### Step 3: Configure Environment Variables (CRITICAL!)
+
+In Vercel project settings, add these environment variables:
+
+| Variable Name            | Value                     | Environment                      |
+| ------------------------ | ------------------------- | -------------------------------- |
+| `VITE_SUPABASE_URL`      | Your Supabase project URL | Production, Preview, Development |
+| `VITE_SUPABASE_ANON_KEY` | Your Supabase anon key    | Production, Preview, Development |
+| `VITE_KHALTI_PUBLIC_KEY` | Your Khalti public key    | Production, Preview, Development |
+
+**⚠️ Important**: Without these environment variables, your site will appear blank!
+
+#### Step 4: Deploy
+
+Click **"Deploy"** and wait for the build to complete.
+
+#### Troubleshooting Blank Page Issues
+
+If your deployment shows a blank page:
+
+1. **Check Browser Console** (F12) for errors
+2. **Verify Environment Variables** are set correctly in Vercel
+3. **Check Build Logs** in Vercel dashboard for errors
+4. **Redeploy** after adding environment variables:
+   - Go to Deployments tab
+   - Click "..." on latest deployment
+   - Click "Redeploy"
+
+#### Alternative: Deploy via CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy to preview
+vercel
+
+# Deploy to production
+vercel --prod
+```
 
 ### Build Configuration
 
 - Output directory: `dist`
 - Build command: `npm run build`
 - Framework preset: Vite
+- Node version: 18.x or higher
 
 ### Environment Variables (Production)
 
 Set the following in your deployment platform:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
-- `VITE_KHALTI_PUBLIC_KEY`
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `VITE_KHALTI_PUBLIC_KEY` - Your Khalti public key (test or live)
+
+### Post-Deployment Checklist
+
+- [ ] Site loads without blank page
+- [ ] Environment variables are set
+- [ ] Navigation works correctly
+- [ ] Images load properly
+- [ ] API calls to Supabase work
+- [ ] Authentication flow functions
+- [ ] Payment integration tested
+- [ ] Mobile responsive design verified
 
 ---
 
