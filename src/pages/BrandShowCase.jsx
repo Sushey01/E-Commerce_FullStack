@@ -23,7 +23,7 @@ const BrandShowCase = () => {
   }, []);
 
   return (
-    <div className="bg-white py-10 overflow-hidden">
+    <div className="bg-white py-10  overflow-hidden">
       <div className="flex overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap w-[200%]">
           {/* First loop */}

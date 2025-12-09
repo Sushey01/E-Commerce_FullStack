@@ -15,7 +15,28 @@ const Navbar = () => {
   const [showCategory, setShowCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Select Category");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [input, setInput] = useState("");
   const navigate = useNavigate();
+
+
+  const fetchData = async (value) => {
+    const {data, error} = await supabase
+    .from("products")
+    .select("*")
+    .ilike("name", `%${value}%`); // for searching
+
+    if(error) {
+      console.error(error);
+      return [];
+    } 
+
+    return data;
+  }
+
+  const handleChange = (value)=>{
+    setInput(value)
+    fetchData(value)
+  }
 
   const categories = [
     "Electronics",
@@ -119,6 +140,8 @@ const Navbar = () => {
             <div className="flex items-center flex-1">
               <input
                 type="text"
+                value={input}
+                onChange={(e)=>handleChange(e.target.value)}
                 placeholder="Search for products..."
                 className="w-full border rounded-tr-none rounded-br-none rounded-tl-md rounded-bl-md  px-3 py-2"
               />
