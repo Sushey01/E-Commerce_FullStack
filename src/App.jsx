@@ -52,8 +52,10 @@ import TripleDynamicPopUp from "./AdminSeller/admin/components/Marketing/TripleD
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import ReactGA from "react-ga4";
 import usePageTracking from "./GA_Hook/usePageTracking";
-import KhaltiButton from "./payments/khalti/KhaltiButton";
 import KhaltiTestPage from "./payments/khalti/KhaltiTestPage";
+import Success from "./payments/khalti/Success";
+import TopWelcomeBannerMavbar from "./pages/TopWelcomeBannerMavbar";
+import BrandShowCase from "./pages/BrandShowCase";
 
 
 
@@ -90,6 +92,7 @@ const AppContent = () => {
         path="/*"
         element={
           <main className="max-w-[1400px] mx-auto w-full">
+            <TopWelcomeBannerMavbar />
             <Navbar />
 
             {/* GLOBAL POPUPS */}
@@ -108,6 +111,7 @@ const AppContent = () => {
                       <HeroSection />
                       {/* <CategoryPage /> */}
                       <CategorySliderDynamic />
+                      <BrandShowCase />
                       <DynamicPageSlider />
                       <BlackFridaySales />
                       <NewProduct />
@@ -165,6 +169,10 @@ const AppContent = () => {
         }
       />
     </Routes>
+    // <Routes>
+    //   <Route path="/khalti-test" element={<KhaltiTestPage />} />
+    //   <Route path="/success" element={<Success />} />
+    // </Routes>
   );
 };
 
