@@ -1,17 +1,13 @@
-// // ../config/khaltiConfig.ts
-// import axios from "axios";
+// Khalti configuration (client-safe)
+// NOTE: Do NOT include secret keys in client-side code. Use server-side endpoints
+// for any operations that require Khalti secret keys.
 
-// // -------------------- Khalti configuration --------------------
-// export const KHALTI_CONFIG = {
-//   baseUrl: "https://dev.khalti.com/api/v2/epayment/initiate/", // no trailing slash!
-//   secretKey: import.meta.env.VITE_KHALTI_SECRET_KEY ?? "", // from .env
-// } as const;
+export const KHALTI_CONFIG = {
+	// Base API URL (no trailing slash). Use dev or live endpoint as needed.
+	baseUrl: import.meta.env.VITE_KHALTI_BASE_URL ?? "https://dev.khalti.com/api/v2",
+	// Public key is safe to keep on client-side for initiating payment flows
+	publicKey: import.meta.env.VITE_KHALTI_PUBLIC_KEY ?? "",
+} as const;
 
-// // -------------------- Pre-configured Axios client --------------------
-// export const KhaltiClient = axios.create({
-//   baseURL: KHALTI_CONFIG.baseUrl,
-//   headers: {
-//     Authorization: `Key ${KHALTI_CONFIG.secretKey}`,
-//     "Content-Type": "application/json",
-//   },
-// });
+// If you need a server-side client using the secret key, create an API route
+// on your server that calls Khalti using the secret key (read from server env).

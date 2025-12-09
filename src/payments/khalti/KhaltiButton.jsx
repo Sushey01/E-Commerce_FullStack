@@ -1,9 +1,18 @@
 import React, { useEffect } from "react";
 
-// Khalti public key (test key)
-const KHALTI_PUBLIC_KEY = "pkey_test_03b8308d1f49449180cc43567acb9c32";
+const ENABLE_KHALTI = import.meta.env.VITE_ENABLE_KHALTI === "true";
+const KHALTI_PUBLIC_KEY = import.meta.env.VITE_KHALTI_PUBLIC_KEY ?? "";
 
 const KhaltiButton = ({ amount = 5000 }) => {
+  // If Khalti is disabled via env, render a disabled button
+  if (!ENABLE_KHALTI || !KHALTI_PUBLIC_KEY) {
+    return (
+      <button disabled className="bg-gray-300 text-gray-700 px-4 py-2 rounded mt-3">
+        Khalti Disabled
+      </button>
+    );
+  }
+
   useEffect(() => {
     // Dynamically load Khalti checkout script
     if (!window.KhaltiCheckout) {

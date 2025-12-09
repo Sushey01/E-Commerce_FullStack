@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { KHALTI_CONFIG } from "../config/khaltiConfig";
 
+const ENABLE_KHALTI = import.meta.env.VITE_ENABLE_KHALTI === "true";
+
 export interface KhaltiPaymentRequest {
     amount:number; // Amount in paisa (e.g., 1000 paisa = 10 NPR)
     purchase_order_id:string; // Unique order ID from your system`
@@ -47,6 +49,22 @@ export function useKhalti({
     const [initiationError, setInitiationError] = useState<Error | null>(null);
     const [statusError, setStatusError] = useState<Error |null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    // If Khalti is disabled, provide no-op implementations to avoid runtime errors
+    if (!ENABLE_KHALTI || !KHALTI_CONFIG.publicKey) {
+        const noop = async () => {
+            console.warn("Khalti is disabled via environment. initiate() is a no-op.");
+            return null;
+        };
+        return {
+            initiate: noop,
+            checkPaymentStatus: async () => { console.warn("Khalti disabled: checkPaymentStatus() no-op"); return null; },
+            pidx: null,
+            initiationError: null,
+            statusError: null,
+            isLoading: false,
+        };
+    }
 
     const initiate = async (data: KhaltiPaymentRequest) => {
         setIsLoading(true);

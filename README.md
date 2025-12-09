@@ -260,13 +260,19 @@ client/
    ```
 
 3. **Set up environment variables**
-   Create a `.env` file in the `client` directory:
+   Create a `.env` file in the `client` directory (or copy from `.env.example`):
 
    ```env
+   # Required
    VITE_SUPABASE_URL=your_supabase_project_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   
+   # Optional - Khalti Payment Gateway
+   VITE_ENABLE_KHALTI=false
    VITE_KHALTI_PUBLIC_KEY=your_khalti_public_key
    ```
+
+   **Note:** Set `VITE_ENABLE_KHALTI=true` only if you have a Khalti merchant account.
 
 4. **Run the development server**
 
@@ -546,13 +552,23 @@ store/
 
 In Vercel project settings, add these environment variables:
 
+**Required (Minimum for deployment):**
 | Variable Name            | Value                     | Environment                      |
 | ------------------------ | ------------------------- | -------------------------------- |
 | `VITE_SUPABASE_URL`      | Your Supabase project URL | Production, Preview, Development |
 | `VITE_SUPABASE_ANON_KEY` | Your Supabase anon key    | Production, Preview, Development |
-| `VITE_KHALTI_PUBLIC_KEY` | Your Khalti public key    | Production, Preview, Development |
 
-**⚠️ Important**: Without these environment variables, your site will appear blank!
+**Optional (Enable Khalti Payment Gateway):**
+| Variable Name            | Value                     | Environment                      |
+| ------------------------ | ------------------------- | -------------------------------- |
+| `VITE_ENABLE_KHALTI`     | `true` or `false`         | Production, Preview, Development |
+| `VITE_KHALTI_PUBLIC_KEY` | Your Khalti public key    | Production, Preview, Development |
+| `VITE_KHALTI_BASE_URL`   | Khalti API URL (optional) | Production, Preview, Development |
+
+**⚠️ Important**: 
+- Without Supabase environment variables, your site will appear blank!
+- Set `VITE_ENABLE_KHALTI=false` (or omit it) to disable Khalti payment integration
+- Only set Khalti variables if you have an active Khalti account
 
 #### Step 4: Deploy
 
